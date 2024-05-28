@@ -2,20 +2,14 @@ package com.example.jlearnn;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -25,13 +19,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
-public class CRUD extends AppCompatActivity {
+public class LessonItemCRUD extends AppCompatActivity {
     FloatingActionButton fab;
     DatabaseReference databaseReference;
     ValueEventListener eventListener;
     RecyclerView recyclerView;
-    List<DataClass> dataList;
-    MyAdapter adapter;
+    List<LessonItemDataClass> dataList;
+    LessonItemAdapter adapter;
     SearchView searchView;
 
     @Override
@@ -43,16 +37,16 @@ public class CRUD extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         searchView = findViewById(R.id.search);
         searchView.clearFocus();
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(CRUD.this, 1);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(LessonItemCRUD.this, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
-        AlertDialog.Builder builder = new AlertDialog.Builder(CRUD.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(LessonItemCRUD.this);
         builder.setCancelable(false);
         builder.setView(R.layout.progress_layout);
         AlertDialog dialog = builder.create();
         dialog.show();
 
         dataList = new ArrayList<>();
-        adapter = new MyAdapter(CRUD.this, dataList);
+        adapter = new LessonItemAdapter(LessonItemCRUD.this, dataList);
         recyclerView.setAdapter(adapter);
         databaseReference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Lessons");
 
@@ -64,9 +58,9 @@ public class CRUD extends AppCompatActivity {
                 dataList.clear();
                 for (DataSnapshot lessonSnapshot : snapshot.getChildren()) {
                     for (DataSnapshot itemSnapshot : lessonSnapshot.getChildren()) {
-                        DataClass dataClass = itemSnapshot.getValue(DataClass.class);
-                        dataClass.setKey(itemSnapshot.getKey());
-                        dataList.add(dataClass);
+                        LessonItemDataClass lessonItemDataClass = itemSnapshot.getValue(LessonItemDataClass.class);
+                        lessonItemDataClass.setKey(itemSnapshot.getKey());
+                        dataList.add(lessonItemDataClass);
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -95,17 +89,17 @@ public class CRUD extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CRUD.this, UploadActivity.class);
+                Intent intent = new Intent(LessonItemCRUD.this, LessonItemUploadActivity.class);
                 startActivity(intent);
             }
         });
     }
 
     public void searchList(String text) {
-        ArrayList<DataClass> searchList = new ArrayList<>();
-        for (DataClass dataClass : dataList) {
-            if (dataClass.getDataRomaji().toLowerCase().contains(text.toLowerCase())) {
-                searchList.add(dataClass);
+        ArrayList<LessonItemDataClass> searchList = new ArrayList<>();
+        for (LessonItemDataClass lessonItemDataClass : dataList) {
+            if (lessonItemDataClass.getDataRomaji().toLowerCase().contains(text.toLowerCase())) {
+                searchList.add(lessonItemDataClass);
             }
         }
         adapter.searchDataList(searchList);

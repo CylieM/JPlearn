@@ -29,7 +29,7 @@ public class PracticeNihongoRaceActivity extends AppCompatActivity {
     private EditText textInput;
     private Button resetButton;
     private ImageView playerIcon;
-    private ParagraphsSQLiteHelper dbHelper;
+    private ParagraphSQLiteDB dbHelper;
     private CountDownTimer timer;
     private long startTime = 30 * 1000; // 30 seconds
     private long interval = 1000; // 1 second
@@ -52,7 +52,7 @@ public class PracticeNihongoRaceActivity extends AppCompatActivity {
         playerIcon = findViewById(R.id.playerIcon);
 
         // Initialize database helper
-        dbHelper = new ParagraphsSQLiteHelper(this);
+        dbHelper = new ParagraphSQLiteDB(this);
 
         // Set up reset button click listener
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -177,15 +177,15 @@ public class PracticeNihongoRaceActivity extends AppCompatActivity {
 
     private String[] getRandomParagraph() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + ParagraphsSQLiteHelper.TABLE_PARAGRAPHS, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ParagraphSQLiteDB.TABLE_PARAGRAPHS, null);
         int count = cursor.getCount();
         if (count == 0) {
             return new String[] {"", ""}; // Handle case with no paragraphs in the database
         }
         int randomIndex = new Random().nextInt(count);
         cursor.moveToPosition(randomIndex);
-        String paragraph = cursor.getString(cursor.getColumnIndexOrThrow(ParagraphsSQLiteHelper.COLUMN_PARAGRAPH));
-        String romaji = cursor.getString(cursor.getColumnIndexOrThrow(ParagraphsSQLiteHelper.COLUMN_ROMAJI));
+        String paragraph = cursor.getString(cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_PARAGRAPH));
+        String romaji = cursor.getString(cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_ROMAJI));
         cursor.close();
         return new String[] {paragraph, romaji};
     }

@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navProfile"
+        android:title="Profile" />
+    <item
+        android:id="@+id/navUserPanel"
+        android:title="Users" />
+    <item
+        android:id="@+id/navLogout"
+        android:title="Logout" />
+</menu>

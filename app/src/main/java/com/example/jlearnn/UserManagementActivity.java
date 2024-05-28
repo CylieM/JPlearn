@@ -100,7 +100,7 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(UserManagementActivity.this, UploadActivity.class);
+                Intent intent = new Intent(UserManagementActivity.this, LessonItemUploadActivity.class);
                 startActivity(intent);
             }
         });

@@ -9,19 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 public class HomeFragment extends Fragment {
 
     private String email;
 
-    public static HomeFragment newInstance(String email) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString("email", email);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +44,7 @@ public class HomeFragment extends Fragment {
         });
 
         btnSelfTesting.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), TestYourself.class);
+            Intent intent = new Intent(getActivity(), LessonTestYourself.class);
             startActivity(intent);
         });
 

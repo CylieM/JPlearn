@@ -18,10 +18,7 @@
             android:name=".LessonReview"
             android:exported="false" />
         <activity
-            android:name=".Vocab"
-            android:exported="false" />
-        <activity
-            android:name=".TestYourself"
+            android:name=".LessonTestYourself"
             android:exported="false" />
         <activity
             android:name=".LessonDiscussionActivity"
@@ -45,10 +42,7 @@
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Profile"
+            android:name=".ProfileFragment"
             android:exported="false" />
         <activity
             android:name=".MultiplayerGameActivity"
@@ -58,10 +52,10 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
-            android:name=".UpdateActivity"
+            android:name=".LessonItemUpdateActivity"
             android:exported="false" />
         <activity
-            android:name=".DetailActivity"
+            android:name=".LessonItemDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
@@ -73,11 +67,11 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
-            android:name=".UploadActivity"
+            android:name=".LessonItemUploadActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
-            android:name=".CRUD"
+            android:name=".LessonItemCRUD"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity

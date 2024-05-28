@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -60,7 +59,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
 
     private long interval = 1000; // 1 second
 
-    private ParagraphsSQLiteHelper dbHelper;
+    private ParagraphSQLiteDB dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         gameRoomRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("gameRooms").child(gameCode);
 
-        dbHelper = new ParagraphsSQLiteHelper(this);
+        dbHelper = new ParagraphSQLiteDB(this);
         getRoomOwnerId();
 
         initializePlayers();
@@ -196,12 +195,12 @@ public class MultiplayerGameActivity extends AppCompatActivity {
 
 
         // Query the database
-        Cursor cursor = db.rawQuery("SELECT * FROM " + ParagraphsSQLiteHelper.TABLE_PARAGRAPHS + " WHERE " + ParagraphsSQLiteHelper.COLUMN_CATEGORY + " = ? AND " + ParagraphsSQLiteHelper.COLUMN_SENTENCES + " = ? ORDER BY RANDOM() LIMIT 1", new String[]{category, String.valueOf(sentences)});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ParagraphSQLiteDB.TABLE_PARAGRAPHS + " WHERE " + ParagraphSQLiteDB.COLUMN_CATEGORY + " = ? AND " + ParagraphSQLiteDB.COLUMN_SENTENCES + " = ? ORDER BY RANDOM() LIMIT 1", new String[]{category, String.valueOf(sentences)});
 
         if (cursor.moveToFirst()) {
             // Log column names and indices
-            int columnIndexParagraph = cursor.getColumnIndexOrThrow(ParagraphsSQLiteHelper.COLUMN_PARAGRAPH);
-            int columnIndexRomaji = cursor.getColumnIndexOrThrow(ParagraphsSQLiteHelper.COLUMN_ROMAJI);
+            int columnIndexParagraph = cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_PARAGRAPH);
+            int columnIndexRomaji = cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_ROMAJI);
             Log.e("MultiplayerGameActivity", "Column Index for Paragraph: " + columnIndexParagraph);
             Log.e("MultiplayerGameActivity", "Column Index for Romaji: " + columnIndexRomaji);
 

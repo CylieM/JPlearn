@@ -1,6 +1,5 @@
 package com.example.jlearnn;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -8,8 +7,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -17,10 +14,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class LessonsActivity extends AppCompatActivity {
+public class LessonTestYourself extends AppCompatActivity {
 
     private static final String TAG = "Lesson421";
     private TextView tvFront, tvCounter;
@@ -36,7 +34,7 @@ public class LessonsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lessons);
+        setContentView(R.layout.activity_test_yourself);
 
         // Initialize views
         tvFront = findViewById(R.id.tvFront);
@@ -140,6 +138,7 @@ public class LessonsActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Error saving incorrect answer", e));
     }
     public void onCancelled(DatabaseError databaseError) {
-                    Log.e(TAG, "Error checking progress", databaseError.toException());
-                }
+        Log.e(TAG, "Error checking progress", databaseError.toException());
+    }
 }
+

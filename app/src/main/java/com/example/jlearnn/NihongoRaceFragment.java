@@ -54,17 +54,19 @@ public class NihongoRaceFragment extends Fragment {
     }
 
     private void handleCreateRoomButtonVisibility(String userRole) {
+        Log.d("UserRole", "User role retrieved: " + userRole); // Log the retrieved user role
+
         Button createRoomButton = getView().findViewById(R.id.btnCreateRoom);
 
-        if ("Teacher".equals(userRole)) {
-            // User is a teacher, make the button visible
+        if ("Teacher".equals(userRole) || "Admin".equals(userRole)) {
+            // User is a teacher or admin, make the button visible
             createRoomButton.setVisibility(View.VISIBLE);
-            Log.d("NihongoRaceFragment", "User is a teacher. Button visible.");
         } else {
-            // User is not a teacher, hide the button
+            // User is not a teacher or admin, hide the button
             createRoomButton.setVisibility(View.GONE);
-            Log.d("NihongoRaceFragment", "User is not a teacher. Button hidden.");
         }
+
+        Log.d("ButtonVisibility", "Setting button visibility for role: " + userRole); // Log the role for which button visibility is being set
     }
 
     @Override

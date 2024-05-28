@@ -1,38 +1,25 @@
 package com.example.jlearnn;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import java.text.DateFormat;
-import java.util.Calendar;
-public class UploadActivity extends AppCompatActivity {
+
+public class LessonItemUploadActivity extends AppCompatActivity {
     EditText uploadRomaji, uploadDesc, uploadExample, uploadJapaneseChar;
     Spinner lessonSpinner;
     Button saveButton;
@@ -93,27 +80,27 @@ public class UploadActivity extends AppCompatActivity {
                 // Construct the key with the format "lessonNumber_itemCount"
                 String key = lessonNumber + "_" + (itemCount + 1);
 
-                DataClass dataClass = new DataClass(romaji, desc, example, japaneseChar);
+                LessonItemDataClass lessonItemDataClass = new LessonItemDataClass(romaji, desc, example, japaneseChar);
 
-                lessonRef.child(key).setValue(dataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
+                lessonRef.child(key).setValue(lessonItemDataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(UploadActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LessonItemUploadActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(UploadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LessonItemUploadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(UploadActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LessonItemUploadActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

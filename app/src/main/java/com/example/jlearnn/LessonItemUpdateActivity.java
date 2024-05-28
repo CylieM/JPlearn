@@ -1,32 +1,21 @@
 package com.example.jlearnn;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
-import com.bumptech.glide.Glide;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-public class UpdateActivity extends AppCompatActivity {
+
+public class LessonItemUpdateActivity extends AppCompatActivity {
     EditText updateDesc, updateRomaji, updateExample, updateJapaneseChar;
     Button updateButton;
     String romaji, desc, example, japaneseChar;
@@ -80,19 +69,19 @@ public class UpdateActivity extends AppCompatActivity {
         example = updateExample.getText().toString().trim();
         japaneseChar = updateJapaneseChar.getText().toString().trim();
 
-        DataClass dataClass = new DataClass(romaji, desc, example, japaneseChar);
-        databaseReference.setValue(dataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
+        LessonItemDataClass lessonItemDataClass = new LessonItemDataClass(romaji, desc, example, japaneseChar);
+        databaseReference.setValue(lessonItemDataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(UpdateActivity.this, "Updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LessonItemUpdateActivity.this, "Updated", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(UpdateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LessonItemUpdateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

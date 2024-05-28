@@ -70,10 +70,12 @@ public class navBar extends AppCompatActivity {
                             PopupMenu popupMenu = new PopupMenu(navBar.this, view);
 
                             // Inflate the appropriate menu layout based on the user's role
-                            if ("Teacher".equals(role)) {
-                                popupMenu.getMenuInflater().inflate(R.menu.profile_menu, popupMenu.getMenu()); // Use the teacher profile menu
+                            if ("Admin".equals(role)) {
+                                popupMenu.getMenuInflater().inflate(R.menu.profile_menu, popupMenu.getMenu()); // Admin profile menu
+                            } else if ("Teacher".equals(role)) {
+                                popupMenu.getMenuInflater().inflate(R.menu.profile_menu_teacher, popupMenu.getMenu()); // Teacher profile menu
                             } else {
-                                popupMenu.getMenuInflater().inflate(R.menu.profile_menu_student, popupMenu.getMenu()); // Use the student profile menu
+                                popupMenu.getMenuInflater().inflate(R.menu.profile_menu_student, popupMenu.getMenu()); // Student profile menu
                             }
 
                             popupMenu.show();
@@ -94,7 +96,7 @@ public class navBar extends AppCompatActivity {
                                         return true;
                                     } else if (itemId == R.id.navAdminPanel) {
                                         // Open the UploadActivity when the AdminPanel item is clicked
-                                        startActivity(new Intent(navBar.this, CRUD.class));
+                                        startActivity(new Intent(navBar.this, LessonItemCRUD.class));
                                         return true;
                                     } else if (itemId == R.id.navUserPanel) {
                                         // Redirect to user management activity

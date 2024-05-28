@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class ParagraphsSQLiteHelper extends SQLiteOpenHelper {
+public class ParagraphSQLiteDB extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "paragraphs.db";
     private static final int DATABASE_VERSION = 18; // Incremented database version
@@ -27,7 +27,7 @@ public class ParagraphsSQLiteHelper extends SQLiteOpenHelper {
                     COLUMN_CATEGORY + " TEXT NOT NULL, " +
                     COLUMN_SENTENCES + " INTEGER NOT NULL);";
 
-    public ParagraphsSQLiteHelper(Context context) {
+    public ParagraphSQLiteDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

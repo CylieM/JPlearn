@@ -1,7 +1,7 @@
 package com.example.jlearnn;
 
 
-public class DataClass {
+public class LessonItemDataClass {
     private String dataRomaji;
     private String dataDesc;
     private String dataExample;
@@ -32,13 +32,13 @@ public class DataClass {
         return japaneseChar;
     }
 
-    public DataClass(String dataRomaji, String dataDesc, String dataExample, String japaneseChar) {
+    public LessonItemDataClass(String dataRomaji, String dataDesc, String dataExample, String japaneseChar) {
         this.dataRomaji = dataRomaji;
         this.dataDesc = dataDesc;
         this.dataExample = dataExample;
         this.japaneseChar = japaneseChar;
     }
 
-    public DataClass() {
+    public LessonItemDataClass() {
     }
 }

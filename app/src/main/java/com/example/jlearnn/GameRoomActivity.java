@@ -40,7 +40,7 @@ public class GameRoomActivity extends AppCompatActivity {
     private DatabaseReference gameRoomRef;
     private String gameCode;
     private String userId;
-    private String roomCreatorId;
+
 
     private EditText timerInput;
     private Spinner sentencesSpinner;
@@ -69,11 +69,6 @@ public class GameRoomActivity extends AppCompatActivity {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         gameRoomRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("gameRooms").child(gameCode);
 
-        if (getIntent().getBooleanExtra("IS_CREATOR", false)) {
-            roomCreatorId = userId;
-            gameRoomRef.child("creator").setValue(roomCreatorId);
-        }
-
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,10 +82,9 @@ public class GameRoomActivity extends AppCompatActivity {
         // Listen for game room updates
         listenForGameRoomUpdates();
 
-        // Check if the current user is the room creator
-        checkIfRoomCreator();
+
         EditText timerInput = findViewById(R.id.timerInput);
-        timerInput.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "300") });
+        timerInput.setFilters(new InputFilter[]{ new GameRoomInputFilter("1", "300") });
 
         // Initialize the sentences spinner
         Spinner sentencesSpinner = findViewById(R.id.sentencesSpinner);
@@ -223,13 +217,18 @@ public class GameRoomActivity extends AppCompatActivity {
         return gameCode.toString();
     }
 
-    private void checkIfRoomCreator() {
-        gameRoomRef.child("creator").addValueEventListener(new ValueEventListener() {
+    private void checkUserRole() {
+        DatabaseReference userRoleRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("users")
+                .child(userId)
+                .child("role");
+
+        userRoleRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String creatorId = snapshot.getValue(String.class);
-                if (creatorId != null && !creatorId.equals(userId)) {
-                    // Hide UI elements for participants
+                String userRole = snapshot.getValue(String.class);
+                if ("student".equals(userRole)) {
+                    // Hide UI elements for students
                     startButton.setVisibility(View.GONE);
                     timerInput.setVisibility(View.GONE);
                     sentencesSpinner.setVisibility(View.GONE);
@@ -240,10 +239,11 @@ public class GameRoomActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("GameRoomActivity", "Error fetching room creator: " + error.getMessage());
+                Log.e("GameRoomActivity", "Error fetching user role: " + error.getMessage());
             }
         });
     }
+
 
 
 }

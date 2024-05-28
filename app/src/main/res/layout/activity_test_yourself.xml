@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#342a29"
-    tools:context=".TestYourself">
+    tools:context=".LessonsTestYourself">
 
 
     <LinearLayout
@@ -13,8 +12,8 @@
         android:layout_height="889dp"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="1dp">
+        tools:layout_editor_absoluteX="1dp"
+        tools:ignore="MissingConstraints">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -25,57 +24,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:text="Test Yourself"
-                        android:textColor="#979393"
-                        android:textColorHint="#979393"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvRound"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
-                        android:layout_marginLeft="20dp"
-                        android:text="Round: 1 / 5"
-                        android:textColor="#979393"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvCorrect"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="20dp"
-                        android:text="Correct: 0"
-                        android:textColor="#979393"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvIncorrect"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="20dp"
-                        android:text="Incorrect: 0"
-                        android:textColor="#979393"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="193dp"
@@ -84,47 +32,25 @@
                     android:backgroundTint="#d34746">
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <ImageButton
-                            android:id="@+id/btnPrevTest"
-                            android:layout_width="20dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:background="@color/white"
-                            android:backgroundTint="#d34746"
-                            android:gravity="center"
-                            android:rotation="180"
-                            app:srcCompat="@drawable/arrow_10"
-                            tools:srcCompat="@drawable/arrow_10" />
-
-                        <TextView
-                            android:id="@+id/tvFrontTest"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="こんにちは"
-                            android:textColor="@color/white"
-                            android:textSize="48sp"
-                            android:textStyle="bold" />
-
-                        <ImageButton
-                            android:id="@+id/btnNextTest"
-                            android:layout_width="20dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:backgroundTint="#d34746"
-                            android:gravity="center"
-                            app:srcCompat="@drawable/arrow_10"
-                            tools:srcCompat="@drawable/arrow_10" />
-
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvFront"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="こんにちは"
+                        android:textColor="@color/black"
+                        android:textSize="48sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tvCounter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="160dp"
+                        android:layout_marginTop="15dp"
+                        android:text="TextView"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                 </FrameLayout>
 
@@ -136,7 +62,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="#65325d"
+                        android:background="#ff00d6"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingLeft="120dp"
@@ -148,7 +74,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="Vocabulary Meaning"
+                            android:text="Test"
                             android:textColor="@color/white"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -175,17 +101,32 @@
                             android:gravity="center"
                             android:orientation="horizontal">
 
-                            <EditText
-                                android:id="@+id/txtUserInputTest"
-                                android:layout_width="302dp"
-                                android:layout_height="60dp"
-                                android:layout_marginLeft="45dp"
-                                android:layout_marginRight="45dp"
+                            <ImageButton
+                                android:id="@+id/btnPrev"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:background="@color/white"
-                                android:gravity="center"
+                                android:rotation="360"
+                                app:srcCompat="@drawable/__1_1_removebg_previewssssss"
+                                tools:srcCompat="@drawable/__1_1_removebg_previewssssss" />
+
+                            <EditText
+                                android:id="@+id/txtUserInput"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:ems="10"
                                 android:inputType="textPersonName" />
+
+                            <ImageButton
+                                android:id="@+id/btnNext"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@color/white"
+                                app:srcCompat="@drawable/arrright"
+                                tools:srcCompat="@drawable/arrright" />
 
                         </LinearLayout>
 
@@ -203,7 +144,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="151dp"
+                        android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp">
@@ -269,9 +210,13 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+
         </FrameLayout>
 
     </LinearLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,9 +4,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.NonNull;
@@ -14,11 +13,11 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
+public class LessonItemAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private Context context;
-    private List<DataClass> dataList;
+    private List<LessonItemDataClass> dataList;
 
-    public MyAdapter(Context context, List<DataClass> dataList) {
+    public LessonItemAdapter(Context context, List<LessonItemDataClass> dataList) {
         this.context = context;
         this.dataList = dataList;
     }
@@ -40,7 +39,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.recCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, DetailActivity.class);
+                Intent intent = new Intent(context, LessonItemDetailActivity.class);
                 intent.putExtra("JapaneseChar", dataList.get(holder.getAdapterPosition()).getJapaneseChar());
                 intent.putExtra("Description", dataList.get(holder.getAdapterPosition()).getDataDesc());
                 intent.putExtra("Romaji", dataList.get(holder.getAdapterPosition()).getDataRomaji());
@@ -56,7 +55,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         return dataList.size();
     }
 
-    public void searchDataList(ArrayList<DataClass> searchList) {
+    public void searchDataList(ArrayList<LessonItemDataClass> searchList) {
         dataList = searchList;
         notifyDataSetChanged();
     }

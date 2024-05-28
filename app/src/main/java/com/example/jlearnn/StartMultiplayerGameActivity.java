@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -61,7 +60,7 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
 
     private long interval = 1000; // 1 second
 
-    private ParagraphsSQLiteHelper dbHelper;
+    private ParagraphSQLiteDB dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +76,7 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         lobbyRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("lobbies").child(lobbyCode);
 
-        dbHelper = new ParagraphsSQLiteHelper(this);
+        dbHelper = new ParagraphSQLiteDB(this);
 
         initializePlayers();
         listenForPlayerProgressUpdates();
@@ -177,15 +176,15 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
 
     private String[] getRandomParagraph() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + ParagraphsSQLiteHelper.TABLE_PARAGRAPHS, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ParagraphSQLiteDB.TABLE_PARAGRAPHS, null);
         int count = cursor.getCount();
         if (count == 0) {
             return new String[] {"", ""}; // Handle case with no paragraphs in the database
         }
         int randomIndex = new Random().nextInt(count);
         cursor.moveToPosition(randomIndex);
-        String paragraph = cursor.getString(cursor.getColumnIndexOrThrow(ParagraphsSQLiteHelper.COLUMN_PARAGRAPH));
-        String romaji = cursor.getString(cursor.getColumnIndexOrThrow(ParagraphsSQLiteHelper.COLUMN_ROMAJI));
+        String paragraph = cursor.getString(cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_PARAGRAPH));
+        String romaji = cursor.getString(cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_ROMAJI));
         cursor.close();
         return new String[] {paragraph, romaji};
     }
