@@ -27,101 +27,64 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 public class UpdateActivity extends AppCompatActivity {
-    ImageView updateImage;
+    EditText updateDesc, updateRomaji, updateExample, updateJapaneseChar;
     Button updateButton;
-    EditText updateDesc, updateRomaji, updateExample;
-    String romaji, desc, example;
-    String imageUrl;
-    String key, oldImageURL;
-    Uri uri;
+    String romaji, desc, example, japaneseChar;
+    String key, lesson;
     DatabaseReference databaseReference;
-    StorageReference storageReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
+
         updateButton = findViewById(R.id.updateButton);
         updateDesc = findViewById(R.id.updateDesc);
-        updateImage = findViewById(R.id.updateImage);
-        updateExample = findViewById(R.id.updateExample);
         updateRomaji = findViewById(R.id.updateRomaji);
-        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK){
-                            Intent data = result.getData();
-                            uri = data.getData();
-                            updateImage.setImageURI(uri);
-                        } else {
-                            Toast.makeText(UpdateActivity.this, "No Image Selected", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-        );
+        updateExample = findViewById(R.id.updateExample);
+        updateJapaneseChar = findViewById(R.id.updateJapaneseChar);
+
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
-            Glide.with(UpdateActivity.this).load(bundle.getString("Image")).into(updateImage);
+        if (bundle != null) {
             updateRomaji.setText(bundle.getString("Romaji"));
             updateDesc.setText(bundle.getString("Description"));
             updateExample.setText(bundle.getString("Example"));
+            updateJapaneseChar.setText(bundle.getString("JapaneseChar"));
             key = bundle.getString("Key");
-            oldImageURL = bundle.getString("Image");
+            // Extract the lesson number from the key
+            lesson = key.split("_")[0]; // Assuming key format is lessonNumber_itemCount
+        } else {
+            // Handle the case where the lesson is not passed properly
+            Toast.makeText(this, "Lesson information not provided", Toast.LENGTH_SHORT).show();
+            finish(); // Finish the activity
+            return;
         }
-        databaseReference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Jlearn").child(key);
-        updateImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent photoPicker = new Intent(Intent.ACTION_PICK);
-                photoPicker.setType("image/*");
-                activityResultLauncher.launch(photoPicker);
-            }
-        });
+
+        // Construct the correct database reference using the lesson variable
+        databaseReference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("Lessons")
+                .child("Lesson " + lesson) // Assuming the lesson number is passed as a string, adjust this accordingly if it's an integer
+                .child(key);
+
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveData();
-                Intent intent = new Intent(UpdateActivity.this, CRUD.class);
-                startActivity(intent);
-            }
-        });
-    }
-    public void saveData(){
-        storageReference = FirebaseStorage.getInstance().getReference().child("Android Images").child(uri.getLastPathSegment());
-        AlertDialog.Builder builder = new AlertDialog.Builder(UpdateActivity.this);
-        builder.setCancelable(false);
-        builder.setView(R.layout.progress_layout);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                while (!uriTask.isComplete());
-                Uri urlImage = uriTask.getResult();
-                imageUrl = urlImage.toString();
                 updateData();
-                dialog.dismiss();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                dialog.dismiss();
             }
         });
     }
-    public void updateData(){
+
+    public void updateData() {
         romaji = updateRomaji.getText().toString().trim();
         desc = updateDesc.getText().toString().trim();
-        example = updateExample.getText().toString();
-        DataClass dataClass = new DataClass(romaji, desc, example, imageUrl);
+        example = updateExample.getText().toString().trim();
+        japaneseChar = updateJapaneseChar.getText().toString().trim();
+
+        DataClass dataClass = new DataClass(romaji, desc, example, japaneseChar);
         databaseReference.setValue(dataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    StorageReference reference = FirebaseStorage.getInstance().getReferenceFromUrl(oldImageURL);
-                    reference.delete();
+                if (task.isSuccessful()) {
                     Toast.makeText(UpdateActivity.this, "Updated", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -129,8 +92,9 @@ public class UpdateActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(UpdateActivity.this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(UpdateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 }
+

@@ -4,7 +4,10 @@
         android:title="Profile" />
     <item
         android:id="@+id/navAdminPanel"
-        android:title="AdminPanel" />
+        android:title="Kana Management" />
+    <item
+        android:id="@+id/navUserPanel"
+        android:title="Users" />
     <item
         android:id="@+id/navLogout"
         android:title="Logout" />

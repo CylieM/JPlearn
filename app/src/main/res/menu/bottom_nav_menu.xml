@@ -19,6 +19,6 @@
         android:title="NihongoRace" />
     <item
         android:id="@+id/navProfile"
-        android:icon="@drawable/profile"
+        android:icon="@drawable/ic_person_24"
         android:title="Profile" />
 </menu>

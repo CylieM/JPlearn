@@ -15,10 +15,61 @@
         android:theme="@style/Theme.Jlearnn"
         tools:targetApi="31">
         <activity
+            android:name=".LessonReview"
+            android:exported="false" />
+        <activity
+            android:name=".Vocab"
+            android:exported="false" />
+        <activity
+            android:name=".TestYourself"
+            android:exported="false" />
+        <activity
+            android:name=".LessonDiscussionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LessonsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StartMultiplayerGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StartGameRoomActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ForgotPasswordBActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Profile"
+            android:exported="false" />
+        <activity
+            android:name=".MultiplayerGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PracticeNihongoRaceActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
             android:name=".UpdateActivity"
             android:exported="false" />
         <activity
             android:name=".DetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
+            android:name=".GameRoomActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
+            android:name=".JoinRoomActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
@@ -30,7 +81,11 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
-            android:name=".UserActivity"
+            android:name=".KanaShootActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
+            android:name=".navBar"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
@@ -38,7 +93,7 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name=".RegistrationActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
             <intent-filter>

@@ -10,19 +10,25 @@
     android:layout_marginVertical="10dp"
     app:cardCornerRadius="20dp"
     app:cardElevation="8dp">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.google.android.material.imageview.ShapeableImageView
+
+        <TextView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:id="@+id/recImage"
-            android:src="@drawable/uploadimg"
+            android:id="@+id/recJapaneseChar"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"/>
+            android:background="@drawable/circle_background"
+            android:gravity="center"
+            android:text="あ"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true" />
+
         <TextView
             android:layout_width="120dp"
             android:layout_height="30dp"
@@ -32,7 +38,8 @@
             android:textSize="20sp"
             android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
-            android:layout_toEndOf="@id/recImage"/>
+            android:layout_toEndOf="@id/recJapaneseChar"/>
+
         <TextView
             android:layout_width="80dp"
             android:layout_height="30dp"
@@ -44,6 +51,7 @@
             android:textAlignment="center"
             android:textColor="@color/myblue"
             android:textSize="16sp"/>
+
         <TextView
             android:layout_width="140dp"
             android:layout_height="wrap_content"
@@ -51,10 +59,11 @@
             android:text="desc"
             android:textColor="@color/myblue"
             android:textSize="14sp"
-            android:layout_toEndOf="@id/recImage"
+            android:layout_toEndOf="@id/recJapaneseChar"
             android:layout_below="@id/recRomaji"
             android:layout_marginStart="20dp"
             android:maxLines="1"
             android:layout_marginBottom="12dp"/>
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

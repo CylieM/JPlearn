@@ -1,16 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".NihongoRaceFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:text="NihongoRace Fragment" />
+    <Button
+        android:id="@+id/btnPlay"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Play"
+        android:textSize="25sp"
+        android:backgroundTint="@color/myblue"/>
 
-</FrameLayout>
+    <Button
+        android:id="@+id/btnJoinRoom"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Join Room"
+        android:textSize="25sp"
+        android:backgroundTint="@color/myblue"/>
+
+    <Button
+        android:id="@+id/btnCreateRoom"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Create Room"
+        android:textSize="25sp"
+        android:backgroundTint="@color/myblue"/>
+
+    <Button
+        android:id="@+id/btnPractice"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Practice"
+        android:textSize="25sp"
+        android:backgroundTint="@color/myblue"/>
+</LinearLayout>

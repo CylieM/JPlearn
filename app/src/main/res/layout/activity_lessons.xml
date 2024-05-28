@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LessonsActivity">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="889dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="1dp"
+        tools:ignore="MissingConstraints">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="738dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="193dp"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/rounded_border"
+                    android:backgroundTint="#d34746">
+
+
+                    <TextView
+                        android:id="@+id/tvFront"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="こんにちは"
+                        android:textColor="@color/black"
+                        android:textSize="48sp"
+                        android:textStyle="bold" />
+
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="#ff00d6"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingLeft="120dp"
+                        android:paddingRight="120dp">
+
+                        <TextView
+                            android:id="@+id/tvBtnExample"
+                            android:layout_width="11dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Test"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageButton
+                                android:id="@+id/btnPrev"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@color/white"
+                                android:rotation="360"
+                                app:srcCompat="@drawable/__1_1_removebg_previewssssss"
+                                tools:srcCompat="@drawable/__1_1_removebg_previewssssss" />
+
+                            <EditText
+                                android:id="@+id/txtUserInput"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ems="10"
+                                android:inputType="textPersonName" />
+
+                            <ImageButton
+                                android:id="@+id/btnNext"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@color/white"
+                                app:srcCompat="@drawable/arrright"
+                                tools:srcCompat="@drawable/arrright" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:paddingLeft="45dp"
+
+                    android:paddingRight="45dp"
+                    android:paddingBottom="30dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp">
+
+                        <ImageButton
+                            android:id="@+id/imageButton17"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_round_radius"
+                            android:backgroundTint="@color/white"
+                            android:elevation="8px"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:foregroundTint="#2196F3"
+                            android:translationZ="4dp"
+                            app:srcCompat="@drawable/screenshot_1710527692533_removebg_preview_40" />
+
+
+                        <ImageButton
+                            android:id="@+id/imageButton18"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+
+                            android:layout_weight="1"
+                            android:background="@drawable/button_round_radius"
+                            android:backgroundTint="@color/white"
+                            android:elevation="4dp"
+                            android:translationZ="4dp"
+                            app:srcCompat="@drawable/oip_removebg_preview_4_4" />
+
+                        <ImageButton
+                            android:id="@+id/imageButton19"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/button_round_radius"
+                            android:backgroundTint="@color/white"
+                            android:elevation="4dp"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:foregroundGravity="bottom"
+                            android:translationZ="4dp"
+                            app:srcCompat="@drawable/speaker_or_volume_icon_free_vector_removebg_preview_2_67_2_30" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_marginLeft="30dp"
+            android:background="#e8d320"
+            android:backgroundTint="#e8d320"
+            app:srcCompat="@drawable/objex_unlimited_black_line1"
+            tools:srcCompat="@drawable/objex_unlimited_black_line1___copy" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

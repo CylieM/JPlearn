@@ -33,11 +33,13 @@ public class CRUD extends AppCompatActivity {
     List<DataClass> dataList;
     MyAdapter adapter;
     SearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crud);
-       recyclerView = findViewById(R.id.recyclerView);
+
+        recyclerView = findViewById(R.id.recyclerView);
         fab = findViewById(R.id.fab);
         searchView = findViewById(R.id.search);
         searchView.clearFocus();
@@ -48,39 +50,48 @@ public class CRUD extends AppCompatActivity {
         builder.setView(R.layout.progress_layout);
         AlertDialog dialog = builder.create();
         dialog.show();
+
         dataList = new ArrayList<>();
         adapter = new MyAdapter(CRUD.this, dataList);
         recyclerView.setAdapter(adapter);
-        databaseReference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Jlearn");
+        databaseReference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Lessons");
+
         dialog.show();
-eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
-@Override
+
+        eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 dataList.clear();
-                for (DataSnapshot itemSnapshot: snapshot.getChildren()){
-                    DataClass dataClass = itemSnapshot.getValue(DataClass.class);
-                    dataClass.setKey(itemSnapshot.getKey());
-        dataList.add(dataClass);
+                for (DataSnapshot lessonSnapshot : snapshot.getChildren()) {
+                    for (DataSnapshot itemSnapshot : lessonSnapshot.getChildren()) {
+                        DataClass dataClass = itemSnapshot.getValue(DataClass.class);
+                        dataClass.setKey(itemSnapshot.getKey());
+                        dataList.add(dataClass);
+                    }
                 }
                 adapter.notifyDataSetChanged();
                 dialog.dismiss();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 dialog.dismiss();
             }
         });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-    return false;
+                return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
-               searchList(newText);
+                searchList(newText);
                 return true;
             }
         });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,13 +100,14 @@ eventListener = databaseReference.addValueEventListener(new ValueEventListener()
             }
         });
     }
-    public void searchList(String text){
+
+    public void searchList(String text) {
         ArrayList<DataClass> searchList = new ArrayList<>();
-        for (DataClass dataClass: dataList){
-            if (dataClass.getDataRomaji().toLowerCase().contains(text.toLowerCase())){
+        for (DataClass dataClass : dataList) {
+            if (dataClass.getDataRomaji().toLowerCase().contains(text.toLowerCase())) {
                 searchList.add(dataClass);
             }
-}
-adapter.searchDataList(searchList);
+        }
+        adapter.searchDataList(searchList);
     }
 }

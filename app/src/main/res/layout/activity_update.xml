@@ -29,13 +29,16 @@
                 android:textSize="30sp"
                 android:textAlignment="center"
                 android:textColor="@color/myblue"/>
-            <ImageView
+            <EditText
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:src="@drawable/uploadimg"
-                android:id="@+id/updateImage"
-                android:layout_marginTop="10dp"
-                android:scaleType="fitXY"/>
+                android:layout_height="60dp"
+                android:id="@+id/updateJapaneseChar"
+                android:background="@drawable/maroon_border"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:hint="Enter romaji"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/myblue"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="60dp"

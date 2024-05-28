@@ -8,15 +8,17 @@
     android:orientation="vertical"
     tools:context=".DetailActivity">
 
-    <ImageView
-        android:layout_width="400dp"
-        android:layout_height="200dp"
-        android:id="@+id/detailImage"
-        android:padding="8dp"
-        android:layout_gravity="center"
-        android:src="@drawable/uploadimg"
-        android:scaleType="fitCenter"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/JapaneseChar"
+        android:text="Character"
+        android:layout_marginTop="14dp"
+        android:textSize="50sp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="12dp"
+        android:textColor="@color/myblue"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -46,6 +48,16 @@
         android:text="Description"
         android:layout_gravity="center"
         android:id="@+id/detailDesc"
+        android:textSize="18sp"
+        android:textColor="@color/myblue"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
+        android:text="Lesson Number"
+        android:layout_gravity="center"
+        android:id="@+id/LessonNumber"
         android:textSize="18sp"
         android:textColor="@color/myblue"/>
     <RelativeLayout

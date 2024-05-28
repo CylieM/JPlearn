@@ -17,55 +17,63 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private Context context;
     private List<DataClass> dataList;
+
     public MyAdapter(Context context, List<DataClass> dataList) {
         this.context = context;
         this.dataList = dataList;
     }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reecycler_item, parent, false);
         return new MyViewHolder(view);
     }
+
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Glide.with(context).load(dataList.get(position).getDataImage()).into(holder.recImage);
+        holder.recJapaneseChar.setText(dataList.get(position).getJapaneseChar());
         holder.recRomaji.setText(dataList.get(position).getDataRomaji());
         holder.recDesc.setText(dataList.get(position).getDataDesc());
-       // holder.recExample.setText(dataList.get(position).getDataExample());
+        // holder.recExample.setText(dataList.get(position).getDataExample());
+
         holder.recCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra("Image", dataList.get(holder.getAdapterPosition()).getDataImage());
+                intent.putExtra("JapaneseChar", dataList.get(holder.getAdapterPosition()).getJapaneseChar());
                 intent.putExtra("Description", dataList.get(holder.getAdapterPosition()).getDataDesc());
                 intent.putExtra("Romaji", dataList.get(holder.getAdapterPosition()).getDataRomaji());
-                intent.putExtra("Key",dataList.get(holder.getAdapterPosition()).getKey());
+                intent.putExtra("Key", dataList.get(holder.getAdapterPosition()).getKey());
                 intent.putExtra("Example", dataList.get(holder.getAdapterPosition()).getDataExample());
                 context.startActivity(intent);
             }
         });
     }
+
     @Override
     public int getItemCount() {
         return dataList.size();
     }
-    public void searchDataList(ArrayList<DataClass> searchList){
+
+    public void searchDataList(ArrayList<DataClass> searchList) {
         dataList = searchList;
         notifyDataSetChanged();
     }
 }
-class MyViewHolder extends RecyclerView.ViewHolder{
-    ImageView recImage;
-    TextView recRomaji, recDesc;
+
+class MyViewHolder extends RecyclerView.ViewHolder {
+    TextView recJapaneseChar, recRomaji, recDesc;
     CardView recCard;
+
     public MyViewHolder(@NonNull View itemView) {
         super(itemView);
-        recImage = itemView.findViewById(R.id.recImage);
+        recJapaneseChar = itemView.findViewById(R.id.recJapaneseChar);
         recCard = itemView.findViewById(R.id.recCard);
         recDesc = itemView.findViewById(R.id.recDesc);
         recRomaji = itemView.findViewById(R.id.recRomaji);
-        //recExample = itemView.findViewById(R.id.recExample);
+        // recExample = itemView.findViewById(R.id.recExample);
     }
 }
+
 
