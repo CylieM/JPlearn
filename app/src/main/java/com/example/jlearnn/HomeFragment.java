@@ -12,25 +12,14 @@ import android.widget.Button;
 
 public class HomeFragment extends Fragment {
 
-    private String email;
 
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            email = getArguments().getString("email");
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        // Set the email text
-
 
         // Handle button clicks
         Button btnLessons = view.findViewById(R.id.btnLessons);
