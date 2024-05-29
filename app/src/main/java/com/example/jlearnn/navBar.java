@@ -10,18 +10,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class navBar extends AppCompatActivity {
@@ -126,7 +122,7 @@ public class navBar extends AppCompatActivity {
             handleLogout();
             return true;
         } else if (itemId == R.id.navAdminPanel) {
-            startActivity(new Intent(navBar.this, LessonItemCRUD.class));
+            startActivity(new Intent(navBar.this, LessonItemList.class));
             return true;
         } else if (itemId == R.id.navUserPanel) {
             startActivity(new Intent(navBar.this, UserManagementActivity.class));

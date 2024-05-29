@@ -20,7 +20,7 @@ public class LessonItemDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_lesson_item_detail);
 
         detailDesc = findViewById(R.id.detailDesc);
         detailRomaji = findViewById(R.id.detailRomaji);
@@ -53,7 +53,7 @@ public class LessonItemDetailActivity extends AppCompatActivity {
                         .getReference("Lessons");
                 reference.child(key).removeValue();
                 Toast.makeText(LessonItemDetailActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), LessonItemCRUD.class));
+                startActivity(new Intent(getApplicationContext(), LessonItemList.class));
                 finish();
             }
         });

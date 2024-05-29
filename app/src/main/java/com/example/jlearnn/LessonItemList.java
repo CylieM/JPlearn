@@ -19,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
-public class LessonItemCRUD extends AppCompatActivity {
+public class LessonItemList extends AppCompatActivity {
     FloatingActionButton fab;
     DatabaseReference databaseReference;
     ValueEventListener eventListener;
@@ -31,22 +31,22 @@ public class LessonItemCRUD extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_crud);
+        setContentView(R.layout.activity_lesson_item_list);
 
         recyclerView = findViewById(R.id.recyclerView);
         fab = findViewById(R.id.fab);
         searchView = findViewById(R.id.search);
         searchView.clearFocus();
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(LessonItemCRUD.this, 1);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(LessonItemList.this, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
-        AlertDialog.Builder builder = new AlertDialog.Builder(LessonItemCRUD.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(LessonItemList.this);
         builder.setCancelable(false);
         builder.setView(R.layout.progress_layout);
         AlertDialog dialog = builder.create();
         dialog.show();
 
         dataList = new ArrayList<>();
-        adapter = new LessonItemAdapter(LessonItemCRUD.this, dataList);
+        adapter = new LessonItemAdapter(LessonItemList.this, dataList);
         recyclerView.setAdapter(adapter);
         databaseReference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("Lessons");
 
@@ -89,7 +89,7 @@ public class LessonItemCRUD extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LessonItemCRUD.this, LessonItemUploadActivity.class);
+                Intent intent = new Intent(LessonItemList.this, LessonItemUploadActivity.class);
                 startActivity(intent);
             }
         });
