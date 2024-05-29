@@ -25,108 +25,122 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class navBar extends AppCompatActivity {
-
-    Button btnLogOut;
-    FirebaseAuth firebaseAuth;
+    UserModel userModel;
     FirebaseUser user;
     private BottomNavigationView bottomNavigationView;
-    private FirebaseAuth.AuthStateListener authStateListener;
-    TextView txtUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navbar);
-        bottomNavigationView = findViewById(R.id.bottomNavView);
-        firebaseAuth = FirebaseAuth.getInstance();
-        user = firebaseAuth.getCurrentUser();
-        String email = getIntent().getStringExtra("email");  // Retrieve the email
-        if (user == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                int itemId = menuItem.getItemId();
-                if (itemId == R.id.navHome) {
-                    loadFragment(new HomeFragment(), false);
-                } else if (itemId == R.id.navLeaderboard) {
-                    loadFragment(new LeaderboardFragment(), false);
-                } else if (itemId == R.id.navKanashoot) {
-                    // Start KanaShootActivity
-                    startActivity(new Intent(navBar.this, KanaShootActivity.class));
-                    // Finish the current activity to prevent going back to it from KanaShootActivity
-                    finish();
-                } else if (itemId == R.id.navNihongorace) {
-                    loadFragment(new NihongoRaceFragment(), false);
-                } else if (itemId == R.id.navProfile) { //nav Profile
-                    getUserRole(user.getUid(), new UserRoleCallback() {
-                        @Override
-                        public void onRoleRetrieved(String role) {
-                            View view = bottomNavigationView.findViewById(R.id.navProfile);
-                            PopupMenu popupMenu = new PopupMenu(navBar.this, view);
-
-                            // Inflate the appropriate menu layout based on the user's role
-                            if ("Admin".equals(role)) {
-                                popupMenu.getMenuInflater().inflate(R.menu.profile_menu, popupMenu.getMenu()); // Admin profile menu
-                            } else if ("Teacher".equals(role)) {
-                                popupMenu.getMenuInflater().inflate(R.menu.profile_menu_teacher, popupMenu.getMenu()); // Teacher profile menu
-                            } else {
-                                popupMenu.getMenuInflater().inflate(R.menu.profile_menu_student, popupMenu.getMenu()); // Student profile menu
-                            }
-
-                            popupMenu.show();
-                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem item) {
-                                    int itemId = item.getItemId();
-                                    if (itemId == R.id.navProfile) {
-                                        loadFragment(new ProfileFragment(), false);
-                                        return true;
-                                    } else if (itemId == R.id.navLogout) {
-                                        // Handle logout
-                                        firebaseAuth.signOut();
-                                        // Redirect to login activity
-                                        Intent intent = new Intent(navBar.this, LoginActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                        return true;
-                                    } else if (itemId == R.id.navAdminPanel) {
-                                        // Open the UploadActivity when the AdminPanel item is clicked
-                                        startActivity(new Intent(navBar.this, LessonItemCRUD.class));
-                                        return true;
-                                    } else if (itemId == R.id.navUserPanel) {
-                                        // Redirect to user management activity
-                                        startActivity(new Intent(navBar.this, UserManagementActivity.class));
-                                        return true;
-                                    }
-                                    return false;
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onError(String error) {
-                            // Handle the error
-                            Log.e("User Role", "Error: " + error);
-                        }
-                    });
-                    return false;  // return false to not select the profile item
-                }
-                return true;
-            }
-
-        });
-
-
-        // Load HomeFragment by default
+        initializeComponents();
+        checkUserAuthentication();
+        setBottomNavigationListener();
         loadFragment(new HomeFragment(), true);
     }
 
-    private void loadFragment(Fragment fragment, boolean isAppInitialized) {
+    private void initializeComponents() { // Initializes the necessary UI components and the UserModel.
+        bottomNavigationView = findViewById(R.id.bottomNavView);
+        userModel = new UserModel();
+        user = userModel.getFirebaseAuth().getCurrentUser();
+    }
+
+    private void checkUserAuthentication() { //Checks if the user is authenticated. If not, redirects to the login activity.
+        if (user == null) {
+            redirectToLogin();
+        }
+    }
+
+    private void redirectToLogin() { //Redirects the user to the login activity.
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void setBottomNavigationListener() { // Sets the listener for the bottom navigation view to handle item selections.
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                return handleNavigationItemSelected(menuItem.getItemId());
+            }
+        });
+    }
+
+    private boolean handleNavigationItemSelected(int itemId) { //Handles the selection of the profile item in the bottom navigation view.
+        if (itemId == R.id.navHome) {
+            loadFragment(new HomeFragment(), false);
+        } else if (itemId == R.id.navLeaderboard) {
+            loadFragment(new LeaderboardFragment(), false);
+        } else if (itemId == R.id.navKanashoot) {
+            startActivity(new Intent(navBar.this, KanaShootActivity.class));
+            finish();
+        } else if (itemId == R.id.navNihongorace) {
+            loadFragment(new NihongoRaceFragment(), false);
+        } else if (itemId == R.id.navProfile) {
+            handleProfileSelection();
+            return false;  // return false to not select the profile item
+        }
+        return true;
+    }
+
+    private void handleProfileSelection() {
+        getUserRole(user.getUid(), new UserRoleCallback() {
+            @Override
+            public void onRoleRetrieved(String role) {
+                showProfilePopupMenu(role);
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("User Role", "Error: " + error);
+            }
+        });
+    }
+
+    private void showProfilePopupMenu(String role) { //Displays the profile popup menu based on the user's role.
+        View view = bottomNavigationView.findViewById(R.id.navProfile);
+        PopupMenu popupMenu = new PopupMenu(navBar.this, view);
+
+        if ("Admin".equals(role)) {
+            popupMenu.getMenuInflater().inflate(R.menu.profile_menu, popupMenu.getMenu());
+        } else if ("Teacher".equals(role)) {
+            popupMenu.getMenuInflater().inflate(R.menu.profile_menu_teacher, popupMenu.getMenu());
+        } else {
+            popupMenu.getMenuInflater().inflate(R.menu.profile_menu_student, popupMenu.getMenu());
+        }
+
+        popupMenu.show();
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                return handleProfilePopupMenuItemClick(item.getItemId());
+            }
+        });
+    }
+
+    private boolean handleProfilePopupMenuItemClick(int itemId) {
+        if (itemId == R.id.navProfile) {
+            loadFragment(new ProfileFragment(), false);
+            return true;
+        } else if (itemId == R.id.navLogout) {
+            handleLogout();
+            return true;
+        } else if (itemId == R.id.navAdminPanel) {
+            startActivity(new Intent(navBar.this, LessonItemCRUD.class));
+            return true;
+        } else if (itemId == R.id.navUserPanel) {
+            startActivity(new Intent(navBar.this, UserManagementActivity.class));
+            return true;
+        }
+        return false;
+    }
+
+    private void handleLogout() { //Logs out the user and redirects to the login activity.
+        userModel.getFirebaseAuth().signOut();
+        redirectToLogin();
+    }
+
+    private void loadFragment(Fragment fragment, boolean isAppInitialized) { //Loads a fragment into the frame layout.
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (isAppInitialized) {
@@ -136,17 +150,14 @@ public class navBar extends AppCompatActivity {
         }
         fragmentTransaction.commit();
     }
+
     public interface UserRoleCallback {
         void onRoleRetrieved(String role);
         void onError(String error);
     }
 
-
-    private void getUserRole(String userId, UserRoleCallback callback) {
-        DatabaseReference userRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("users")
-                .child(userId);
-
+    private void getUserRole(String userId, UserRoleCallback callback) { //Fetches the user's role from the database.
+        DatabaseReference userRef = userModel.getUserRef(userId);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -164,7 +175,4 @@ public class navBar extends AppCompatActivity {
             }
         });
     }
-
-
-
 }

@@ -76,12 +76,14 @@ public class NihongoRaceFragment extends Fragment {
                     handleCreateRoomButtonVisibility(userRole);
                 } else {
                     // Handle the case where user data doesn't exist
+                    Log.w("NihongoRaceFragment", "User data does not exist.");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle any errors (e.g., database read failure)
+                Log.e("NihongoRaceFragment", "Database error: " + databaseError.getMessage());
             }
         });
     }

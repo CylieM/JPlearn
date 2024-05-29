@@ -42,8 +42,6 @@ import android.Manifest;
 public class ProfileFragment extends Fragment {
 
     private TextView emailTextView, usernameTextView;
-    private TextView dailyStreakTextView, hiraganaProgressTextView, katakanaProgressTextView, vocabProgressTextView;
-    private TextView kanaShootWaveTextView, kanaShootHSTextView, nihongoRaceTextView, nihongoRaceWinsTextView;
     private ImageView detailImage;
     private DatabaseReference usersRef;
     private FirebaseAuth firebaseAuth;
@@ -191,4 +189,3 @@ public class ProfileFragment extends Fragment {
 
 
 }
-

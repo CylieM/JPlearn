@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class UserManagementActivity extends AppCompatActivity implements UserAdapter.OnItemClickListener {
-    FloatingActionButton fab;
+
     DatabaseReference databaseReference;
     ValueEventListener eventListener;
     RecyclerView recyclerView;
@@ -40,7 +40,6 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
 
 
         recyclerView = findViewById(R.id.recyclerView);
-        fab = findViewById(R.id.fab);
         searchView = findViewById(R.id.search);
         searchView.clearFocus();
 
@@ -97,13 +96,7 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
             }
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(UserManagementActivity.this, LessonItemUploadActivity.class);
-                startActivity(intent);
-            }
-        });
+
     }
 
 
@@ -167,5 +160,4 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     }
 
 }
-
 

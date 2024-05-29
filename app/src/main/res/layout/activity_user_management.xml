@@ -31,17 +31,6 @@
         android:id="@+id/recyclerView"
         android:scrollbars="vertical"/>
 
-    <!-- FloatingActionButton -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="40dp"
-        android:backgroundTint="@color/lavender"
-        app:tint = "@color/white"
-        android:src="@drawable/ic_baseline_add_24" />
 
     <!-- Profile Fragment Container -->
     <FrameLayout
