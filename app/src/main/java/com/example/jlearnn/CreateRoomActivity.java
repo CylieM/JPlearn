@@ -49,7 +49,7 @@ public class CreateRoomActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_room);
+        setContentView(R.layout.activity_create_room);
 
         gameCodeTextView = findViewById(R.id.gameCodeTextView);
         startButton = findViewById(R.id.startButton);
