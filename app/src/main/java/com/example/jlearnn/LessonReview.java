@@ -50,6 +50,8 @@ public class LessonReview extends AppCompatActivity {
             if (currentLessonIndex < lessonCount - 1) {
                 currentLessonIndex++;
                 loadLesson(currentLessonIndex);
+            } else {
+                finish();
             }
         });
 
