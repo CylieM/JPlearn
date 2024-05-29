@@ -22,24 +22,57 @@ import com.google.firebase.database.ValueEventListener;
 
 public class NihongoRaceFragment extends Fragment {
 
+    private UserModel userModel;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_nihongo_race, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_nihongo_race, container, false);
+        userModel = new UserModel();
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Button playButton = view.findViewById(R.id.btnPlay);
+        Button joinRoomButton = view.findViewById(R.id.btnJoinRoom);
+        Button practiceButton = view.findViewById(R.id.btnPractice);
+
+        String userUid = userModel.getFirebaseAuth().getCurrentUser().getUid();
+        getUserRole(userUid);
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkOrCreateLobby();
+            }
+        });
+
+        joinRoomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectToJoinRoom();
+            }
+        });
+
+        practiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectToPracticeActivity();
+            }
+        });
     }
 
     private void getUserRole(String userId) {
-        DatabaseReference userRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("users")
-                .child(userId);
+        DatabaseReference userRef = userModel.getUserRef(userId);
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String userRole = dataSnapshot.child("role").getValue(String.class);
-                    // Now you have the user's role, proceed with handling visibility
                     handleCreateRoomButtonVisibility(userRole);
                 } else {
                     // Handle the case where user data doesn't exist
@@ -54,62 +87,13 @@ public class NihongoRaceFragment extends Fragment {
     }
 
     private void handleCreateRoomButtonVisibility(String userRole) {
-        Log.d("UserRole", "User role retrieved: " + userRole); // Log the retrieved user role
-
         Button createRoomButton = getView().findViewById(R.id.btnCreateRoom);
 
         if ("Teacher".equals(userRole) || "Admin".equals(userRole)) {
-            // User is a teacher or admin, make the button visible
             createRoomButton.setVisibility(View.VISIBLE);
         } else {
-            // User is not a teacher or admin, hide the button
             createRoomButton.setVisibility(View.GONE);
         }
-
-        Log.d("ButtonVisibility", "Setting button visibility for role: " + userRole); // Log the role for which button visibility is being set
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        Button playButton = view.findViewById(R.id.btnPlay);
-        Button joinRoomButton = view.findViewById(R.id.btnJoinRoom);
-        Button createRoomButton = view.findViewById(R.id.btnCreateRoom);
-        Button practiceButton = view.findViewById(R.id.btnPractice);
-        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        getUserRole(userUid);
-
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkOrCreateLobby();
-            }
-        });
-
-        joinRoomButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), JoinRoomActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        createRoomButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), GameRoomActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        practiceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PracticeNihongoRaceActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     private void checkOrCreateLobby() {
@@ -147,7 +131,7 @@ public class NihongoRaceFragment extends Fragment {
     private void createLobby() {
         DatabaseReference lobbyRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("lobbies");
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = userModel.getFirebaseAuth().getCurrentUser().getUid();
         String newLobbyId = lobbyRef.push().getKey();
         if (newLobbyId != null) {
             lobbyRef.child(newLobbyId).child("creator").setValue(userId);
@@ -156,5 +140,14 @@ public class NihongoRaceFragment extends Fragment {
             startActivity(intent);
         }
     }
-}
 
+    private void redirectToJoinRoom() {
+        Intent intent = new Intent(getActivity(), JoinRoomActivity.class);
+        startActivity(intent);
+    }
+
+    private void redirectToPracticeActivity() {
+        Intent intent = new Intent(getActivity(), PracticeNihongoRaceActivity.class);
+        startActivity(intent);
+    }
+}
