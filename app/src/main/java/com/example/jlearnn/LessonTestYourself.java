@@ -130,15 +130,6 @@ public class LessonTestYourself extends AppCompatActivity {
             }
         });
     }
-    private void saveIncorrectAnswer(String character, String userInput) {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference userIncorrectAnswersRef = database.child("users").child(userId).child("incorrectAnswers");
-        userIncorrectAnswersRef.child(character).setValue(userInput)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "Incorrect answer saved successfully"))
-                .addOnFailureListener(e -> Log.e(TAG, "Error saving incorrect answer", e));
-    }
-    public void onCancelled(DatabaseError databaseError) {
-        Log.e(TAG, "Error checking progress", databaseError.toException());
-    }
+
 }
 
