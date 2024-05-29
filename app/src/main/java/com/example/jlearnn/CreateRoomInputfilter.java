@@ -3,15 +3,15 @@ package com.example.jlearnn;
 import android.text.InputFilter;
 import android.text.Spanned;
 
-public class GameRoomInputFilter implements InputFilter {
+public class CreateRoomInputfilter implements InputFilter {
     private int min, max;
 
-    public GameRoomInputFilter(int min, int max) {
+    public CreateRoomInputfilter(int min, int max) {
         this.min = min;
         this.max = max;
     }
 
-    public GameRoomInputFilter(String min, String max) {
+    public CreateRoomInputfilter(String min, String max) {
         this.min = Integer.parseInt(min);
         this.max = Integer.parseInt(max);
     }

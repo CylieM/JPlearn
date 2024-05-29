@@ -34,7 +34,7 @@ public class JoinRoomActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String gameCode = gameCodeEditText.getText().toString().trim();
                 if (!gameCode.isEmpty()) {
-                    Intent intent = new Intent(JoinRoomActivity.this, GameRoomActivity.class);
+                    Intent intent = new Intent(JoinRoomActivity.this, CreateRoomActivity.class);
                     intent.putExtra("GAME_CODE", gameCode);
                     startActivity(intent);
                 }

@@ -30,7 +30,7 @@ import android.widget.EditText;
 
 
 
-public class GameRoomActivity extends AppCompatActivity {
+public class CreateRoomActivity extends AppCompatActivity {
 
     private TextView gameCodeTextView;
     private Button startButton;
@@ -84,7 +84,7 @@ public class GameRoomActivity extends AppCompatActivity {
 
 
         EditText timerInput = findViewById(R.id.timerInput);
-        timerInput.setFilters(new InputFilter[]{ new GameRoomInputFilter("1", "300") });
+        timerInput.setFilters(new InputFilter[]{ new CreateRoomInputfilter("1", "300") });
 
         // Initialize the sentences spinner
         Spinner sentencesSpinner = findViewById(R.id.sentencesSpinner);
@@ -161,7 +161,7 @@ public class GameRoomActivity extends AppCompatActivity {
                         Boolean gameStarted = gameStartedSnapshot.getValue(Boolean.class);
                         if (gameStarted != null && gameStarted) {
                             // Navigate to the game activity
-                            Intent intent = new Intent(GameRoomActivity.this, MultiplayerGameActivity.class);
+                            Intent intent = new Intent(CreateRoomActivity.this, MultiplayerGameActivity.class);
                             intent.putExtra("GAME_CODE", gameCode);
                             // Pass any other necessary data
                             startActivity(intent);
@@ -196,7 +196,7 @@ public class GameRoomActivity extends AppCompatActivity {
         gameRoomRef.child("gameStarted").setValue(true);
 
         // Navigate to the game activity
-        Intent intent = new Intent(GameRoomActivity.this, MultiplayerGameActivity.class);
+        Intent intent = new Intent(CreateRoomActivity.this, MultiplayerGameActivity.class);
         intent.putExtra("GAME_CODE", gameCode);
         // Pass the options to the game activity
         intent.putExtra("TIMER", timer);
