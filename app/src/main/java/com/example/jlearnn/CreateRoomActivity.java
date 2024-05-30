@@ -120,22 +120,22 @@ public class CreateRoomActivity extends AppCompatActivity {
                 String username = snapshot.getValue(String.class);
                 if (username != null) {
                     addUserToGameRoom(username);
-                    Log.d("GameRoomActivity", "Current user added to game room: " + username);
+
                 } else {
-                    Log.e("GameRoomActivity", "Username is null for current user");
+
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("GameRoomActivity", "Error fetching current user username: " + error.getMessage());
+      
             }
         });
     }
 
     private void addUserToGameRoom(String username) {
         gameRoomRef.child("players").child(userId).setValue(username);
-        Log.d("GameRoomActivity", "Adding user to game room: " + username);
+  
     }
     // Initialize the timer input
 
@@ -170,14 +170,14 @@ public class CreateRoomActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("GameRoomActivity", "Error fetching gameStarted flag: " + error.getMessage());
+           
                     }
                 });
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("GameRoomActivity", "Error fetching game room updates: " + error.getMessage());
+        
             }
         });
     }
