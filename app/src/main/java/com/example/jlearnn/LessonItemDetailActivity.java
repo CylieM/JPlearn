@@ -6,9 +6,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -26,7 +30,7 @@ public class LessonItemDetailActivity extends AppCompatActivity {
         detailRomaji = findViewById(R.id.detailRomaji);
         detailExample = findViewById(R.id.detailExample);
         detailJapaneseChar = findViewById(R.id.JapaneseChar);
-        detailLesson = findViewById(R.id.LessonNumber); // Add TextView for lesson number
+        detailLesson = findViewById(R.id.LessonNumber);
         deleteButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
 
@@ -49,12 +53,40 @@ public class LessonItemDetailActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference reference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
-                        .getReference("Lessons");
-                reference.child(key).removeValue();
-                Toast.makeText(LessonItemDetailActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), LessonItemList.class));
-                finish();
+                if (key == null || key.isEmpty()) {
+                    Toast.makeText(LessonItemDetailActivity.this, "Key is invalid", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Split the key to get the lesson number
+                String[] keyParts = key.split("_");
+                if (keyParts.length == 2) {
+                    String lessonNumber = keyParts[0];
+                    DatabaseReference reference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
+                            .getReference("Lessons")
+                            .child("Lesson " + lessonNumber)
+                            .child(key);
+
+                    reference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(LessonItemDetailActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), LessonItemList.class));
+                                finish();
+                            } else {
+                                Toast.makeText(LessonItemDetailActivity.this, "Failed to delete", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(LessonItemDetailActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    Toast.makeText(LessonItemDetailActivity.this, "Invalid key format", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -72,4 +104,5 @@ public class LessonItemDetailActivity extends AppCompatActivity {
         });
     }
 }
+
 
