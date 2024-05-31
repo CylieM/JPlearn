@@ -39,7 +39,7 @@ public class NihongoRaceFragment extends Fragment {
         Button playButton = view.findViewById(R.id.btnPlay);
         Button joinRoomButton = view.findViewById(R.id.btnJoinRoom);
         Button practiceButton = view.findViewById(R.id.btnPractice);
-
+        Button createRoomButton = view.findViewById(R.id.btnCreateRoom);
         String userUid = userModel.getFirebaseAuth().getCurrentUser().getUid();
         getUserRole(userUid);
 
@@ -63,7 +63,15 @@ public class NihongoRaceFragment extends Fragment {
                 redirectToPracticeActivity();
             }
         });
+        createRoomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CreateRoomActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
 
     private void getUserRole(String userId) {
         DatabaseReference userRef = userModel.getUserRef(userId);

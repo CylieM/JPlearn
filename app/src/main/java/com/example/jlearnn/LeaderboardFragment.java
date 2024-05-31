@@ -157,7 +157,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
 
         TextView usernameTextView = new TextView(getContext());
         usernameTextView.setText(username);
-        usernameTextView.setPadding(40, 8, 40, 8); // Increase left and right padding
+        usernameTextView.setPadding(40, 8, 240, 8); // Increase left and right padding
         usernameTextView.setMaxLines(1); // Limit to a single line
         usernameTextView.setEllipsize(TextUtils.TruncateAt.END); // Add ellipsis at the end if the text is too long
         tableRow.addView(usernameTextView);

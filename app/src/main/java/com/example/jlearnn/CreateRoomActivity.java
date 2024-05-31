@@ -110,6 +110,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                 charactersSpinner.setSelection(random.nextInt(charactersSpinner.getCount()));
             }
         });
+        checkUserRole();
     }
 
     private void fetchAndAddCurrentUser() {
@@ -227,7 +228,7 @@ public class CreateRoomActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String userRole = snapshot.getValue(String.class);
-                if ("student".equals(userRole)) {
+                if ("Student".equals(userRole)) {
                     // Hide UI elements for students
                     startButton.setVisibility(View.GONE);
                     timerInput.setVisibility(View.GONE);

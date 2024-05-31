@@ -21,39 +21,43 @@ import java.util.Map;
 public class LessonTestYourself extends AppCompatActivity {
 
     private static final String TAG = "Lesson421";
-    private TextView tvFront, tvCounter;
+    private TextView tvFront;
     private EditText txtUserInput;
     private ImageButton btnPrev, btnNext;
     private Map<String, Integer> counters = new HashMap<>();
     private int currentLessonIndex = 0; // Start from Lesson1
-    private int lessonCount = 5; // Total lessons
+    private int lessonCount; // Total lessons, will be dynamically set
 
     private DatabaseReference database;
     private String currentCharacter;
+    private UserModel userModel;
+    private String userId;
+    private String currentLesson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_yourself);
+        setContentView(R.layout.activity_lessons);
 
         // Initialize views
         tvFront = findViewById(R.id.tvFront);
         txtUserInput = findViewById(R.id.txtUserInput);
-        tvCounter = findViewById(R.id.tvCounter);
         btnPrev = findViewById(R.id.btnPrev);
         btnNext = findViewById(R.id.btnNext);
 
-        // Initialize Firebase Database
+        // Initialize UserModel
+        userModel = new UserModel();
+        userId = userModel.getFirebaseAuth().getCurrentUser().getUid();
         database = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
 
-        // Load the current lesson
-        loadLesson(currentLessonIndex);
+        // Fetch current lesson for the user
+        fetchCurrentLesson();
 
         // Set up click listener for btnNext
         btnNext.setOnClickListener(v -> {
             if (currentLessonIndex < lessonCount - 1) {
                 currentLessonIndex++;
-                loadLesson(currentLessonIndex);
+                loadLesson(currentLesson, currentLessonIndex);
             } else {
                 finish();
             }
@@ -62,9 +66,50 @@ public class LessonTestYourself extends AppCompatActivity {
         // Disable prev button click listener
         btnPrev.setOnClickListener(null);
     }
-    private void loadLesson(int index) {
-        // Construct the path based on the lesson index
-        String lessonPath = "Lessons/Lesson 1/1_" + (index + 1);
+
+    private void fetchCurrentLesson() {
+        userModel.getUserRef(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    currentLesson = dataSnapshot.child("currentLesson").getValue(String.class);
+                    // Count the number of items under the current lesson
+                    countLessonItems(currentLesson);
+                } else {
+                    Log.e(TAG, "User data does not exist for userId: " + userId);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Error fetching user data", databaseError.toException());
+            }
+        });
+    }
+
+    private void countLessonItems(String lesson) {
+        database.child("Lessons").child(lesson).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    lessonCount = (int) dataSnapshot.getChildrenCount();
+                    // Load the first item of the current lesson
+                    loadLesson(currentLesson, currentLessonIndex);
+                } else {
+                    Log.e(TAG, "Lesson does not exist: " + lesson);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Error counting lesson items", databaseError.toException());
+            }
+        });
+    }
+
+    private void loadLesson(String lesson, int index) {
+        // Construct the path based on the lesson number and item index
+        String lessonPath = "Lessons/" + lesson + "/" + lesson + "_" + (index + 1);
 
         // Fetch the lesson data from Realtime Database
         database.child(lessonPath).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -83,6 +128,7 @@ public class LessonTestYourself extends AppCompatActivity {
             }
         });
     }
+
     private void displayLesson(DataSnapshot dataSnapshot) {
         // Get data from Firebase Realtime Database
         currentCharacter = dataSnapshot.child("japaneseChar").getValue(String.class);
@@ -90,7 +136,6 @@ public class LessonTestYourself extends AppCompatActivity {
 
         // Display the data in the appropriate TextViews
         tvFront.setText(currentCharacter);
-        tvCounter.setText(currentCharacter + "="  + "/5");
         txtUserInput.setText(""); // Clear previous input
 
         // Check user input against the romaji
@@ -98,37 +143,20 @@ public class LessonTestYourself extends AppCompatActivity {
             if (!hasFocus) {
                 String userInput = txtUserInput.getText().toString().trim();
                 if (userInput.equalsIgnoreCase(romaji)) {
-                    // If user input matches the romaji, set background color to green and update counter
+                    // If user input matches the romaji, set background color to green
                     txtUserInput.setBackgroundColor(getResources().getColor(R.color.green));
-                    updateCounter(currentCharacter, 1);
                     Log.d(TAG, "Correct answer: " + userInput);
                 } else {
                     // If user input does not match the romaji, set background color to red
                     txtUserInput.setBackgroundColor(getResources().getColor(R.color.red));
+
                     Log.d(TAG, "Incorrect answer. User input: " + userInput + ", Correct answer: " + romaji);
                     Toast.makeText(this, "Next session will be in 3 hours", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-    private void updateCounter(String lessonKey, int increment) {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference userLessonRef = database.child("users").child(userId).child("itemProgress").child(currentCharacter);
-        userLessonRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Integer counter = dataSnapshot.getValue(Integer.class);
-                if (counter != null && counter < 5) {
-                    userLessonRef.setValue(counter + increment);
-                    tvCounter.setText(currentCharacter + "=" + (counter + increment) + "/5");
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "Error updating counter", databaseError.toException());
-            }
-        });
-    }
 
+                }
+            }
+        });
+    }
 }
+
 

@@ -38,7 +38,7 @@ public class LessonItemUploadActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.saveButton);
 
         for (int i = 0; i < lessons.length; i++) {
-            lessons[i] = "Lesson " + (i + 1);
+            lessons[i] = String.valueOf(i + 1);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, lessons);
@@ -63,6 +63,7 @@ public class LessonItemUploadActivity extends AppCompatActivity {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
+
 
         DatabaseReference lessonRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("Lessons")
