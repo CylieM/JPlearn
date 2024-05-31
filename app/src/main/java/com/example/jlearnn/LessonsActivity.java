@@ -26,7 +26,6 @@ public class LessonsActivity extends AppCompatActivity {
     private TextView tvFront;
     private EditText txtUserInput;
     private ImageButton btnPrev, btnNext;
-    private Map<String, Integer> counters = new HashMap<>();
     private int currentLessonIndex = 0; // Start from Lesson1
     private int lessonCount; // Total lessons, will be dynamically set
 
