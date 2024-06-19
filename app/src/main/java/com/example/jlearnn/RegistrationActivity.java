@@ -96,14 +96,15 @@ public class RegistrationActivity extends AppCompatActivity {
                                     if (user != null) {
                                         // Save username, profile picture, role, and additional stats to Realtime Database
                                         String userId = user.getUid();
+
+                                        // Initialize itemProgress for lesson1
                                         Map<String, Integer> itemProgress = new HashMap<>();
-                                        itemProgress.put("あ", 0);
-                                        itemProgress.put("い", 0);
-                                        itemProgress.put("う", 0);
-                                        itemProgress.put("え", 0);
-                                        itemProgress.put("お", 0);
+                                        for (int i = 1; i <= 5; i++) {
+                                            itemProgress.put("lesson1/item_" + i + "/counter", 0);
+                                        }
                                         Map<String, String> incorrectAnswers = new HashMap<>();
                                         incorrectAnswers.put("none", "none");
+
                                         // Default profile picture resource name
                                         String defaultProfilePicture = "usericon.png"; // Resource name of the default profile picture
                                         long currentTimeMillis = System.currentTimeMillis(); // Get the current time in milliseconds
@@ -129,8 +130,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                     Toast.makeText(RegistrationActivity.this, "SignUp unsuccessful: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
-
                         });
+
             }
         });
 
