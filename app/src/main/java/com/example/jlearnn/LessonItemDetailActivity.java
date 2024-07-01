@@ -1,10 +1,13 @@
 package com.example.jlearnn;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.media.MediaPlayer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +22,11 @@ import com.google.firebase.database.FirebaseDatabase;
 public class LessonItemDetailActivity extends AppCompatActivity {
     TextView detailDesc, detailRomaji, detailExample, detailJapaneseChar, detailLesson;
     FloatingActionButton deleteButton, editButton;
+    Button playAudio;
     String key = "";
+    MediaPlayer mediaPlayer;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +39,7 @@ public class LessonItemDetailActivity extends AppCompatActivity {
         detailLesson = findViewById(R.id.LessonNumber);
         deleteButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
+        playAudio = findViewById(R.id.playAudio);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -102,6 +109,36 @@ public class LessonItemDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        playAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Assuming you have a URL or a local resource for the audio file
+                String audioUrl = "https://example.com/path/to/audio/file.mp3"; // Replace with your audio URL
+
+                if (mediaPlayer == null) {
+                    mediaPlayer = new MediaPlayer();
+                }
+
+                try {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(audioUrl);
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                    Toast.makeText(LessonItemDetailActivity.this, "Playing Audio", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(LessonItemDetailActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+        super.onDestroy();
     }
 }
 
