@@ -60,6 +60,20 @@
         android:id="@+id/LessonNumber"
         android:textSize="18sp"
         android:textColor="@color/myblue"/>
+    <Button
+        android:id="@+id/playAudio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Play Audio"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:textSize="18sp"
+        android:background="@drawable/round_button"
+        android:textColor="@android:color/white"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
