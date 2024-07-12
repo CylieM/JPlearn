@@ -1,8 +1,11 @@
 package com.example.jlearnn;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -29,7 +32,9 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
     String key, lesson;
     DatabaseReference databaseReference;
     private Uri audioUri;
+    private static final int PICK_AUDIO_REQUEST = 1;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +45,7 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
         updateRomaji = findViewById(R.id.updateRomaji);
         updateExample = findViewById(R.id.updateExample);
         updateJapaneseChar = findViewById(R.id.updateJapaneseChar);
+        updateAudioButton = findViewById(R.id.updateAudioButton);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -63,28 +69,25 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
                 .child("Lesson " + lesson) // Assuming the lesson number is passed as a string, adjust this accordingly if it's an integer
                 .child(key);
 
-        updateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateData();
-            }
-        });
+        updateButton.setOnClickListener(view -> updateData());
 
-        updateAudioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Implement audio file selection logic here
-                // Example: Launch an intent to choose an audio file
-                // Replace with your actual implementation
-                // Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                // intent.setType("audio/*");
-                // startActivityForResult(Intent.createChooser(intent, "Select Audio"), 1);
+        updateAudioButton.setOnClickListener(v -> selectAudioFile());
+    }
 
-                // For demonstration purposes, setting a dummy URI
-                audioUri = Uri.parse("content://media/external/audio/media/12345");
-                Toast.makeText(LessonItemUpdateActivity.this, "Audio file selected", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void selectAudioFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("audio/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Audio"), PICK_AUDIO_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_AUDIO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            audioUri = data.getData();
+            Toast.makeText(LessonItemUpdateActivity.this, "Audio file selected: " + audioUri.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void updateData() {
@@ -102,12 +105,7 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
                     finish();
                 }
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(LessonItemUpdateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        }).addOnFailureListener(e -> Toast.makeText(LessonItemUpdateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
         // Upload audio file if audioUri is not null
         if (audioUri != null) {
@@ -116,8 +114,8 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
             Toast.makeText(this, "Please select an audio file", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void uploadAudio() {
-        // Replace "your_storage_path" with your actual Firebase Storage path
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("your_storage_path");
 
         // Generate a random UUID as the audio file name
@@ -129,45 +127,35 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
         UploadTask uploadTask = audioRef.putFile(audioUri);
 
         // Register observers to listen for upload progress or failures
-        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
+        uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw task.getException();
+            }
 
-                // Continue with the task to get the download URL
-                return audioRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    // Update the lesson item data with the new audio download URL
-                    databaseReference.child("audioUrl").setValue(downloadUri.toString())
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(LessonItemUpdateActivity.this, "Audio updated successfully", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(LessonItemUpdateActivity.this, "Failed to update audio", Toast.LENGTH_SHORT).show();
-                                    }
+            // Continue with the task to get the download URL
+            return audioRef.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUri = task.getResult();
+                // Update the lesson item data with the new audio download URL
+                databaseReference.child("audioUrl").setValue(downloadUri.toString())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(LessonItemUpdateActivity.this, "Audio updated successfully", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(LessonItemUpdateActivity.this, "Failed to update audio", Toast.LENGTH_SHORT).show();
                                 }
-                            });
-                } else {
-                    // Handle failures
-                    Toast.makeText(LessonItemUpdateActivity.this, "Failed to upload audio", Toast.LENGTH_SHORT).show();
-                }
+                            }
+                        });
+            } else {
+                // Handle failures
+                Toast.makeText(LessonItemUpdateActivity.this, "Failed to upload audio", Toast.LENGTH_SHORT).show();
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Handle exceptions
-                Toast.makeText(LessonItemUpdateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+        }).addOnFailureListener(e -> {
+            // Handle exceptions
+            Toast.makeText(LessonItemUpdateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
 }
-

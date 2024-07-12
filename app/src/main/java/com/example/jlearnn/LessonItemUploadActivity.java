@@ -1,10 +1,14 @@
 package com.example.jlearnn;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -34,6 +38,7 @@ public class LessonItemUploadActivity extends AppCompatActivity {
     Button uploadAudioButton;
     String[] lessons = new String[15];
 
+    private static final int PICK_AUDIO_REQUEST = 1;
     private Uri audioUri;
 
     @Override
@@ -56,28 +61,25 @@ public class LessonItemUploadActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, lessons);
         lessonSpinner.setAdapter(adapter);
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                uploadData();
-            }
-        });
+        saveButton.setOnClickListener(view -> uploadData());
 
-        uploadAudioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Implement audio file selection logic here
-                // Example: Launch an intent to choose an audio file
-                // Replace with your actual implementation
-                // Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                // intent.setType("audio/*");
-                // startActivityForResult(Intent.createChooser(intent, "Select Audio"), 1);
+        uploadAudioButton.setOnClickListener(v -> selectAudioFile());
+    }
 
-                // For demonstration purposes, setting a dummy URI
-                audioUri = Uri.parse("content://media/external/audio/media/12345");
-                Toast.makeText(LessonItemUploadActivity.this, "Audio file selected", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void selectAudioFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("audio/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Audio"), PICK_AUDIO_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_AUDIO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            audioUri = data.getData();
+            Toast.makeText(LessonItemUploadActivity.this, "Audio file selected: " + audioUri.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void uploadData() {
@@ -98,7 +100,6 @@ public class LessonItemUploadActivity extends AppCompatActivity {
             Toast.makeText(this, "Please select an audio file", Toast.LENGTH_SHORT).show();
         }
 
-
         DatabaseReference lessonRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("Lessons")
                 .child(selectedLesson);
@@ -106,13 +107,8 @@ public class LessonItemUploadActivity extends AppCompatActivity {
         lessonRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Get the number of items in the lesson
                 long itemCount = snapshot.getChildrenCount();
-
-                // Get the lesson number from the selectedLesson string
                 String lessonNumber = selectedLesson.substring(selectedLesson.lastIndexOf(" ") + 1);
-
-                // Construct the key with the format "lessonNumber_itemCount"
                 String key = lessonNumber + "_" + (itemCount + 1);
 
                 LessonItemDataClass lessonItemDataClass = new LessonItemDataClass(romaji, desc, example, japaneseChar);
@@ -141,47 +137,38 @@ public class LessonItemUploadActivity extends AppCompatActivity {
     }
 
     private void uploadAudio() {
-        // Replace "your_storage_path" with your actual Firebase Storage path
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("your_storage_path");
-
-        // Generate a random UUID as the audio file name
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("gs://jlearn-25b34.appspot.com/audios");
         String audioFileName = UUID.randomUUID().toString();
-
         StorageReference audioRef = storageRef.child(audioFileName);
 
-        // Upload file to Firebase Storage
         UploadTask uploadTask = audioRef.putFile(audioUri);
 
-        // Register observers to listen for upload progress or failures
-        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
+        uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw task.getException();
+            }
+            return audioRef.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUri = task.getResult();
+                Toast.makeText(LessonItemUploadActivity.this, "Audio uploaded successfully: " + downloadUri.toString(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(LessonItemUploadActivity.this, "Failed to upload audio", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> Toast.makeText(LessonItemUploadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
 
-                // Continue with the task to get the download URL
-                return audioRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    // Handle successful audio upload
-                    Toast.makeText(LessonItemUploadActivity.this, "Audio uploaded successfully: " + downloadUri.toString(), Toast.LENGTH_SHORT).show();
-                } else {
-                    // Handle failures
-                    Toast.makeText(LessonItemUploadActivity.this, "Failed to upload audio", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Handle exceptions
-                Toast.makeText(LessonItemUploadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+    private String getRealPathFromURI(Uri uri) {
+        String result;
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        if (cursor == null) {
+            result = uri.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
 }
-
