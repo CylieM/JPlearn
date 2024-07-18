@@ -70,7 +70,7 @@
                 android:gravity="start|center_vertical"
                 android:textColor="@color/myblue"/>
             <Button
-                android:id="@+id/uploadAudioButton"
+                android:id="@+id/updateAudioButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:text="Update Audio"

@@ -2,12 +2,12 @@ package com.example.jlearnn;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.media.MediaPlayer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -109,11 +109,12 @@ public class LessonItemDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         playAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Assuming you have a URL or a local resource for the audio file
-                String audioUrl = "https://example.com/path/to/audio/file.mp3"; // Replace with your audio URL
+                String audioUrl = "audios/"; // Replace with your audio URL
 
                 if (mediaPlayer == null) {
                     mediaPlayer = new MediaPlayer();
@@ -141,5 +142,3 @@ public class LessonItemDetailActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
-
-
