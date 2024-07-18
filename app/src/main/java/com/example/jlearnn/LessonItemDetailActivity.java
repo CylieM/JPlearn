@@ -13,11 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class LessonItemDetailActivity extends AppCompatActivity {
     TextView detailDesc, detailRomaji, detailExample, detailJapaneseChar, detailLesson;
@@ -57,80 +58,67 @@ public class LessonItemDetailActivity extends AppCompatActivity {
             }
         }
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (key == null || key.isEmpty()) {
-                    Toast.makeText(LessonItemDetailActivity.this, "Key is invalid", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        deleteButton.setOnClickListener(view -> {
+            if (key == null || key.isEmpty()) {
+                Toast.makeText(LessonItemDetailActivity.this, "Key is invalid", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                // Split the key to get the lesson number
-                String[] keyParts = key.split("_");
-                if (keyParts.length == 2) {
-                    String lessonNumber = keyParts[0];
-                    DatabaseReference reference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
-                            .getReference("Lessons")
-                            .child("Lesson " + lessonNumber)
-                            .child(key);
+            // Split the key to get the lesson number
+            String[] keyParts = key.split("_");
+            if (keyParts.length == 2) {
+                String lessonNumber = keyParts[0];
+                DatabaseReference reference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
+                        .getReference("Lessons")
+                        .child("Lesson " + lessonNumber)
+                        .child(key);
 
-                    reference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(LessonItemDetailActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), LessonItemList.class));
-                                finish();
-                            } else {
-                                Toast.makeText(LessonItemDetailActivity.this, "Failed to delete", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(LessonItemDetailActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    Toast.makeText(LessonItemDetailActivity.this, "Invalid key format", Toast.LENGTH_SHORT).show();
-                }
+                reference.removeValue().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(LessonItemDetailActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), LessonItemList.class));
+                        finish();
+                    } else {
+                        Toast.makeText(LessonItemDetailActivity.this, "Failed to delete", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(e -> Toast.makeText(LessonItemDetailActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+            } else {
+                Toast.makeText(LessonItemDetailActivity.this, "Invalid key format", Toast.LENGTH_SHORT).show();
             }
         });
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LessonItemDetailActivity.this, LessonItemUpdateActivity.class)
-                        .putExtra("Romaji", detailRomaji.getText().toString())
-                        .putExtra("Description", detailDesc.getText().toString())
-                        .putExtra("Example", detailExample.getText().toString())
-                        .putExtra("JapaneseChar", detailJapaneseChar.getText().toString())
-                        .putExtra("Key", key);
-                startActivity(intent);
-            }
+        editButton.setOnClickListener(view -> {
+            Intent intent = new Intent(LessonItemDetailActivity.this, LessonItemUpdateActivity.class)
+                    .putExtra("Romaji", detailRomaji.getText().toString())
+                    .putExtra("Description", detailDesc.getText().toString())
+                    .putExtra("Example", detailExample.getText().toString())
+                    .putExtra("JapaneseChar", detailJapaneseChar.getText().toString())
+                    .putExtra("Key", key);
+            startActivity(intent);
         });
 
-        playAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Assuming you have a URL or a local resource for the audio file
-                String audioUrl = "audios/"; // Replace with your audio URL
+        playAudio.setOnClickListener(view -> playAudioFile(detailJapaneseChar.getText().toString()));
+    }
 
-                if (mediaPlayer == null) {
-                    mediaPlayer = new MediaPlayer();
-                }
+    private void playAudioFile(String japaneseChar) {
+        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "_");
+        StorageReference audioRef = FirebaseStorage.getInstance().getReference().child("audios/" + sanitizedJapaneseChar);
 
-                try {
-                    mediaPlayer.reset();
-                    mediaPlayer.setDataSource(audioUrl);
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                    Toast.makeText(LessonItemDetailActivity.this, "Playing Audio", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Toast.makeText(LessonItemDetailActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+        audioRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            if (mediaPlayer == null) {
+                mediaPlayer = new MediaPlayer();
             }
-        });
+
+            try {
+                mediaPlayer.reset();
+                mediaPlayer.setDataSource(uri.toString());
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+                Toast.makeText(LessonItemDetailActivity.this, "Playing Audio", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(LessonItemDetailActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> Toast.makeText(LessonItemDetailActivity.this, "Failed to get audio URL: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     @Override

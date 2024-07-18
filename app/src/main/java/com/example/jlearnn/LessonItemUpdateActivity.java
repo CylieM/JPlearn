@@ -109,19 +109,19 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
 
         // Upload audio file if audioUri is not null
         if (audioUri != null) {
-            uploadAudio();
+            uploadAudio(japaneseChar);
         } else {
             Toast.makeText(this, "Please select an audio file", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void uploadAudio() {
+    private void uploadAudio(String japaneseChar) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("audios/");
 
-        // Generate a random UUID as the audio file name
-        String audioFileName = UUID.randomUUID().toString();
+        // Sanitize japaneseChar to ensure it can be used as a file name
+        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "_");
 
-        StorageReference audioRef = storageRef.child(audioFileName);
+        StorageReference audioRef = storageRef.child(sanitizedJapaneseChar);
 
         // Upload file to Firebase Storage
         UploadTask uploadTask = audioRef.putFile(audioUri);

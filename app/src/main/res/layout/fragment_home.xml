@@ -98,7 +98,7 @@
                     android:layout_marginEnd="8dp"
                     android:contentDescription="Icon description"
 
-                    app:srcCompat="@drawable/leaderboards" />
+                    />
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView1"
@@ -124,7 +124,7 @@
                     android:layout_marginEnd="8dp"
                     android:contentDescription="Icon description"
 
-                    app:srcCompat="@drawable/kanashooticon" />
+                    />
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView2"
@@ -150,7 +150,7 @@
                     android:layout_marginEnd="8dp"
                     android:contentDescription="Icon description"
 
-                    app:srcCompat="@drawable/nihongoraceicon" />
+                    />
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView3"
@@ -175,7 +175,7 @@
                     android:layout_marginEnd="8dp"
                     android:contentDescription="Icon description"
 
-                    app:srcCompat="@drawable/profile" />
+                     />
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView4"
