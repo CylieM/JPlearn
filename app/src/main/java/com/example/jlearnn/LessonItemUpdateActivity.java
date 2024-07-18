@@ -116,7 +116,7 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
     }
 
     private void uploadAudio() {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("your_storage_path");
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("audios/");
 
         // Generate a random UUID as the audio file name
         String audioFileName = UUID.randomUUID().toString();

@@ -114,7 +114,7 @@ public class LessonItemDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Assuming you have a URL or a local resource for the audio file
-                String audioUrl = "gs://jlearn-25b34.appspot.com/gs:/jlearn-25b34.appspot.com/audios"; // Replace with your audio URL
+                String audioUrl = "audios/"; // Replace with your audio URL
 
                 if (mediaPlayer == null) {
                     mediaPlayer = new MediaPlayer();

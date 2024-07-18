@@ -137,8 +137,8 @@ public class LessonItemUploadActivity extends AppCompatActivity {
     }
 
     private void uploadAudio() {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("gs://jlearn-25b34.appspot.com/audios");
-        String audioFileName = UUID.randomUUID().toString();
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("audios/");
+        String audioFileName = "UUID.randomUUID()".toString();
         StorageReference audioRef = storageRef.child(audioFileName);
 
         UploadTask uploadTask = audioRef.putFile(audioUri);
