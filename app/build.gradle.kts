@@ -1,6 +1,8 @@
 plugins {
-    alias(libs.plugins.androidApplication)
     id("com.google.gms.google-services")
+    id("com.android.application")
+
+
 
 }
 
@@ -57,5 +59,6 @@ dependencies {
 
     annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
 
-
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }

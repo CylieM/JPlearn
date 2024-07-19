@@ -17,14 +17,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LessonReview extends AppCompatActivity {
 
     private static final String TAG = "LessonReview";
     private TextView tvFront;
     private EditText txtUserInput;
     private ImageButton btnPrev, btnNext;
-    private int currentLessonIndex = 0; // Start from Lesson1
-    private int lessonCount = 5; // Total lessons
+    private int currentLessonIndex = 1; // Start from Lesson1
+    private int currentItemIndex = 1; // Start from item_1
+    private int lessonCount = 4; // Total lessons
+    private int itemsPerLesson = 5; // Total items per lesson
     private DatabaseReference database;
     private String currentCharacter;
 
@@ -43,13 +48,17 @@ public class LessonReview extends AppCompatActivity {
         database = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
 
         // Load the current lesson
-        loadLesson(currentLessonIndex);
+        loadLesson(currentLessonIndex, currentItemIndex);
 
         // Set up click listener for btnNext
         btnNext.setOnClickListener(v -> {
-            if (currentLessonIndex < lessonCount - 1) {
+            if (currentItemIndex < itemsPerLesson) {
+                currentItemIndex++;
+                loadLesson(currentLessonIndex, currentItemIndex);
+            } else if (currentLessonIndex < lessonCount) {
                 currentLessonIndex++;
-                loadLesson(currentLessonIndex);
+                currentItemIndex = 1;
+                loadLesson(currentLessonIndex, currentItemIndex);
             } else {
                 finish();
             }
@@ -59,9 +68,9 @@ public class LessonReview extends AppCompatActivity {
         btnPrev.setOnClickListener(null);
     }
 
-    private void loadLesson(int index) {
-        // Construct the lesson path based on the lesson index
-        String lessonPath = "Lessons/Lesson 1/1_" + (index + 1);
+    private void loadLesson(int lessonIndex, int itemIndex) {
+        // Construct the lesson path based on the lesson and item index
+        String lessonPath = "Lessons/Lesson " + lessonIndex + "/1_" + itemIndex;
 
         // Fetch the lesson data
         database.child(lessonPath).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -98,6 +107,9 @@ public class LessonReview extends AppCompatActivity {
                     // If user input matches the romaji, set background color to green
                     txtUserInput.setBackgroundColor(getResources().getColor(R.color.green));
                     Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
+
+                    // Update progress in Firebase
+                    updateProgress();
                 } else {
                     // If user input does not match the romaji, set background color to red
                     txtUserInput.setBackgroundColor(getResources().getColor(R.color.red));
@@ -105,5 +117,105 @@ public class LessonReview extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void updateProgress() {
+        // Get the user ID
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Construct the path to the user's progress for the current item
+        String itemProgressPath = "users/" + userId + "/itemProgress/lesson" + currentLessonIndex + "/item_" + currentItemIndex + "/counter";
+
+        // Increment the progress for the corresponding Lesson
+        incrementProgress(itemProgressPath);
+
+        // Check if all items in the current lesson are completed
+        checkAllItemsProgress();
+    }
+
+    private void incrementProgress(String userProgressPath) {
+        // Update the progress in the database for the Lesson Item
+        database.child(userProgressPath).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Integer currentProgress = dataSnapshot.getValue(Integer.class);
+
+                // Increment the progress
+                if (currentProgress != null) {
+                    currentProgress++;
+                } else {
+                    currentProgress = 1; // Start from 1 if it's null
+                }
+
+                // Update the progress in the database
+                database.child(userProgressPath).setValue(currentProgress);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Error updating user progress", databaseError.toException());
+            }
+        });
+    }
+
+    private void checkAllItemsProgress() {
+        // Get the user ID
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Construct the path to the user's progress for the current lesson
+        String lessonProgressPath = "users/" + userId + "/itemProgress/lesson" + currentLessonIndex;
+
+        // Fetch the user's progress data
+        database.child(lessonProgressPath).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean allItemsCompleted = true;
+                if (dataSnapshot.exists()) {
+                    // Iterate through each child (lesson item key)
+                    for (DataSnapshot lessonItemSnapshot : dataSnapshot.getChildren()) {
+                        // Get the current progress count
+                        int currentProgress = lessonItemSnapshot.child("counter").getValue(Integer.class);
+
+                        // Check if the progress has reached 5 for all items
+                        if (currentProgress < 5) {
+                            allItemsCompleted = false;
+                            break;
+                        }
+                    }
+                    if (allItemsCompleted) {
+                        // If all items have reached 5, proceed to the next lesson
+                        proceedToNextLesson();
+                    }
+                } else {
+                    Log.e(TAG, "User progress data not found");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Error getting user progress data", databaseError.toException());
+            }
+        });
+    }
+
+    private void proceedToNextLesson() {
+        // Increment the lesson progress and reset item counters for the new lesson
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        int nextLessonIndex = currentLessonIndex + 1;
+        String nextLessonPath = "users/" + userId + "/itemProgress/lesson" + nextLessonIndex;
+        Map<String, Integer> newLessonProgress = new HashMap<>();
+        for (int i = 1; i <= itemsPerLesson; i++) {
+            newLessonProgress.put("item_" + i + "/counter", 0);
+        }
+        database.child(nextLessonPath).setValue(newLessonProgress)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        currentLessonIndex++;
+                        currentItemIndex = 1;
+                        loadLesson(currentLessonIndex, currentItemIndex);
+                    } else {
+                        Log.e(TAG, "Error resetting progress for new lesson");
+                    }
+                });
     }
 }

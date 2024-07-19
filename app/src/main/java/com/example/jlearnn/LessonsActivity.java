@@ -2,14 +2,14 @@ package com.example.jlearnn;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -17,8 +17,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LessonsActivity extends AppCompatActivity {
 
@@ -26,14 +24,18 @@ public class LessonsActivity extends AppCompatActivity {
     private TextView tvFront;
     private EditText txtUserInput;
     private ImageButton btnPrev, btnNext;
-    private int currentLessonIndex = 0; // Start from Lesson1
+    private int currentLessonIndex = 1; // Start from Lesson1
+    private int currentItemIndex = 1; // Start from item_1
     private int lessonCount; // Total lessons, will be dynamically set
+    private int itemsPerLesson = 5; // Assuming 5 items per lesson
+    private boolean answerVerified = false; // Flag to track if answer has been verified
 
     private DatabaseReference database;
     private String currentCharacter;
     private UserModel userModel;
     private String userId;
     private String currentLesson;
+    private String romaji;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +58,38 @@ public class LessonsActivity extends AppCompatActivity {
 
         // Set up click listener for btnNext
         btnNext.setOnClickListener(v -> {
-            if (currentLessonIndex < lessonCount - 1) {
-                currentLessonIndex++;
-                loadLesson(currentLesson, currentLessonIndex);
+            if (!answerVerified) {
+                // If the answer has not been verified, verify the answer
+                verifyAnswer();
             } else {
-                updateDailyStreak();
+                // If the answer has already been verified, proceed to the next question
+                loadNextQuestion();
             }
         });
 
         // Disable prev button click listener
         btnPrev.setOnClickListener(null);
+
+        // Set up text change listener for txtUserInput
+        txtUserInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Not needed
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Automatically verify the answer when the user finishes typing
+                if (!answerVerified) {
+                    verifyAnswer();
+                }
+            }
+        });
     }
 
     private void fetchCurrentLesson() {
@@ -95,7 +119,7 @@ public class LessonsActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     lessonCount = (int) dataSnapshot.getChildrenCount();
                     // Load the first item of the current lesson
-                    loadLesson(currentLesson, currentLessonIndex);
+                    loadLesson(lesson, currentItemIndex);
                 } else {
                     Log.e(TAG, "Lesson does not exist: " + lesson);
                 }
@@ -110,7 +134,7 @@ public class LessonsActivity extends AppCompatActivity {
 
     private void loadLesson(String lesson, int index) {
         // Construct the path based on the lesson number and item index
-        String lessonPath = "Lessons/" + lesson + "/" + lesson + "_" + (index + 1);
+        String lessonPath = "Lessons/" + lesson + "/" + lesson + "_" + index;
 
         // Fetch the lesson data from Realtime Database
         database.child(lessonPath).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -132,32 +156,53 @@ public class LessonsActivity extends AppCompatActivity {
 
     private void displayLesson(DataSnapshot dataSnapshot) {
         // Get data from Firebase Realtime Database
-        currentCharacter = dataSnapshot.child("japaneseChar").getValue(String.class);
-        String romaji = dataSnapshot.child("dataRomaji").getValue(String.class);
+        currentCharacter= dataSnapshot.child("japaneseChar").getValue(String.class);
+        romaji = dataSnapshot.child("dataRomaji").getValue(String.class);
 
         // Display the data in the appropriate TextViews
         tvFront.setText(currentCharacter);
         txtUserInput.setText(""); // Clear previous input
+    }
 
-        // Check user input against the romaji
-        txtUserInput.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                String userInput = txtUserInput.getText().toString().trim();
-                if (userInput.equalsIgnoreCase(romaji)) {
-                    // If user input matches the romaji, set background color to green
-                    txtUserInput.setBackgroundColor(getResources().getColor(R.color.green));
-                    Log.d(TAG, "Correct answer: " + userInput);
-                } else {
-                    // If user input does not match the romaji, set background color to red
-                    txtUserInput.setBackgroundColor(getResources().getColor(R.color.red));
-
-                    Log.d(TAG, "Incorrect answer. User input: " + userInput + ", Correct answer: " + romaji);
-                    Toast.makeText(this, "Next session will be in 3 hours", Toast.LENGTH_LONG).show();
-                    saveIncorrectAnswer(currentCharacter, userInput);
+    private void verifyAnswer() {
+        String userInput = txtUserInput.getText().toString().trim();
+        if (!userInput.isEmpty()) {
+            if (userInput.equalsIgnoreCase(romaji)) {
+                txtUserInput.setBackgroundColor(getResources().getColor(R.color.green));
+                Log.d(TAG, "Correct answer: " + userInput);
+                txtUserInput.postDelayed(() -> {
+                    txtUserInput.setBackgroundColor(getResources().getColor(android.R.color.white));
+                    if (currentItemIndex == itemsPerLesson) {
+                        returnToLessonDiscussion();
+                    } else {
+                        loadNextQuestion();
+                    }
+                }, 1000);
+            } else {
+                txtUserInput.setBackgroundColor(getResources().getColor(R.color.red));
+                Log.d(TAG, "Incorrect answer. User input: " + userInput + ", Correct answer: " + romaji);
+                Toast.makeText(this, "Next session will be in 3 hours", Toast.LENGTH_LONG).show();
+                saveIncorrectAnswer(currentCharacter, userInput);
+                if (currentItemIndex == itemsPerLesson) {
+                    btnNext.setEnabled(true); // Enable the next button if it's the last question and the answer is incorrect
                 }
             }
-        });
+            answerVerified = false;
+            updateProgress(); // Increment count after verifying answer
+        }
     }
+
+    private void loadNextQuestion() {
+        if (currentItemIndex < itemsPerLesson + 1) {
+            currentItemIndex++;
+            loadLesson(currentLesson, currentItemIndex);
+        } else {
+            returnToLessonDiscussion(); // Return to lesson discussion after completing all questions
+        }
+    }
+
+
+
 
     private void saveIncorrectAnswer(String character, String userInput) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -166,6 +211,108 @@ public class LessonsActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Incorrect answer saved successfully"))
                 .addOnFailureListener(e -> Log.e(TAG, "Error saving incorrect answer", e));
     }
+
+    private void updateProgress() {
+        // Get the user ID
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Construct the path to the user's progress for the current item
+        String itemProgressPath = "users/" + userId + "/itemProgress/lesson" + currentLessonIndex + "/item_" + currentItemIndex + "/counter";
+
+        // Increment the progress for the corresponding Lesson
+        incrementProgress(itemProgressPath);
+    }
+
+    private void incrementProgress(String userProgressPath) {
+        // Update the progress in the database for the Lesson Item
+        database.child(userProgressPath).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Integer currentProgress = dataSnapshot.getValue(Integer.class);
+
+                // Increment the progress
+                if (currentProgress != null) {
+                    currentProgress++;
+                } else {
+                    currentProgress = 1; // Start from 1 if it's null
+                }
+
+                // Update the progress in the database
+                database.child(userProgressPath).setValue(currentProgress);
+
+                // Check if all items in the current lesson are completed
+                checkAllItemsProgress();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Error updating user progress", databaseError.toException());
+            }
+        });
+    }
+
+    private void checkAllItemsProgress() {
+        // Get the user ID
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Construct the path to the user's progress for the current lesson
+        String lessonProgressPath = "users/" + userId + "/itemProgress/lesson" + currentLessonIndex;
+
+        // Fetch the user's progress data
+        database.child(lessonProgressPath).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean allItemsCompleted = true;
+                if (dataSnapshot.exists()) {
+                    // Iterate through each child (lesson item key)
+                    for (DataSnapshot lessonItemSnapshot : dataSnapshot.getChildren()) {
+                        // Get the current progress count
+                        Integer currentProgress = lessonItemSnapshot.child("counter").getValue(Integer.class);
+
+                        // Check if the progress has reached 5 for all items
+                        if (currentProgress == null || currentProgress < 5) {
+                            allItemsCompleted = false;
+                            break;
+                        }
+                    }
+
+                    if (allItemsCompleted) {
+                        // After completing all items in the lesson, return to lesson discussion
+                        returnToLessonDiscussion();
+                    } else {
+                        // If not all items are completed, reload the lesson
+                        loadLesson(currentLesson, currentItemIndex);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Error checking progress", databaseError.toException());
+            }
+        });
+    }
+
+
+
+    private void returnToLessonDiscussion() {
+        // Implement the logic to return to the lesson discussion
+        // For example, you might start a new activity for the lesson discussion
+        Intent intent = new Intent(this, LessonDiscussionActivity.class);
+        startActivity(intent);
+    }
+
+    private void proceedToNextLesson() {
+        if (currentLessonIndex < lessonCount) {
+            currentLessonIndex++;
+            currentItemIndex = 1; // Reset the item index
+            fetchCurrentLesson(); // Fetch current lesson again
+        } else {
+            // Update the daily streak before returning to the Lesson Discussion
+            updateDailyStreak();
+        }
+    }
+
 
     private void updateDailyStreak() {
         userModel.getUserRef(userId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -186,11 +333,12 @@ public class LessonsActivity extends AppCompatActivity {
                     dataSnapshot.getRef().child("lastLoginDate").setValue(currentTime);
 
                     Log.d(TAG, "Daily streak updated: " + dailyStreak);
+
+                    // Return to lesson discussion after updating the daily streak
+                    returnToLessonDiscussion();
                 } else {
                     Log.e(TAG, "User data does not exist for userId: " + userId);
                 }
-
-                finish();
             }
 
             @Override
@@ -199,9 +347,5 @@ public class LessonsActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    public void onCancelled(DatabaseError databaseError) {
-        Log.e(TAG, "Error checking progress", databaseError.toException());
     }
 }
