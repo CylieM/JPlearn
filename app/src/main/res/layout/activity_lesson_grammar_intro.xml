@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    android:background="@color/white">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+
+        android:text="Make sure to turn on volume for the best learning experience!  🔊 🇯🇵"
+        android:layout_gravity="center"
+
+        android:textSize="15sp"
+        android:textColor="@color/myblue"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/custom_round_background"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:layout_margin="16dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="20dp"
+
+            android:text="Congratulations on reaching the final  lesson! 🎉 Today, we’ll explore Japanese grammatical particles.  Grammatical particles are small words in a language that serve specific functions, like marking subjects, objects, or locations. They’re crucial because they clarify relationships between words and give sentences structure. "
+            android:layout_gravity="center"
+            android:id="@+id/detailExample"
+            android:textSize="18sp"
+            android:textColor="@color/myblue"/>
+        <Button
+            android:id="@+id/btnGrammar"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/circle"
+
+            android:text="🌟  Let’s dive in!"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+
+    </LinearLayout>
+</LinearLayout>

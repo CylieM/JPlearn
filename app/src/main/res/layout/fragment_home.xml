@@ -24,7 +24,7 @@
                 android:gravity="center"
                 android:padding="16dp"
                 android:text="Welcome to Jlearn"
-                android:textSize="40sp" />
+                android:textSize="30sp" />
 
             <!-- Button for Lessons -->
 
@@ -36,23 +36,6 @@
                 android:layout_marginTop="16dp"
                 android:text="Lessons" />
 
-            <!-- Button for Self-Testing -->
-            <Button
-                android:id="@+id/btnLessonReview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:text="Review" />
-
-            <!-- TextViews below the buttons -->
-            <Button
-                android:id="@+id/btnSelfTesting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:text="Test Yourself" />
 
             <TextView
                 android:id="@+id/txtBelowButtons"
@@ -60,26 +43,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:text="Lessons - To start Learning"
+                android:text="Click the Lessons button to start learning"
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/txtBelowButtons2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:text="Review - To the Lessons"
-                android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/txtBelowButtons3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:text="Test Yourself - To Test what you learned"
-                android:textSize="16sp" />
 
 
 
@@ -92,20 +59,22 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/iconImageView1"
+                    android:id="@+id/leaderboard"
                     android:layout_width="71dp"
                     android:layout_height="69dp"
                     android:layout_marginEnd="8dp"
                     android:contentDescription="Icon description"
+                    android:src="@drawable/leaderboard"
+                    android:background="@color/myblue"
+/>
 
-                    app:srcCompat="@drawable/leaderboards" />
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="To view the Leaderborads"
+                    android:text="To view the Leaderboards"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -122,16 +91,18 @@
                     android:layout_width="71dp"
                     android:layout_height="69dp"
                     android:layout_marginEnd="8dp"
+                    android:src="@drawable/kanashoot"
+                    android:background="@color/myblue"
                     android:contentDescription="Icon description"
+/>
 
-                    app:srcCompat="@drawable/kanashooticon" />
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="To open Kanashoot"
+                    android:text="To open Kanashoot, a minigame to practice your skills in romanizing kana characters and vocab"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -144,20 +115,22 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/iconImageView3"
+                    android:id="@+id/nihongorace"
                     android:layout_width="71dp"
                     android:layout_height="69dp"
                     android:layout_marginEnd="8dp"
                     android:contentDescription="Icon description"
+                    android:src="@drawable/nihongorace"
+                    android:background="@color/myblue"
+/>
 
-                    app:srcCompat="@drawable/nihongoraceicon" />
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="To open Nihongo Race"
+                    android:text="To open Nihongo Race, a game similar to typeracer, where you translate Japanese characters to its romaji equivalent"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -174,19 +147,20 @@
                     android:layout_height="69dp"
                     android:layout_marginEnd="8dp"
                     android:contentDescription="Icon description"
+                    android:src="@drawable/usericon"
 
-                    app:srcCompat="@drawable/profile" />
+/>
+
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="To view your profile"
+                    android:text="To view your profile and your learning progress"
                     android:textSize="16sp" />
 
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
-

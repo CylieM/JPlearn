@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LessonGrammarExercise">
+
+    <!-- Container for the first sentence with the missing grammar particle -->
+    <TextView
+        android:id="@+id/tvSentence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="This is a sentence with a ______."
+        android:textSize="24sp"
+        android:textColor="#666666"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Second sentence -->
+    <TextView
+        android:id="@+id/tvSecondSentence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="This is the second sentence."
+        android:textSize="24sp"
+        android:textColor="#666666"
+        app:layout_constraintTop_toBottomOf="@+id/tvSentence"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Button 1 -->
+    <Button
+        android:id="@+id/btnOption1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/button_background"
+        android:text="Option 1"
+        android:textColor="#666666"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/tvSecondSentence"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Button 2 -->
+    <Button
+        android:id="@+id/btnOption2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/button_background"
+        android:text="Option 2"
+        android:textColor="#666666"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/btnOption1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Button 3 -->
+    <Button
+        android:id="@+id/btnOption3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/button_background"
+        android:text="Option 3"
+        android:textColor="#666666"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/btnOption2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Button 4 -->
+    <Button
+        android:id="@+id/btnOption4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/button_background"
+        android:text="Option 4"
+        android:textColor="#666666"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/btnOption3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

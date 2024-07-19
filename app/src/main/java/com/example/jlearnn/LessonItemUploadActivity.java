@@ -1,3 +1,4 @@
+
 package com.example.jlearnn;
 
 import androidx.annotation.NonNull;
@@ -95,7 +96,7 @@ public class LessonItemUploadActivity extends AppCompatActivity {
         }
 
         if (audioUri != null) {
-            uploadAudio();
+            uploadAudio(japaneseChar);
         } else {
             Toast.makeText(this, "Please select an audio file", Toast.LENGTH_SHORT).show();
         }
@@ -136,10 +137,13 @@ public class LessonItemUploadActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadAudio() {
+    private void uploadAudio(String japaneseChar) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("audios/");
-        String audioFileName = "UUID.randomUUID()".toString();
-        StorageReference audioRef = storageRef.child(audioFileName);
+
+        // Sanitize japaneseChar to ensure it can be used as a file name
+        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "_");
+
+        StorageReference audioRef = storageRef.child(sanitizedJapaneseChar);
 
         UploadTask uploadTask = audioRef.putFile(audioUri);
 

@@ -19,6 +19,18 @@
         android:theme="@style/Theme.Jlearnn"
         tools:targetApi="31">
         <activity
+            android:name=".LessonGrammarExercise"
+            android:exported="false" />
+        <activity
+            android:name=".LessonGrammarIntroActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LessonGrammarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChooseLessonActivity"
+            android:exported="false" />
+        <activity
             android:name=".LessonReview"
             android:exported="false" />
         <activity

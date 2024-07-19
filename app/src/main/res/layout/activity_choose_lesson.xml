@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".ChooseLessonActivity">
+
+    <Button
+        android:id="@+id/btnLesson1"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Lesson 1: Hiragana and Katakana"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+
+        android:background="@drawable/circle"/>
+
+    <Button
+        android:id="@+id/btnLesson2"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Lesson 2: Vocabulary"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:background="@drawable/circle"/>
+
+    <Button
+        android:id="@+id/btnLesson3"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Lesson 3: Grammar"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:background="@drawable/circle"/>
+
+
+</LinearLayout>
