@@ -110,7 +110,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:backgroundTint="@color/myblue"
+
+                android:background="@drawable/circle"
                 android:text="Sign Up"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

@@ -175,4 +175,3 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
 
 
 }
-

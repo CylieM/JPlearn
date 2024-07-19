@@ -60,38 +60,42 @@
         android:id="@+id/LessonNumber"
         android:textSize="18sp"
         android:textColor="@color/myblue"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.github.clans.fab.FloatingActionMenu
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            app:menu_fab_size="normal"
-            android:layout_marginBottom="20dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginEnd="20dp"
-            app:menu_colorPressed="@color/myblue"
+            android:layout_marginBottom="20dp"
             app:menu_colorNormal="@color/myblue"
+            app:menu_colorPressed="@color/myblue"
+            app:menu_fab_size="normal"
             app:menu_icon="@drawable/ic_baseline_format_list_bulleted_24"
             app:menu_openDirection="up"
             app:menu_showShadow="true">
+
             <com.github.clans.fab.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/editButton"
-                android:src="@drawable/ic_baseline_edit_24"
-                app:fab_showShadow="true"
-                app:fab_colorNormal="@color/gold"
-                app:fab_size="mini"/>
-            <com.github.clans.fab.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/deleteButton"
-                android:src="@drawable/ic_baseline_delete_24"
+                android:src="@drawable/ic_baseline_edit_24"
+                app:fab_colorNormal="@color/gold"
                 app:fab_showShadow="true"
+                app:fab_size="mini" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/deleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_delete_24"
                 app:fab_colorNormal="@color/red"
-                app:fab_size="mini"/>
+                app:fab_showShadow="true"
+                app:fab_size="mini" />
         </com.github.clans.fab.FloatingActionMenu>
     </RelativeLayout>
 </LinearLayout>

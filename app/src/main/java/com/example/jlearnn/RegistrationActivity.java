@@ -96,19 +96,12 @@ public class RegistrationActivity extends AppCompatActivity {
                                     if (user != null) {
                                         // Save username, profile picture, role, and additional stats to Realtime Database
                                         String userId = user.getUid();
-                                        Map<String, Integer> itemProgress = new HashMap<>();
-                                        itemProgress.put("あ", 0);
-                                        itemProgress.put("い", 0);
-                                        itemProgress.put("う", 0);
-                                        itemProgress.put("え", 0);
-                                        itemProgress.put("お", 0);
-                                        Map<String, String> incorrectAnswers = new HashMap<>();
-                                        incorrectAnswers.put("none", "none");
+
                                         // Default profile picture resource name
                                         String defaultProfilePicture = "usericon.png"; // Resource name of the default profile picture
                                         long currentTimeMillis = System.currentTimeMillis(); // Get the current time in milliseconds
                                         User userObj = new User(username, emailID, defaultProfilePicture, role,
-                                                0, 0, 0, 0, 0, 0, 0, 0, System.currentTimeMillis(), "1", itemProgress, incorrectAnswers); // Set lastLoginDate to current date
+                                                0, 0, 0, 0, 0, 0, 0, 0, System.currentTimeMillis(), "1"); // Set lastLoginDate to current date
                                         userObj.setUserId(userId);
                                         usersRef.child(userId).setValue(userObj)
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -170,14 +163,13 @@ public class RegistrationActivity extends AppCompatActivity {
         private int NRaceFirstPlace;
         private int DailyStreak;
         private long lastLoginDate;
-        private Map<String, Integer> itemProgress;
-        private Map<String, String> incorrectAnswers;
+
 
 
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
         public User() {}
 
-        public User(String username, String email, String profilePicture, String role, int KSWaves, int KSHighScore, int HiraganaProgress, int KatakanaProgress, int VocabularyProgress, int NRaceBestWPM, int NRaceFirstPlace, int DailyStreak, long lastLoginDate, String currentLesson,   Map<String, Integer> itemProgress, Map<String, String> incorrectAnswers ) { // Modify this line
+        public User(String username, String email, String profilePicture, String role, int KSWaves, int KSHighScore, int HiraganaProgress, int KatakanaProgress, int VocabularyProgress, int NRaceBestWPM, int NRaceFirstPlace, int DailyStreak, long lastLoginDate, String currentLesson ) { // Modify this line
             this.username = username;
             this.email = email;
             this.profilePicture = profilePicture;
@@ -192,8 +184,6 @@ public class RegistrationActivity extends AppCompatActivity {
             this.DailyStreak = DailyStreak;
             this.lastLoginDate = lastLoginDate;
             this.currentLesson = currentLesson;
-            this.itemProgress = itemProgress;
-            this.incorrectAnswers = incorrectAnswers;
         }
 
         // Getter methods
@@ -250,12 +240,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
         public long getLastLoginDate() { // Add this method
             return lastLoginDate;
-        }
-        public Map<String, Integer> getItemProgress() {
-            return itemProgress;
-        }
-        public Map<String, String> getIncorrectAnswers() {
-            return incorrectAnswers;
         }
 
         // Setter methods
@@ -316,12 +300,6 @@ public class RegistrationActivity extends AppCompatActivity {
         }
         public void setCurrentLesson(String currentLesson) { // Add this method
             this.currentLesson = currentLesson;
-        }
-        public void setItemProgress(@Nullable Map<String, Integer> itemProgress) {
-            this.itemProgress = itemProgress;
-        }
-        public void setIncorrectAnswers(@Nullable Map<String, String> incorrectAnswers) {
-            this.incorrectAnswers = incorrectAnswers;
         }
     }
 
