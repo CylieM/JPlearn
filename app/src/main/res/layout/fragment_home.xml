@@ -65,8 +65,8 @@
                     android:layout_marginEnd="8dp"
                     android:contentDescription="Icon description"
                     android:src="@drawable/leaderboard"
-                    android:background="@color/myblue"
-/>
+                    android:background="@color/myblue" />
+
 
 
                 <TextView
@@ -93,8 +93,9 @@
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/kanashoot"
                     android:background="@color/myblue"
-                    android:contentDescription="Icon description"
-/>
+                    android:contentDescription="Icon description"/>
+
+
 
 
                 <TextView
@@ -121,8 +122,8 @@
                     android:layout_marginEnd="8dp"
                     android:contentDescription="Icon description"
                     android:src="@drawable/nihongorace"
-                    android:background="@color/myblue"
-/>
+                    android:background="@color/myblue" />
+
 
 
                 <TextView
@@ -147,9 +148,7 @@
                     android:layout_height="69dp"
                     android:layout_marginEnd="8dp"
                     android:contentDescription="Icon description"
-                    android:src="@drawable/usericon"
-
-/>
+                    android:src="@drawable/usericon"/>
 
 
                 <TextView

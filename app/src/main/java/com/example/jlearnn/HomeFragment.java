@@ -13,24 +13,23 @@ import android.widget.Button;
 public class HomeFragment extends Fragment {
 
 
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Handle button clicks
-        Button btnGrammar = view.findViewById(R.id.btnLessons);
+        Button btnLessons = view.findViewById(R.id.btnLessons);
 
 
-        btnGrammar.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ChooseLessonActivity.class);
+        btnLessons.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), LessonList.class);
+            intent.putExtra("reviewMode", false); // Not in review mode
+
             startActivity(intent);
         });
 
 
         return view;
+        }
     }
-}

@@ -2,6 +2,7 @@ package com.example.jlearnn;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -50,6 +51,9 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         // Check if the activity was started in review mode
         isReviewMode = getIntent().getBooleanExtra("reviewMode", false);
 
+        // Get the lesson number from the intent
+        int lessonNumber = getIntent().getIntExtra("lessonNumber", 1);
+
         // Fetch current user's ID
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -60,12 +64,8 @@ public class LessonDiscussionActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String currentLesson = dataSnapshot.child("currentLesson").getValue(String.class);
-                    if (currentLesson != null && !currentLesson.isEmpty()) {
-                        currentLessonIndex = Integer.parseInt(currentLesson);
-                        // Load the first lesson item when loading the lesson initially
-                        loadLesson(currentLessonIndex, 0); // Pass lessonItemIndex as 0
-                    }
+                    // Load the lesson based on the passed lesson number
+                    loadLesson(lessonNumber, 0); // Pass lessonItemIndex as 0
                 }
             }
 
@@ -75,33 +75,21 @@ public class LessonDiscussionActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         // Set up click listener for btnNext
         findViewById(R.id.btnNext).setOnClickListener(v -> {
             if (lessonItemIndex < lessonCount - 1) {
                 lessonItemIndex++;
-                loadLesson(currentLessonIndex, lessonItemIndex); // Load the next lesson item
-            } else {
-                // Handle case when there are no more lesson items
-                if (isReviewMode) {
-                    startLessonReviewActivity();
-                } else {
-                    startLessonsActivity();
-                }
+                loadLesson(lessonNumber, lessonItemIndex); // Load the next lesson item
             }
         });
 
-
-// Set up click listener for btnPrev
+        // Set up click listener for btnPrev
         findViewById(R.id.btnPrev).setOnClickListener(v -> {
             if (lessonItemIndex > 0) {
                 lessonItemIndex--;
-                loadLesson(currentLessonIndex, lessonItemIndex); // Load the previous lesson item
+                loadLesson(lessonNumber, lessonItemIndex); // Load the previous lesson item
             }
         });
-
 
         // Set up click listener for tvRomaji
         tvRomaji.setOnClickListener(v -> {
@@ -158,8 +146,6 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void displayLesson(DataSnapshot dataSnapshot) {
         String japaneseChar = dataSnapshot.child("japaneseChar").getValue(String.class);
         currentRomaji = dataSnapshot.child("dataRomaji").getValue(String.class);
@@ -175,32 +161,40 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         tvDesc.setText(description);
         isRomajiName = true;
 
+        // Convert dp to pixels
+        int defaultMarginDp = 135;
+        int exampleMarginDp = 245;
+        int defaultMarginPx = convertDpToPx(defaultMarginDp);
+        int exampleMarginPx = convertDpToPx(exampleMarginDp);
+
+        // Initialize the margin parameters
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) ivArrow.getLayoutParams();
-        marginLayoutParams.setMargins(0, 16, 0, 0);
+        marginLayoutParams.leftMargin = defaultMarginPx; // Set initial margin in pixels
         ivArrow.setLayoutParams(marginLayoutParams);
 
         tvBtnExample.setOnClickListener(v -> {
             if (isRomajiName) {
                 tvRomaji.setText(currentExamples);
                 isRomajiName = false;
-            }
-        });
 
-        tvBtnName.setOnClickListener(v -> {
-            if (!isRomajiName) {
+                // Update margin to exampleMarginPx
+                marginLayoutParams.leftMargin = exampleMarginPx;
+                ivArrow.setLayoutParams(marginLayoutParams);
+            } else {
                 tvRomaji.setText(currentRomaji);
                 isRomajiName = true;
+
+                // Update margin to defaultMarginPx
+                marginLayoutParams.leftMargin = defaultMarginPx;
+                ivArrow.setLayoutParams(marginLayoutParams);
             }
         });
     }
 
-    private void startLessonsActivity() {
-        // Start the LessonsActivity
-        startActivity(new Intent(LessonDiscussionActivity.this, LessonsActivity.class));
-    }
 
-    private void startLessonReviewActivity() {
-        // Start the LessonReviewActivity
-        startActivity(new Intent(LessonDiscussionActivity.this, LessonReview.class));
+    // Convert dp to pixels
+    private int convertDpToPx(int dp) {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 }

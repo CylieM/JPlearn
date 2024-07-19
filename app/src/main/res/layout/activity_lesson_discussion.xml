@@ -116,6 +116,7 @@
                         android:layout_weight="1"
                         app:srcCompat="@drawable/__1_1_removebg_previewsss" />
 
+
                 </FrameLayout>
 
                 <FrameLayout
@@ -150,9 +151,8 @@
                                 android:id="@+id/tvRomaji"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-
-                                android:layout_weight="1"
+                                android:layout_marginLeft="15dp"
+                                android:layout_weight="5"
                                 android:text="Romaji Name"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -161,7 +161,6 @@
                                 android:id="@+id/btnNext"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="170dp"
                                 android:layout_weight="1"
                                 android:background="@color/white"
                                 app:srcCompat="@drawable/arrright"

@@ -33,6 +33,12 @@ public class navBar extends AppCompatActivity {
         checkUserAuthentication();
         setBottomNavigationListener();
         loadFragment(new HomeFragment(), true);
+
+
+
+    }
+
+    private void getClassLoader(LessonList lessonList, boolean b) {
     }
 
     private void initializeComponents() { // Initializes the necessary UI components and the UserModel.
@@ -65,6 +71,7 @@ public class navBar extends AppCompatActivity {
     private boolean handleNavigationItemSelected(int itemId) { //Handles the selection of the profile item in the bottom navigation view.
         if (itemId == R.id.navHome) {
             loadFragment(new HomeFragment(), false);
+
         } else if (itemId == R.id.navLeaderboard) {
             loadFragment(new LeaderboardFragment(), false);
         } else if (itemId == R.id.navKanashoot) {

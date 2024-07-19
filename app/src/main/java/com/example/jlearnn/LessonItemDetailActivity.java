@@ -40,7 +40,7 @@ public class LessonItemDetailActivity extends AppCompatActivity {
         detailLesson = findViewById(R.id.LessonNumber);
         deleteButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
-        playAudio = findViewById(R.id.playAudio);
+//        playAudio = findViewById(R.id.playAudio);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
