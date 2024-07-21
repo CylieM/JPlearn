@@ -20,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class LessonItemDetailActivity extends AppCompatActivity {
+public class                                                        LessonItemDetailActivity extends AppCompatActivity {
     TextView detailDesc, detailRomaji, detailExample, detailJapaneseChar, detailLesson;
     FloatingActionButton deleteButton, editButton;
     Button playAudio;
@@ -40,7 +40,7 @@ public class LessonItemDetailActivity extends AppCompatActivity {
         detailLesson = findViewById(R.id.LessonNumber);
         deleteButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
-//        playAudio = findViewById(R.id.playAudio);
+        playAudio = findViewById(R.id.playAudio);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
