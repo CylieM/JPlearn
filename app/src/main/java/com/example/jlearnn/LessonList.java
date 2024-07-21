@@ -2,6 +2,8 @@ package com.example.jlearnn;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,8 +28,16 @@ public class LessonList extends AppCompatActivity {
         // Set up click listeners for each lesson
         findViewById(R.id.lessonKatakanaHiragana).setOnClickListener(v -> startLessonDiscussionActivity(1));
         findViewById(R.id.lessonVocabulary).setOnClickListener(v -> startLessonDiscussionActivity(2));
-        findViewById(R.id.lessonGrammar).setOnClickListener(v -> startLessonDiscussionActivity(3));
 
+        // Modify the click listener for the grammar button to use your existing activity
+        LinearLayout lessonGrammar = findViewById(R.id.lessonGrammar);
+        lessonGrammar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LessonList.this, LessonGrammarIntroActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void startLessonDiscussionActivity(int lessonNumber) {
