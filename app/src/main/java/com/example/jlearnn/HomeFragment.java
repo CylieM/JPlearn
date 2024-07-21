@@ -20,10 +20,18 @@ public class HomeFragment extends Fragment {
 
         // Handle button clicks
         Button btnLessons = view.findViewById(R.id.btnLessons);
+        Button btnTest = view.findViewById(R.id.btnTest);
 
 
         btnLessons.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), LessonList.class);
+            intent.putExtra("reviewMode", false); // Not in review mode
+
+            startActivity(intent);
+        });
+
+        btnTest.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), LessonsActivity.class);
             intent.putExtra("reviewMode", false); // Not in review mode
 
             startActivity(intent);

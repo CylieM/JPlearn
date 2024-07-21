@@ -24,10 +24,10 @@ public class LessonList extends AppCompatActivity {
         });
 
         // Set up click listeners for each lesson
-        findViewById(R.id.lessonHiragana).setOnClickListener(v -> startLessonDiscussionActivity(1));
-        findViewById(R.id.lessonKatakana).setOnClickListener(v -> startLessonDiscussionActivity(2));
-        findViewById(R.id.lessonVocabulary).setOnClickListener(v -> startLessonDiscussionActivity(3));
-        findViewById(R.id.lessonParticles).setOnClickListener(v -> startLessonDiscussionActivity(4));
+        findViewById(R.id.lessonKatakanaHiragana).setOnClickListener(v -> startLessonDiscussionActivity(1));
+        findViewById(R.id.lessonVocabulary).setOnClickListener(v -> startLessonDiscussionActivity(2));
+        findViewById(R.id.lessonGrammar).setOnClickListener(v -> startLessonDiscussionActivity(3));
+
     }
 
     private void startLessonDiscussionActivity(int lessonNumber) {

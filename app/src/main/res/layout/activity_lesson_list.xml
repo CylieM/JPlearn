@@ -42,13 +42,14 @@
                 <!-- Hiragana Container -->
 
                 <LinearLayout
+                    android:layout_marginTop="100dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
 
                     <LinearLayout
-                        android:id="@+id/lessonHiragana"
+                        android:id="@+id/lessonKatakanaHiragana"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="35dp"
@@ -63,7 +64,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:text="Hiragana"
+                            android:text="Katakana and Hiragana"
                             android:textColor="@android:color/black"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -196,7 +197,7 @@
 
                     <LinearLayout
 
-                        android:id="@+id/lessonKatakana"
+                        android:id="@+id/lessonVocabulary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -209,7 +210,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:text="Katakana"
+                            android:text="Vocabulary"
                             android:textColor="@android:color/black"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -348,7 +349,7 @@
                         app:srcCompat="@drawable/padlock_removebg_preview" />
 
                     <LinearLayout
-                        android:id="@+id/lessonVocabulary"
+                        android:id="@+id/lessonGrammar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -360,7 +361,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:text="Vocabulary"
+                            android:text="Grammar"
                             android:textColor="@android:color/black"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -416,134 +417,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="142dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/img_lock3"
-                        android:layout_width="35dp"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="170px"
-                        app:srcCompat="@drawable/padlock_removebg_preview" />
-
-                    <LinearLayout
-                        android:id="@+id/lessonParticles"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@drawable/locked_content_roundbg"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="Particles"
-                            android:textColor="@android:color/black"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="4dp"
-                                android:background="@drawable/custom_round_background"
-                                android:padding="8dp"
-                                android:text="は"
-                                android:textColor="@android:color/black"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="4dp"
-                                android:background="@drawable/custom_round_background"
-                                android:padding="8dp"
-                                android:text="が"
-                                android:textColor="@android:color/black"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="4dp"
-                                android:background="@drawable/custom_round_background"
-                                android:padding="8dp"
-                                android:text="か"
-                                android:textColor="@android:color/black"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="4dp"
-                                android:background="@drawable/custom_round_background"
-                                android:padding="8dp"
-                                android:text="の"
-                                android:textColor="@android:color/black"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="4dp"
-                                android:background="@drawable/custom_round_background"
-                                android:padding="8dp"
-                                android:text="も"
-                                android:textColor="@android:color/black"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="4dp"
-                                android:background="@drawable/custom_round_background"
-                                android:padding="8dp"
-                                android:text="を"
-                                android:textColor="@android:color/black"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="4dp"
-                                android:background="@drawable/custom_round_background"
-                                android:padding="8dp"
-                                android:text="に"
-                                android:textColor="@android:color/black"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="4dp"
-                                android:background="@drawable/custom_round_background"
-                                android:padding="8dp"
-                                android:text="で"
-                                android:textColor="@android:color/black"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="4dp"
-                                android:background="@drawable/custom_round_background"
-                                android:padding="8dp"
-                                android:text="と"
-                                android:textColor="@android:color/black"
-                                android:textSize="18sp" />
-
-                            <!-- Add other particles similarly -->
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
+                    android:orientation="horizontal"/>
 
             </LinearLayout>
         </ScrollView>
