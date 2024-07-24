@@ -181,7 +181,7 @@ public class LessonsActivity extends AppCompatActivity {
             } else {
                 txtUserInput.setBackgroundColor(getResources().getColor(R.color.red));
                 Log.d(TAG, "Incorrect answer. User input: " + userInput + ", Correct answer: " + romaji);
-                Toast.makeText(this, "Next session will be in 3 hours", Toast.LENGTH_LONG).show();
+
                 saveIncorrectAnswer(currentCharacter, userInput);
                 if (currentItemIndex == itemsPerLesson) {
                     btnNext.setEnabled(true); // Enable the next button if it's the last question and the answer is incorrect
