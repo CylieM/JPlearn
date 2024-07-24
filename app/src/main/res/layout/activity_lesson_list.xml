@@ -9,12 +9,12 @@
 
 
     <LinearLayout
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="889dp"
         android:orientation="vertical"
+        tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp"
-        tools:ignore="MissingConstraints">
+        tools:layout_editor_absoluteY="1dp">
 
 
         <ScrollView
@@ -25,26 +25,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/txtMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:padding="16dp"
                     android:text="Lesson"
-                    android:textSize="40sp"
-                    android:padding="16dp" />
+                    android:textSize="40sp" />
 
                 <!-- Button for Lessons -->
                 <!-- Button for Self-Testing -->
                 <!-- Hiragana Container -->
 
                 <LinearLayout
-                    android:layout_marginTop="100dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="100dp"
                     android:orientation="horizontal">
 
 
@@ -144,8 +144,6 @@
                                 android:text="き"
                                 android:textColor="@android:color/black"
                                 android:textSize="18sp" />
-
-
 
 
                             <!-- Add other hiragana characters similarly -->
@@ -293,6 +291,7 @@
                                 android:text="は"
                                 android:textColor="@android:color/black"
                                 android:textSize="18sp" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -302,6 +301,7 @@
                                 android:text="も"
                                 android:textColor="@android:color/black"
                                 android:textSize="18sp" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -322,7 +322,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="142dp"
-                    android:orientation="horizontal"/>
+                    android:orientation="horizontal" />
 
             </LinearLayout>
         </ScrollView>
