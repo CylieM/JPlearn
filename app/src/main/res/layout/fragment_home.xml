@@ -64,7 +64,8 @@
                     android:background="@drawable/button_round_radius"
                     android:backgroundTint="#FFFFFF"
                     android:text="Select Lesson"
-                    android:textColor="#d34746" />
+                    android:textColor="#d34746"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Test Yourself Section -->
@@ -85,7 +86,8 @@
                     android:gravity="center"
                     android:text="Test Yourself!"
                     android:textColor="@color/white"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/btnTest"
@@ -97,7 +99,8 @@
                     android:background="@drawable/button_round_radius"
                     android:backgroundTint="#FFFFFF"
                     android:text="Start Quiz!"
-                    android:textColor="#d34746" />
+                    android:textColor="#d34746"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <TextView
