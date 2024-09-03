@@ -38,17 +38,27 @@
                         android:layout_marginBottom="50dp"
                         android:gravity="center"
                         android:text="TextView"
-                        android:textSize="48sp"
+                        android:textSize="60sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvPronunciation"
+                        android:id="@+id/tvRomaji"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="50dp"
-                        android:text="Pronunciation"
-                        android:textSize="24sp"
+                        android:text="Romaji"
+                        android:textSize="34sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="75dp"
+                        android:text="Romaji"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
 
@@ -73,11 +83,11 @@
                             android:layout_width="1dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
                             android:text="Name"
                             android:textColor="@color/white"
-                            android:clickable="true"
-                            android:focusable="true"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -97,24 +107,16 @@
                             android:layout_width="11dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
                             android:text="Example"
                             android:textColor="@color/white"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:textSize="16sp" />
 
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/ivArrow"
-                        android:layout_width="25dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="135dp"
-                        android:layout_marginTop="52dp"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/__1_1_removebg_previewsss" />
+
 
 
                 </FrameLayout>
@@ -148,13 +150,13 @@
                                 tools:srcCompat="@drawable/__1_1_removebg_previewssssss" />
 
                             <TextView
-                                android:id="@+id/tvRomaji"
+                                android:id="@+id/tvTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
                                 android:layout_weight="5"
-                                android:text="Romaji Name"
-                                android:textSize="16sp"
+                                android:text="Name"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
 
                             <ImageButton
@@ -186,13 +188,71 @@
                     android:paddingRight="63dp"
                     android:paddingBottom="30dp">
 
-                    <TextView
-                        android:id="@+id/tvDesc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Lorem Ipsum Lorem Ipsum Lorem Ipsum"
-                        android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="331dp"
+                            android:layout_height="46dp"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="10dp">
+
+                            <TextView
+                                android:id="@+id/Tv_op_1"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Pronunciation : "
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/Tv_desc_1"
+                                android:layout_width="215dp"
+                                android:layout_height="match_parent"
+                                android:text="Lorem Ipsum Lorem Ipsum Lorem Ipsum"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/Tv_op_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Description : "
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/Tv_desc_2"
+                                android:layout_width="190dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="TextView"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
                 </FrameLayout>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btn_lesson_audio"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    app:srcCompat="@drawable/speaker_or_volume_icon_free_vector_removebg_preview" />
 
             </LinearLayout>
         </ScrollView>
