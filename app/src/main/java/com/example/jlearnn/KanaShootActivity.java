@@ -73,7 +73,7 @@ public class KanaShootActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     Toast.makeText(KanaShootActivity.this, "Game result saved successfully", Toast.LENGTH_SHORT).show();
 
-                    // Start the KanaBoardActivity
+                    // Start the test
                     Intent intent = new Intent(KanaShootActivity.this, KanaBoardActivity.class);
                     startActivity(intent);
 
