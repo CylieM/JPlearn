@@ -101,7 +101,7 @@ public class                                                        LessonItemDe
     }
 
     private void playAudioFile(String japaneseChar) {
-        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "_");
+        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "" + detailJapaneseChar);
         StorageReference audioRef = FirebaseStorage.getInstance().getReference().child("audios/" + sanitizedJapaneseChar);
 
         audioRef.getDownloadUrl().addOnSuccessListener(uri -> {

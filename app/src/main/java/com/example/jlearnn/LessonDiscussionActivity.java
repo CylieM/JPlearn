@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LessonDiscussionActivity extends AppCompatActivity {
 
+    Button playAudio;
     private static final String TAG = "LessonDiscussionActivity";
     private TextView tvFront, tvPronunciation, tvDesc, tvBtnName, tvBtnExample, tvRomaji;
     private ImageView ivArrow;
