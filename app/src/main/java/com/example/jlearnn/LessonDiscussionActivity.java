@@ -1,5 +1,6 @@
 package com.example.jlearnn;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,12 +22,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 
 public class LessonDiscussionActivity extends AppCompatActivity {
 
-    Button playAudio;
+    private TextView JapaneseChar;
+    private MediaPlayer mediaPlayer;
+    private Button playAudio;
     private static final String TAG = "LessonDiscussionActivity";
     private TextView tvFront, tvBtnName, tvBtnExample, tvRomaji, tv_op_1, tv_op_2, tv_desc_1, tv_desc_2, tvTitle;
     private ImageView audioIcon;
@@ -40,7 +47,9 @@ public class LessonDiscussionActivity extends AppCompatActivity {
     private String exampleJp = "";
     private boolean isReviewMode = false; // Flag to check if it's in review mode
     private int lessonItemIndex = 0;
+    private FirebaseStorage storage;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +66,9 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         tv_op_2 = findViewById(R.id.Tv_op_2);
         audioIcon = findViewById(R.id.btn_lesson_audio);
         tvTitle = findViewById(R.id.tvTitle);
+        JapaneseChar = findViewById(R.id.JapaneseChar);
+        storage = FirebaseStorage.getInstance();
+
 
         // Initialize Firebase Database
         database = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
@@ -137,7 +149,7 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         });
 
         // Set up click listener for the audio icon
-        audioIcon.setOnClickListener(v -> playLessonAudio()); // Implement playLessonAudio method
+        audioIcon.setOnClickListener(v -> playLessonAudio(JapaneseChar.getText().toString())); // Implement playLessonAudio method
     }
 
     private void setNameOptionActive() {
@@ -235,17 +247,24 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         // This method can be used to load additional data specific to the Example option if required
     }
 
-    private void playLessonAudio() {
-        String audioUrl = "URL_FROM_FIREBASE"; // Replace with actual URL retrieval logic
+    private void playLessonAudio(String japaneseChar) {
+        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "" + japaneseChar);
+        StorageReference audioRef = storage.getInstance().getReference().child("audios/" + sanitizedJapaneseChar);
+        audioRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            if (mediaPlayer == null) {
+                mediaPlayer = new MediaPlayer();
+            }
 
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.setDataSource(audioUrl);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (IOException e) {
-            Log.e(TAG, "Error playing audio", e);
-        }
+            try {
+                mediaPlayer.reset();
+                mediaPlayer.setDataSource(uri.toString());
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+                Toast.makeText(LessonDiscussionActivity.this, "Playing Audio", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(LessonDiscussionActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> Toast.makeText(LessonDiscussionActivity.this, "Failed to get audio URL: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void showEndOfLessonPopup() {
