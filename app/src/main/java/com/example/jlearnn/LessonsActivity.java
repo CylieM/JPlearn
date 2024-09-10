@@ -1,34 +1,43 @@
 package com.example.jlearnn;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog; // Import AlertDialog
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import com.example.jlearnn.R;
+import com.example.jlearnn.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 public class LessonsActivity extends AppCompatActivity {
 
     private static final String TAG = "Lesson421";
-    private TextView tvFront;
+    private TextView tvFront, tvOp1, tvOp2, tvDesc1, tvDesc2, tvTitle;
     private EditText txtUserInput;
-    private ImageButton btnPrev, btnNext;
-    private int currentLessonIndex = 1; // Start from Lesson1
-    private int currentItemIndex = 1; // Start from item_1
-    private int lessonCount; // Total lessons, will be dynamically set
-    private int itemsPerLesson = 5; // Assuming 5 items per lesson
-    private boolean answerVerified = false; // Flag to track if answer has been verified
+    private ImageButton btnPrev, btnNext, btnTestName, btnTestExample;
+    private int currentLessonIndex = 1;
+    private int currentItemIndex = 1;
+    private int lessonCount;
+    private int itemsPerLesson = 5;
+    private boolean answerVerified = false;
 
     private DatabaseReference database;
     private String currentCharacter;
@@ -36,6 +45,10 @@ public class LessonsActivity extends AppCompatActivity {
     private String userId;
     private String currentLesson;
     private String romaji;
+    private String dataPronun;
+    private String dataDesc;
+    private String exampleEn;
+    private String exampleJp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +60,14 @@ public class LessonsActivity extends AppCompatActivity {
         txtUserInput = findViewById(R.id.txtUserInput);
         btnPrev = findViewById(R.id.btnPrev);
         btnNext = findViewById(R.id.btnNext);
+        tvOp1 = findViewById(R.id.Tv_op_1);
+        tvOp2 = findViewById(R.id.Tv_op_2);
+        tvDesc1 = findViewById(R.id.Tv_desc_1);
+        tvDesc2 = findViewById(R.id.Tv_desc_2);
+        tvTitle = findViewById(R.id.tvTitle);
+        btnTestName = findViewById(R.id.btnTestName);
+        btnTestExample = findViewById(R.id.btnTestExample);
 
-        // Initialize UserModel
         userModel = new UserModel();
         userId = userModel.getFirebaseAuth().getCurrentUser().getUid();
         database = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference();
@@ -56,40 +75,34 @@ public class LessonsActivity extends AppCompatActivity {
         // Fetch current lesson for the user
         fetchCurrentLesson();
 
-        // Set up click listener for btnNext
         btnNext.setOnClickListener(v -> {
             if (!answerVerified) {
-                // If the answer has not been verified, verify the answer
                 verifyAnswer();
             } else {
-                // If the answer has already been verified, proceed to the next question
                 loadNextQuestion();
             }
         });
 
-        // Disable prev button click listener
         btnPrev.setOnClickListener(null);
 
-        // Set up text change listener for txtUserInput
         txtUserInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Not needed
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Not needed
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Automatically verify the answer when the user finishes typing
                 if (!answerVerified) {
                     verifyAnswer();
                 }
             }
         });
+
+        // Set up click listeners for buttons
+        btnTestName.setOnClickListener(v -> updateTextViewsForTestName());
+        btnTestExample.setOnClickListener(v -> updateTextViewsForTestExample());
     }
 
     private void fetchCurrentLesson() {
@@ -98,7 +111,6 @@ public class LessonsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     currentLesson = dataSnapshot.child("currentLesson").getValue(String.class);
-                    // Count the number of items under the current lesson
                     countLessonItems(currentLesson);
                 } else {
                     Log.e(TAG, "User data does not exist for userId: " + userId);
@@ -118,7 +130,6 @@ public class LessonsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     lessonCount = (int) dataSnapshot.getChildrenCount();
-                    // Load the first item of the current lesson
                     loadLesson(lesson, currentItemIndex);
                 } else {
                     Log.e(TAG, "Lesson does not exist: " + lesson);
@@ -133,10 +144,8 @@ public class LessonsActivity extends AppCompatActivity {
     }
 
     private void loadLesson(String lesson, int index) {
-        // Construct the path based on the lesson number and item index
         String lessonPath = "Lessons/" + lesson + "/" + lesson + "_" + index;
 
-        // Fetch the lesson data from Realtime Database
         database.child(lessonPath).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -155,13 +164,34 @@ public class LessonsActivity extends AppCompatActivity {
     }
 
     private void displayLesson(DataSnapshot dataSnapshot) {
-        // Get data from Firebase Realtime Database
-        currentCharacter= dataSnapshot.child("japaneseChar").getValue(String.class);
+        currentCharacter = dataSnapshot.child("japaneseChar").getValue(String.class);
         romaji = dataSnapshot.child("dataRomaji").getValue(String.class);
+        dataPronun = dataSnapshot.child("dataPronun").getValue(String.class);
+        dataDesc = dataSnapshot.child("dataDesc").getValue(String.class);
+        exampleEn = dataSnapshot.child("exampleEn").getValue(String.class);
+        exampleJp = dataSnapshot.child("exampleJp").getValue(String.class);
 
-        // Display the data in the appropriate TextViews
         tvFront.setText(currentCharacter);
         txtUserInput.setText(""); // Clear previous input
+
+        // Set default values
+        updateTextViewsForTestName();
+    }
+
+    private void updateTextViewsForTestName() {
+        tvTitle.setText("Item Name");
+        tvOp1.setText("Pronunciation");
+        tvOp2.setText("Description");
+        tvDesc1.setText(dataPronun);
+        tvDesc2.setText(dataDesc);
+    }
+
+    private void updateTextViewsForTestExample() {
+        tvTitle.setText("Item Example");
+        tvOp1.setText("English Example");
+        tvOp2.setText("Japanese Example");
+        tvDesc1.setText(exampleEn);
+        tvDesc2.setText(exampleJp);
     }
 
     private void verifyAnswer() {
@@ -173,7 +203,7 @@ public class LessonsActivity extends AppCompatActivity {
                 txtUserInput.postDelayed(() -> {
                     txtUserInput.setBackgroundColor(getResources().getColor(android.R.color.white));
                     if (currentItemIndex == itemsPerLesson) {
-                        returnToLessonDiscussion();
+                        showCompletionPopup(); // Show completion popup
                     } else {
                         loadNextQuestion();
                     }
@@ -184,11 +214,11 @@ public class LessonsActivity extends AppCompatActivity {
 
                 saveIncorrectAnswer(currentCharacter, userInput);
                 if (currentItemIndex == itemsPerLesson) {
-                    btnNext.setEnabled(true); // Enable the next button if it's the last question and the answer is incorrect
+                    btnNext.setEnabled(true);
                 }
             }
             answerVerified = false;
-            updateProgress(); // Increment count after verifying answer
+            updateProgress();
         }
     }
 
@@ -197,12 +227,9 @@ public class LessonsActivity extends AppCompatActivity {
             currentItemIndex++;
             loadLesson(currentLesson, currentItemIndex);
         } else {
-            returnToLessonDiscussion(); // Return to lesson discussion after completing all questions
+            showCompletionPopup(); // Show completion popup
         }
     }
-
-
-
 
     private void saveIncorrectAnswer(String character, String userInput) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -213,139 +240,17 @@ public class LessonsActivity extends AppCompatActivity {
     }
 
     private void updateProgress() {
-        // Get the user ID
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // Construct the path to the user's progress for the current item
-        String itemProgressPath = "users/" + userId + "/itemProgress/lesson" + currentLessonIndex + "/item_" + currentItemIndex + "/counter";
-
-        // Increment the progress for the corresponding Lesson
-        incrementProgress(itemProgressPath);
+        // Continue updating the progress as needed
     }
 
-    private void incrementProgress(String userProgressPath) {
-        // Update the progress in the database for the Lesson Item
-        database.child(userProgressPath).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Integer currentProgress = dataSnapshot.getValue(Integer.class);
+    private void showCompletionPopup() {
+        new AlertDialog.Builder(this)
+                .setTitle("Congratulations!")
+                .setMessage("You have completed the test.")
 
-                // Increment the progress
-                if (currentProgress != null) {
-                    currentProgress++;
-                } else {
-                    currentProgress = 1; // Start from 1 if it's null
-                }
-
-                // Update the progress in the database
-                database.child(userProgressPath).setValue(currentProgress);
-
-                // Check if all items in the current lesson are completed
-                checkAllItemsProgress();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "Error updating user progress", databaseError.toException());
-            }
-        });
-    }
-
-    private void checkAllItemsProgress() {
-        // Get the user ID
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // Construct the path to the user's progress for the current lesson
-        String lessonProgressPath = "users/" + userId + "/itemProgress/lesson" + currentLessonIndex;
-
-        // Fetch the user's progress data
-        database.child(lessonProgressPath).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean allItemsCompleted = true;
-                if (dataSnapshot.exists()) {
-                    // Iterate through each child (lesson item key)
-                    for (DataSnapshot lessonItemSnapshot : dataSnapshot.getChildren()) {
-                        // Get the current progress count
-                        Integer currentProgress = lessonItemSnapshot.child("counter").getValue(Integer.class);
-
-                        // Check if the progress has reached 5 for all items
-                        if (currentProgress == null || currentProgress < 5) {
-                            allItemsCompleted = false;
-                            break;
-                        }
-                    }
-
-                    if (allItemsCompleted) {
-                        // After completing all items in the lesson, return to lesson discussion
-                        returnToLessonDiscussion();
-                    } else {
-                        // If not all items are completed, reload the lesson
-                        loadLesson(currentLesson, currentItemIndex);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "Error checking progress", databaseError.toException());
-            }
-        });
+                .show();
     }
 
 
-
-    private void returnToLessonDiscussion() {
-        // Implement the logic to return to the lesson discussion
-        // For example, you might start a new activity for the lesson discussion
-        Intent intent = new Intent(this, LessonDiscussionActivity.class);
-        startActivity(intent);
-    }
-
-    private void proceedToNextLesson() {
-        if (currentLessonIndex < lessonCount) {
-            currentLessonIndex++;
-            currentItemIndex = 1; // Reset the item index
-            fetchCurrentLesson(); // Fetch current lesson again
-        } else {
-            // Update the daily streak before returning to the Lesson Discussion
-            updateDailyStreak();
-        }
-    }
-
-
-    private void updateDailyStreak() {
-        userModel.getUserRef(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    long currentTime = System.currentTimeMillis();
-                    long lastLoginTime = dataSnapshot.child("lastLoginDate").getValue(Long.class);
-                    int dailyStreak = dataSnapshot.child("dailyStreak").getValue(Integer.class);
-
-                    if (currentTime - lastLoginTime < 24 * 60 * 60 * 1000) {
-                        dailyStreak++;
-                    } else if (currentTime - lastLoginTime > 48 * 60 * 60 * 1000) {
-                        dailyStreak = 0;
-                    }
-
-                    dataSnapshot.getRef().child("dailyStreak").setValue(dailyStreak);
-                    dataSnapshot.getRef().child("lastLoginDate").setValue(currentTime);
-
-                    Log.d(TAG, "Daily streak updated: " + dailyStreak);
-
-                    // Return to lesson discussion after updating the daily streak
-                    returnToLessonDiscussion();
-                } else {
-                    Log.e(TAG, "User data does not exist for userId: " + userId);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "Error updating daily streak", databaseError.toException());
-                finish();
-            }
-        });
-    }
 }
