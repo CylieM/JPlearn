@@ -43,13 +43,12 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="100dp"
+                    android:layout_height="142dp"
+                    android:layout_marginTop="70dp"
                     android:orientation="horizontal">
 
-
                     <LinearLayout
-                        android:id="@+id/lessonKatakanaHiragana"
+                        android:id="@+id/lessonHiragana"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="35dp"
@@ -64,7 +63,124 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:text="Katakana and Hiragana"
+                            android:text="Hiragana"
+                            android:textColor="@android:color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:background="@drawable/custom_round_background"
+                                android:padding="8dp"
+                                android:text="あ"
+                                android:textColor="@android:color/black"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:background="@drawable/custom_round_background"
+                                android:padding="8dp"
+                                android:text="い"
+                                android:textColor="@android:color/black"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:background="@drawable/custom_round_background"
+                                android:padding="8dp"
+                                android:text="う"
+                                android:textColor="@android:color/black"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:background="@drawable/custom_round_background"
+                                android:padding="8dp"
+                                android:text="え"
+                                android:textColor="@android:color/black"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:background="@drawable/custom_round_background"
+                                android:padding="8dp"
+                                android:text="お"
+                                android:textColor="@android:color/black"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:background="@drawable/custom_round_background"
+                                android:padding="8dp"
+                                android:text="か"
+                                android:textColor="@android:color/black"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:background="@drawable/custom_round_background"
+                                android:padding="8dp"
+                                android:text="き"
+                                android:textColor="@android:color/black"
+                                android:textSize="18sp" />
+
+
+                            <!-- Add other hiragana characters similarly -->
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="142dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/img_lock"
+                        android:layout_width="35dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="200px"
+                        app:srcCompat="@drawable/padlock_removebg_preview" />
+
+                    <LinearLayout
+                        android:id="@+id/lessonKatakana"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/locked_content_roundbg"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="Katakana"
                             android:textColor="@android:color/black"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -171,7 +287,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="16dp"
+
                         android:background="@drawable/locked_content_roundbg"
                         android:orientation="vertical"
                         android:padding="16dp">
@@ -229,6 +345,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="142dp"
+                    android:layout_marginTop="7dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -242,7 +359,7 @@
                         android:id="@+id/lessonGrammar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+
                         android:background="@drawable/locked_content_roundbg"
                         android:orientation="vertical"
                         android:padding="16dp">

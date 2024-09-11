@@ -32,8 +32,9 @@ public class LessonList extends AppCompatActivity {
         });
 
         // Set up click listeners for each lesson
-        findViewById(R.id.lessonKatakanaHiragana).setOnClickListener(v -> startLessonDiscussionActivity(1, "Katakana and Hiragana"));
-        findViewById(R.id.lessonVocabulary).setOnClickListener(v -> startLessonDiscussionActivity(2, "Vocabulary"));
+        findViewById(R.id.lessonHiragana).setOnClickListener(v -> startHiraganaIntro());
+        findViewById(R.id.lessonKatakana).setOnClickListener(v -> startKatakanaIntro());
+        findViewById(R.id.lessonVocabulary).setOnClickListener(v -> startVocabIntro());
 
         // Modify the click listener for the grammar button to use your existing activity
         LinearLayout lessonGrammar = findViewById(R.id.lessonGrammar);
@@ -48,6 +49,25 @@ public class LessonList extends AppCompatActivity {
         });
     }
 
+    private void startVocabIntro() {
+        Intent intent = new Intent(LessonList.this, VocabIntro.class);
+        startActivity(intent);
+        // Save the selected lesson in SharedPreferences
+    }
+
+    private void startHiraganaIntro() {
+        Intent intent = new Intent(LessonList.this, HiraganaIntro.class);
+        startActivity(intent);
+        // Save the selected lesson in SharedPreferences
+    }
+
+    private void startKatakanaIntro() {
+        Intent intent = new Intent(LessonList.this, KatakanaIntro.class);
+        startActivity(intent);
+        // Save the selected lesson in SharedPreferences
+    }
+
+
     private void startLessonDiscussionActivity(int lessonNumber, String lessonName) {
         Intent intent = new Intent(LessonList.this, LessonDiscussionActivity.class);
         intent.putExtra("lessonNumber", lessonNumber);
@@ -55,4 +75,6 @@ public class LessonList extends AppCompatActivity {
         // Save the selected lesson in SharedPreferences
         sharedPreferences.edit().putString("currentLesson", lessonName).apply();
     }
+
+
 }

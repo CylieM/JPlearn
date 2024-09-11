@@ -1,49 +1,53 @@
 package com.example.jlearnn;
 
-import android.content.DialogInterface;
+import android.os.Bundle;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.io.IOException;
 
-public class LessonDiscussionActivity extends AppCompatActivity {
+public class LessonVocab extends AppCompatActivity {
 
-    private static final String TAG = "LessonDiscussionActivity";
+    private static final String TAG = "LessonVocab";
     private TextView tvFront, tvBtnName, tvBtnExample, tvRomaji, tv_op_1, tv_op_2, tv_desc_1, tv_desc_2, tvTitle;
     private ImageView audioIcon;
-    private int currentLessonIndex = 0;
     private int lessonCount = 0;
     private boolean isRomajiName = true; // Flag to track if Romaji is currently set to Name or Examples
     private DatabaseReference database;
     private String currentRomaji = "";
-    private String currentExamples = "";
-    private String dataPronun = "";
+    private String dataTranslate = "";
     private String dataDesc = "";
     private String exampleEn = "";
     private String exampleJp = "";
     private boolean isReviewMode = false; // Flag to check if it's in review mode
-    private int lessonItemIndex = 0;
+    private int lessonItemIndex = 0; // Only declared once
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lesson_discussion);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_lesson_vocab);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         // Initialize views
         tv_desc_1 = findViewById(R.id.Tv_desc_1);
@@ -63,8 +67,9 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         // Check if the activity was started in review mode
         isReviewMode = getIntent().getBooleanExtra("reviewMode", false);
 
-        // Get the lesson number from the intent
+        // Get the lesson number and lesson item index from the intent
         int lessonNumber = getIntent().getIntExtra("lessonNumber", 1);
+        lessonItemIndex = getIntent().getIntExtra("lessonItemIndex", 0); // Use the intent data for initialization
 
         // Fetch current user's ID
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -76,8 +81,8 @@ public class LessonDiscussionActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Load the lesson based on the passed lesson number
-                    loadLesson(lessonNumber, 0); // Pass lessonItemIndex as 0
+                    // Load the lesson based on the passed lesson number and item index
+                    loadLesson(lessonNumber, lessonItemIndex);
                 }
             }
 
@@ -88,46 +93,57 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         });
 
         // Set default values for the Name option
-        tv_op_1.setText("Pronunciation : ");
+        tv_op_1.setText("Translation : ");
         tv_op_2.setText("Description : ");
         tv_desc_1.setText("");
         tv_desc_2.setText("");
         audioIcon.setVisibility(View.GONE); // Hide the audio icon by default
 
-        // Set up click listener for Name button
+        // Set up click listeners for buttons
         tvBtnName.setOnClickListener(v -> {
             setNameOptionActive();
             loadNameOptionData();
         });
 
-        // Set up click listener for Example button
         tvBtnExample.setOnClickListener(v -> {
             setExampleOptionActive();
             loadExampleOptionData();
         });
 
-        // Set up click listener for btnNext
         findViewById(R.id.btnNext).setOnClickListener(v -> {
-            if (lessonItemIndex < lessonCount - 1) {
+            if (lessonItemIndex == 9) { // Lesson item 3_10 corresponds to index 9 (0-based index)
+                // Redirect to VocabGreetingIntro
+                Intent intent = new Intent(LessonVocab.this, VocabWeekdayIntro.class);
+                intent.putExtra("lessonNumber", getIntent().getIntExtra("lessonNumber", 1));
+                startActivity(intent);
+                finish();
+            } else if (lessonItemIndex == 16) { // Lesson item 3_17 corresponds to index 16 (0-based index)
+                // Redirect to VocabForeignIntro
+                Intent intent = new Intent(LessonVocab.this, VocabForeignIntro.class);
+                intent.putExtra("lessonNumber", getIntent().getIntExtra("lessonNumber", 1));
+                startActivity(intent);
+                finish();
+            } else if (lessonItemIndex < lessonCount - 1) {
+                // Load the next lesson item
                 lessonItemIndex++;
-                loadLesson(lessonNumber, lessonItemIndex); // Load the next lesson item
+                loadLesson(getIntent().getIntExtra("lessonNumber", 1), lessonItemIndex);
             } else {
-                showEndOfLessonPopup(); // Show end of lesson popup
+                // Show end of lesson popup
+                showEndOfLessonPopup();
             }
         });
 
-        // Set up click listener for btnPrev
+
         findViewById(R.id.btnPrev).setOnClickListener(v -> {
             if (lessonItemIndex > 0) {
                 lessonItemIndex--;
-                loadLesson(lessonNumber, lessonItemIndex); // Load the previous lesson item
+                loadLesson(getIntent().getIntExtra("lessonNumber", 1), lessonItemIndex); // Load the previous lesson item
             }
         });
 
-        // Set up click listener for tvRomaji
         tvRomaji.setOnClickListener(v -> {
             if (isRomajiName) {
-                tvRomaji.setText(currentExamples);
+                tvRomaji.setText(currentRomaji);
                 isRomajiName = false;
             } else {
                 tvRomaji.setText(currentRomaji);
@@ -135,16 +151,16 @@ public class LessonDiscussionActivity extends AppCompatActivity {
             }
         });
 
-        // Set up click listener for the audio icon
         audioIcon.setOnClickListener(v -> playLessonAudio()); // Implement playLessonAudio method
     }
+
 
     private void setNameOptionActive() {
         tvBtnName.setTextAppearance(R.style.BoldText); // Use a style for bold text
         tvBtnExample.setTextAppearance(R.style.NormalText); // Use a style for normal text
-        tv_op_1.setText("Pronunciation : ");
+        tv_op_1.setText("Translation : ");
         tv_op_2.setText("Description : ");
-        tv_desc_1.setText(dataPronun);
+        tv_desc_1.setText(dataTranslate);
         tv_desc_2.setText(dataDesc);
         audioIcon.setVisibility(View.GONE); // Hide the audio icon
         tvTitle.setText("Name"); // Update title text
@@ -153,8 +169,8 @@ public class LessonDiscussionActivity extends AppCompatActivity {
     private void setExampleOptionActive() {
         tvBtnName.setTextAppearance(R.style.NormalText); // Use a style for normal text
         tvBtnExample.setTextAppearance(R.style.BoldText); // Use a style for bold text
-        tv_op_1.setText("English Example :");
-        tv_op_2.setText("Japanese Example :");
+        tv_op_1.setText("English Example : ");
+        tv_op_2.setText("Japanese Example : ");
         tv_desc_1.setText(exampleEn);
         tv_desc_2.setText(exampleJp);
         audioIcon.setVisibility(View.VISIBLE); // Show the audio icon
@@ -201,14 +217,13 @@ public class LessonDiscussionActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, "Error getting lesson data", databaseError.toException());
             }
-
         });
     }
 
     private void displayLesson(DataSnapshot dataSnapshot) {
         String japaneseChar = dataSnapshot.child("japaneseChar").getValue(String.class);
         currentRomaji = dataSnapshot.child("dataRomaji").getValue(String.class);
-        dataPronun = dataSnapshot.child("dataPronun").getValue(String.class);
+        dataTranslate = dataSnapshot.child("dataTranslate").getValue(String.class);
         dataDesc = dataSnapshot.child("dataDesc").getValue(String.class);
         exampleEn = dataSnapshot.child("dataExampleEn").getValue(String.class);
         exampleJp = dataSnapshot.child("dataExampleJp").getValue(String.class);
@@ -252,13 +267,14 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         builder.setTitle("Congratulations!")
                 .setMessage("You have completed this lesson.")
                 .setPositiveButton("Back to Lesson List", (dialog, which) -> {
-                    Intent intent = new Intent(LessonDiscussionActivity.this, LessonList.class);
+                    Intent intent = new Intent(LessonVocab.this, LessonList.class);
                     startActivity(intent);
                     finish();
                 })
                 .setNegativeButton("Restart Lesson", (dialog, which) -> {
                     lessonItemIndex = 0;
                     loadLesson(getIntent().getIntExtra("lessonNumber", 1), lessonItemIndex);
+
                 })
                 .show();
     }
