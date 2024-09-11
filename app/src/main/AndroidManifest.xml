@@ -18,6 +18,9 @@
         android:theme="@style/Theme.Jlearnn"
         tools:targetApi="31">
         <activity
+            android:name=".NihonBoardActivity"
+            android:exported="false" />
+        <activity
             android:name=".KanaBoardActivity"
             android:exported="false"
             android:theme="@style/Theme.Jlearnn" />
@@ -66,6 +69,9 @@
             android:exported="false" />
         <activity
             android:name=".HomeFragment"
+            android:exported="false" />
+        <activity
+            android:name=".LeaderboardFragment"
             android:exported="false" />
         <activity
             android:name=".MultiplayerGameActivity"
