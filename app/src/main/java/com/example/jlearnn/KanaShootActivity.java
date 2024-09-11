@@ -1,4 +1,5 @@
 package com.example.jlearnn;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
@@ -7,6 +8,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.webkit.WebViewCompat;
 import androidx.webkit.WebViewFeature;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,6 +72,13 @@ public class KanaShootActivity extends AppCompatActivity {
             userRef.child("KSHighScore").setValue(finalScore).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(KanaShootActivity.this, "Game result saved successfully", Toast.LENGTH_SHORT).show();
+
+                    // Start the test
+                    Intent intent = new Intent(KanaShootActivity.this, KanaBoardActivity.class);
+                    startActivity(intent);
+
+                    // Finish the current activity
+                    finish();
                 } else {
                     Toast.makeText(KanaShootActivity.this, "Failed to save game result", Toast.LENGTH_SHORT).show();
                 }
@@ -76,5 +86,4 @@ public class KanaShootActivity extends AppCompatActivity {
         } else {
             Toast.makeText(KanaShootActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
         }
-    }
-}
+    }}

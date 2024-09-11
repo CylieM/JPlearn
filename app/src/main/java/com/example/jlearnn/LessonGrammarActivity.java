@@ -68,7 +68,7 @@ public class LessonGrammarActivity extends AppCompatActivity {
 
     private void fetchLessons() {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app");
-        DatabaseReference ref = database.getReference("Lessons/3");
+        DatabaseReference ref = database.getReference("Lessons/4");
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -121,7 +121,7 @@ public class LessonGrammarActivity extends AppCompatActivity {
 
     private void playAudioExample() {
         if (currentIndex >= 0 && currentIndex < lessonList.size()) {
-            String audioFileName = "3_" + (currentIndex + 1) + ".m4a";
+            String audioFileName = "4_" + (currentIndex + 1) + ".m4a";
             StorageReference audioRef = storage.getReference().child("grammar/" + audioFileName);
 
             audioRef.getDownloadUrl().addOnSuccessListener(uri -> {

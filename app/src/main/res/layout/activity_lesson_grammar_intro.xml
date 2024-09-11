@@ -30,7 +30,12 @@
             android:layout_marginTop="10dp"
             android:padding="20dp"
 
-            android:text="Congratulations on reaching the final  lesson! 🎉 Today, we’ll explore Japanese grammatical particles.  Grammatical particles are small words in a language that serve specific functions, like marking subjects, objects, or locations. They’re crucial because they clarify relationships between words and give sentences structure. "
+            android:text="Today, we’ll explore Japanese grammatical particles. Grammatical particles are small words in a language that serve specific functions, like marking subjects, objects, or locations.
+Objective: At the end of this lesson, users will be able to:
+Identify and use common Japanese particles.
+Construct simple sentences using these particles.
+Understand the function of particles in marking the subject, object, and location in a sentence.
+Complete sentences with appropriate grammar elements."
             android:layout_gravity="center"
             android:id="@+id/detailExample"
             android:textSize="18sp"

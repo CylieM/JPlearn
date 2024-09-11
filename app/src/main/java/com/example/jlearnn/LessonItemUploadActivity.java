@@ -141,7 +141,7 @@ public class LessonItemUploadActivity extends AppCompatActivity {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("audios/");
 
         // Sanitize japaneseChar to ensure it can be used as a file name
-        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "_");
+        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "" + japaneseChar);
 
         StorageReference audioRef = storageRef.child(sanitizedJapaneseChar);
 

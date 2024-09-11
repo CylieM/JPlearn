@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string msgid="8397015543330865059" name="android.credentials.TYPE_PASSWORD_CREDENTIAL">"पासवर्ड"</string>
+    <string msgid="3929015085059320822" name="androidx.credentials.TYPE_PUBLIC_KEY_CREDENTIAL">"पासकी"</string>
+</resources>

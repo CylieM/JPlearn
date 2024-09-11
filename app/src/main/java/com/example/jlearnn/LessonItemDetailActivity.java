@@ -20,12 +20,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class                                                        LessonItemDetailActivity extends AppCompatActivity {
+public class LessonItemDetailActivity extends AppCompatActivity {
     TextView detailDesc, detailRomaji, detailExample, detailJapaneseChar, detailLesson;
     FloatingActionButton deleteButton, editButton;
     Button playAudio;
     String key = "";
     MediaPlayer mediaPlayer;
+    FirebaseStorage storage;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -41,6 +42,7 @@ public class                                                        LessonItemDe
         deleteButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
         playAudio = findViewById(R.id.playAudio);
+        storage = FirebaseStorage.getInstance();
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -53,7 +55,7 @@ public class                                                        LessonItemDe
             // Extract lesson number from the key and display it
             String[] keyParts = key.split("_");
             if (keyParts.length > 0) {
-                String lessonNumber = keyParts[0]; // Extract lesson number from the key
+                String lessonNumber = keyParts[0];
                 detailLesson.setText("Lesson " + lessonNumber);
             }
         }
@@ -101,8 +103,8 @@ public class                                                        LessonItemDe
     }
 
     private void playAudioFile(String japaneseChar) {
-        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "_");
-        StorageReference audioRef = FirebaseStorage.getInstance().getReference().child("audios/" + sanitizedJapaneseChar);
+        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "" + japaneseChar);
+        StorageReference audioRef = storage.getReference().child("audios/" + sanitizedJapaneseChar);
 
         audioRef.getDownloadUrl().addOnSuccessListener(uri -> {
             if (mediaPlayer == null) {

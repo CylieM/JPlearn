@@ -13,11 +13,27 @@
         <!-- Table rows will be added programmatically -->
     </TableLayout>
 
-    <Button
-        android:id="@+id/btnOk"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:text="OK" />
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="OK"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnShowAllLeaderboards"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Show All Leaderboard" />
+    </LinearLayout>
 </LinearLayout>
