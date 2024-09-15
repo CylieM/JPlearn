@@ -2,6 +2,7 @@ package com.example.jlearnn;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -371,10 +372,10 @@ public class MultiplayerGameActivity extends AppCompatActivity {
         double words = progress * currentRomaji.split(" ").length;
         return words / minutes;
     }
-    private void displayFinishedDialog(List<PlayerResult> playerResults) {
-        Collections.sort(playerResults, new Comparator<PlayerResult>() {
+    private void displayFinishedDialog(List<MultiplayerGameActivity.PlayerResult> playerResults) {
+        Collections.sort(playerResults, new Comparator<MultiplayerGameActivity.PlayerResult>() {
             @Override
-            public int compare(PlayerResult o1, PlayerResult o2) {
+            public int compare(MultiplayerGameActivity.PlayerResult o1, MultiplayerGameActivity.PlayerResult o2) {
                 return Double.compare(o2.progress, o1.progress);
             }
         });
@@ -385,7 +386,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
         builder.setView(dialogView);
 
         TableLayout tableLayout = dialogView.findViewById(R.id.tableLayout);
-        for (PlayerResult result : playerResults) {
+        for (MultiplayerGameActivity.PlayerResult result : playerResults) {
             TableRow row = new TableRow(this);
 
             TextView usernameTextView = new TextView(this);
@@ -407,16 +408,30 @@ public class MultiplayerGameActivity extends AppCompatActivity {
         }
 
         Button btnOk = dialogView.findViewById(R.id.btnOk);
+        Button btnShowAllLeaderboards = dialogView.findViewById(R.id.btnShowAllLeaderboards);
+
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                // Replace fragment with NihongoRaceFragment
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new NihongoRaceFragment())
+                        .addToBackStack(null)  // Optional: add to back stack if you want to enable back navigation
+                        .commit();
+            }
+        });
+
+        btnShowAllLeaderboards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Dialog", "Show All Leaderboards Button Clicked");
+                Intent intent = new Intent(MultiplayerGameActivity.this, NihonBoardActivity.class);
+                startActivity(intent);
             }
         });
 
         builder.create().show();
     }
-
 
     public class PlayerView extends LinearLayout {
 

@@ -301,6 +301,10 @@ public class RegistrationActivity extends AppCompatActivity {
         public void setCurrentLesson(String currentLesson) { // Add this method
             this.currentLesson = currentLesson;
         }
+
+        public Object getJoinedRoomCode() {
+            return null;
+        }
     }
 
 

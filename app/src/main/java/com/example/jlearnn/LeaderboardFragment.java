@@ -10,8 +10,10 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -19,10 +21,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 public class LeaderboardFragment extends Fragment implements View.OnClickListener {
 
@@ -108,14 +109,17 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
                     }
                 }
 
+                // Sort users by category value in descending order
                 userList.sort((user1, user2) -> {
                     int value1 = getCategoryValue(user1, category);
                     int value2 = getCategoryValue(user2, category);
                     return Integer.compare(value2, value1);
                 });
 
+                // Display only the top 10 users
                 int rank = 1;
                 for (RegistrationActivity.User user : userList) {
+                    if (rank > 10) break; // Limit to top 10
                     int categoryValue = getCategoryValue(user, category);
                     if (categoryValue > 0) {
                         addTableRow(rank, user.getUsername(), categoryValue, user.getProfilePicture());

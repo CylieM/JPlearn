@@ -159,7 +159,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/img_lock"
+                        android:id="@+id/img_lock123"
                         android:layout_width="35dp"
                         android:layout_height="50dp"
                         android:layout_marginTop="200px"

@@ -44,8 +44,7 @@
             android:exported="false" />
         <activity
             android:name=".KanaBoardActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Jlearnn" />
+            android:exported="false" />
         <activity
             android:name=".bottom_nav_menu"
             android:exported="false" />
@@ -79,7 +78,9 @@
             android:exported="false" />
         <activity
             android:name=".UserManagementActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            />
         <activity
             android:name=".ForgotPasswordBActivity"
             android:exported="false" />

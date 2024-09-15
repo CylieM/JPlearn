@@ -1,24 +1,19 @@
 package com.example.jlearnn;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.webkit.WebViewCompat;
-import androidx.webkit.WebViewFeature;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.jlearnn.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class KanaShootActivity extends AppCompatActivity {
     private WebView webView;
@@ -57,7 +52,7 @@ public class KanaShootActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void onGameEnded(int finalWave, int finalScore) {
-            saveGameResult(finalWave, finalScore);
+            activity.saveGameResult(finalWave, finalScore);
         }
     }
 
@@ -68,8 +63,21 @@ public class KanaShootActivity extends AppCompatActivity {
             DatabaseReference userRef = userModel.getUserRef(userId);
 
             // Update user's game result in Firebase Database
-            userRef.child("KSWaves").setValue(finalWave);
+            userRef.child("KSWaves").setValue(finalWave).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d("Firebase", "Wave data saved successfully: " + finalWave);
+                } else {
+                    Log.e("Firebase", "Failed to save wave data", task.getException());
+                }
+            });
+
             userRef.child("KSHighScore").setValue(finalScore).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d("Firebase", "Score data saved successfully: " + finalScore);
+                } else {
+                    Log.e("Firebase", "Failed to save score data", task.getException());
+                }
+            }).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(KanaShootActivity.this, "Game result saved successfully", Toast.LENGTH_SHORT).show();
 
@@ -83,7 +91,9 @@ public class KanaShootActivity extends AppCompatActivity {
                     Toast.makeText(KanaShootActivity.this, "Failed to save game result", Toast.LENGTH_SHORT).show();
                 }
             });
+
         } else {
             Toast.makeText(KanaShootActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
         }
-    }}
+    }
+}

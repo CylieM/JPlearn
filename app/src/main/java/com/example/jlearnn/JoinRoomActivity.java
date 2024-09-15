@@ -20,6 +20,7 @@ public class JoinRoomActivity extends AppCompatActivity {
 
     private EditText gameCodeEditText;
     private Button clearButton, enterButton;
+    private UserModel userModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,8 @@ public class JoinRoomActivity extends AppCompatActivity {
         gameCodeEditText = findViewById(R.id.editTextGameCode);
         clearButton = findViewById(R.id.btnClear);
         enterButton = findViewById(R.id.btnEnter);
+
+        userModel = new UserModel();
 
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,16 +52,23 @@ public class JoinRoomActivity extends AppCompatActivity {
     }
 
     private void checkGameCodeExists(String gameCode) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("gameRooms");
+        DatabaseReference gameRoomsReference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("gameRooms");
 
-        databaseReference.child(gameCode).addListenerForSingleValueEvent(new ValueEventListener() {
+        gameRoomsReference.child(gameCode).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     // Game code exists
-                    Intent intent = new Intent(JoinRoomActivity.this, CreateRoomActivity.class);
-                    intent.putExtra("GAME_CODE", gameCode);
-                    startActivity(intent);
+                    String userId = userModel.getFirebaseAuth().getCurrentUser().getUid();
+                    userModel.getUserRef(userId).child("joinedRoomCode").setValue(1).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Intent intent = new Intent(JoinRoomActivity.this, CreateRoomActivity.class);
+                            intent.putExtra("GAME_CODE", gameCode);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(JoinRoomActivity.this, "Failed to update user data.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } else {
                     // Game code does not exist
                     Toast.makeText(JoinRoomActivity.this, "Game code does not exist.", Toast.LENGTH_SHORT).show();

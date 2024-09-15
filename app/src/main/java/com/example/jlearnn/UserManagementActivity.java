@@ -24,7 +24,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class UserManagementActivity extends AppCompatActivity implements UserAdapter.OnItemClickListener {
-
     DatabaseReference databaseReference;
     ValueEventListener eventListener;
     RecyclerView recyclerView;
@@ -37,7 +36,6 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_management);
-
 
         recyclerView = findViewById(R.id.recyclerView);
         searchView = findViewById(R.id.search);
@@ -54,13 +52,13 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
 
         userList = new ArrayList<>();
         fullUserList = new ArrayList<>();
-        adapter = new UserAdapter(UserManagementActivity.this, userList, this); // Pass this activity as OnItemClickListener
+        adapter = new UserAdapter(UserManagementActivity.this, userList, this);
         recyclerView.setAdapter(adapter);
 
         databaseReference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("users");
-        dialog.show();
 
-        eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+        // Query users with joinedRoomCode equal to 1
+        eventListener = databaseReference.orderByChild("joinedRoomCode").equalTo(1).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userList.clear();
@@ -82,7 +80,6 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
             }
         });
 
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -95,16 +92,10 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
                 return true;
             }
         });
-
-
     }
-
-
-
 
     @Override
     public void onItemClick(RegistrationActivity.User user) {
-        // Handle item click
         Bundle bundle = new Bundle();
         bundle.putString("userId", user.getUserId());
         bundle.putString("username", user.getUsername());
@@ -117,18 +108,12 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
                 .replace(R.id.other_user_profile_fragment, profileFragment)
                 .commit();
 
-        // Make the FrameLayout visible
         FrameLayout frameLayout = findViewById(R.id.other_user_profile_fragment);
         frameLayout.setVisibility(View.VISIBLE);
 
-        // Hide the RecyclerView and SearchView
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        SearchView searchView = findViewById(R.id.search);
         recyclerView.setVisibility(View.GONE);
         searchView.setVisibility(View.GONE);
     }
-
-
 
     public void searchList(String text) {
         if (text.isEmpty()) {
@@ -146,18 +131,13 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
 
     @Override
     public void onBackPressed() {
-        // If the ProfileFragment is visible, hide it and show the RecyclerView and SearchView
         FrameLayout frameLayout = findViewById(R.id.other_user_profile_fragment);
         if (frameLayout.getVisibility() == View.VISIBLE) {
             frameLayout.setVisibility(View.GONE);
-            RecyclerView recyclerView = findViewById(R.id.recyclerView);
-            SearchView searchView = findViewById(R.id.search);
             recyclerView.setVisibility(View.VISIBLE);
             searchView.setVisibility(View.VISIBLE);
         } else {
             super.onBackPressed();
         }
     }
-
 }
-
