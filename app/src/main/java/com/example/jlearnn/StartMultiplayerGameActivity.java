@@ -163,7 +163,7 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
         timer = new CountDownTimer(startTime, interval) {
             @Override
             public void onTick(long millisUntilFinished) {
-                timerDisplay.setText("Time remaining: " + millisUntilFinished / 1000);
+                timerDisplay.setText("Time remainingg: " + millisUntilFinished / 1000);
             }
 
             @Override
@@ -205,10 +205,6 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
 
             float progress = (float) currentIndex / romajiCharacters.length;
             updatePlayerProgress(progress);
-
-            if (currentIndex == romajiCharacters.length) {
-                endGame();
-            }
         }
     }
 
@@ -239,6 +235,11 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
     private void endGame() {
         timer.cancel();
         showFinishedDialog();
+        setGameStateFinished();
+    }
+    private void setGameStateFinished() {
+        // Set the game state to finished in the database
+        lobbyRef.child("gameState").setValue("finished");
     }
 
     private boolean isRoomOwner() {
@@ -259,10 +260,17 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
                     lobbyRef.child("progress").child(playerId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot progressSnapshot) {
-                            double progress = progressSnapshot.getValue(Double.class);
-                            Log.e("MultiplayerGameActivity", "Player ID: " + playerId + ", Progress: " + progress);
-                            double wpm = calculateWPM(progress);
+                            Double progress = progressSnapshot.getValue(Double.class);
+                            Log.e("StartMultiplayerGameActivity", "Player ID: " + playerId + ", Progress: " + progress);
+                            Double wpm = calculateWPM(progress);
+                            if (progress == null) {
+                                progress = 0.00; // Default value if progress is null
+                            }
 
+
+                            if (wpm == null) {
+                                wpm = 0.00; // Default value if WPM is null
+                            }
                             // Update the user's best WPM if applicable
                             updateBestWPM(playerId, wpm);
 
@@ -339,7 +347,10 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
     }
 
 
-    private double calculateWPM(double progress) {
+    private Double calculateWPM(Double progress) {
+        if (progress == null || progress == 0.00) {
+            return 0.00; // Return default WPM if progress is null or zero
+        }
         long elapsedTimeMillis = System.currentTimeMillis() - startTimeMillis;
         double minutes = elapsedTimeMillis / 60000.0;
         double words = progress * currentRomaji.split(" ").length;

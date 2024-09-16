@@ -41,11 +41,11 @@ public class CreateRoomActivity extends AppCompatActivity {
     private String gameCode;
     private String userId;
 
-
     private EditText timerInput;
     private Spinner sentencesSpinner;
     private Spinner charactersSpinner;
     private Button randomButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +60,8 @@ public class CreateRoomActivity extends AppCompatActivity {
         sentencesSpinner = findViewById(R.id.sentencesSpinner);
         charactersSpinner = findViewById(R.id.charactersSpinner);
         randomButton = findViewById(R.id.randomButton);
+
+        // Generate a new game code if none is provided
         gameCode = getIntent().getStringExtra("GAME_CODE");
         if (gameCode == null) {
             gameCode = generateGameCode();
@@ -68,6 +70,9 @@ public class CreateRoomActivity extends AppCompatActivity {
 
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         gameRoomRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("gameRooms").child(gameCode);
+
+        // Set default values for game room
+        setDefaultGameRoomValues();
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,35 +87,13 @@ public class CreateRoomActivity extends AppCompatActivity {
         // Listen for game room updates
         listenForGameRoomUpdates();
 
+        // Initialize UI elements
+        initializeUIElements();
+    }
 
-        EditText timerInput = findViewById(R.id.timerInput);
-        timerInput.setFilters(new InputFilter[]{ new CreateRoomInputfilter("1", "300") });
-
-        // Initialize the sentences spinner
-        Spinner sentencesSpinner = findViewById(R.id.sentencesSpinner);
-        ArrayAdapter<CharSequence> sentencesAdapter = ArrayAdapter.createFromResource(this, R.array.sentences_array, android.R.layout.simple_spinner_item);
-        sentencesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sentencesSpinner.setAdapter(sentencesAdapter);
-
-        // Initialize the characters spinner
-        Spinner charactersSpinner = findViewById(R.id.charactersSpinner);
-        ArrayAdapter<CharSequence> charactersAdapter = ArrayAdapter.createFromResource(this, R.array.characters_array, android.R.layout.simple_spinner_item);
-        charactersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        charactersSpinner.setAdapter(charactersAdapter);
-
-        // Initialize the random button
-        Button randomButton = findViewById(R.id.randomButton);
-        randomButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Randomize the timer, sentences, and characters
-                Random random = new Random();
-                timerInput.setText(String.valueOf(random.nextInt(300) + 1));
-                sentencesSpinner.setSelection(random.nextInt(sentencesSpinner.getCount()));
-                charactersSpinner.setSelection(random.nextInt(charactersSpinner.getCount()));
-            }
-        });
-        checkUserRole();
+    private void setDefaultGameRoomValues() {
+        gameRoomRef.child("gameState").setValue("waiting");
+        gameRoomRef.child("gameStarted").setValue(false);
     }
 
     private void fetchAndAddCurrentUser() {
@@ -121,31 +104,25 @@ public class CreateRoomActivity extends AppCompatActivity {
                 String username = snapshot.getValue(String.class);
                 if (username != null) {
                     addUserToGameRoom(username);
-
-                } else {
-
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-      
+                // Handle error
             }
         });
     }
 
     private void addUserToGameRoom(String username) {
         gameRoomRef.child("players").child(userId).setValue(username);
-  
     }
-    // Initialize the timer input
-
 
     private void listenForGameRoomUpdates() {
         gameRoomRef.child("players").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Existing code to update usersList
+                // Update the users list
                 usersList.clear(); // Clear the list to prevent duplication
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     String username = userSnapshot.getValue(String.class);
@@ -171,18 +148,17 @@ public class CreateRoomActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-           
+                        // Handle error
                     }
                 });
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-        
+                // Handle error
             }
         });
     }
-
 
     private void startGame() {
         // Apply the options here
@@ -206,8 +182,6 @@ public class CreateRoomActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-
     private String generateGameCode() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder gameCode = new StringBuilder();
@@ -216,6 +190,32 @@ public class CreateRoomActivity extends AppCompatActivity {
             gameCode.append(characters.charAt(random.nextInt(characters.length())));
         }
         return gameCode.toString();
+    }
+
+    private void initializeUIElements() {
+        timerInput.setFilters(new InputFilter[]{ new CreateRoomInputfilter("1", "300") });
+
+        // Initialize the sentences spinner
+        ArrayAdapter<CharSequence> sentencesAdapter = ArrayAdapter.createFromResource(this, R.array.sentences_array, android.R.layout.simple_spinner_item);
+        sentencesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sentencesSpinner.setAdapter(sentencesAdapter);
+
+        // Initialize the characters spinner
+        ArrayAdapter<CharSequence> charactersAdapter = ArrayAdapter.createFromResource(this, R.array.characters_array, android.R.layout.simple_spinner_item);
+        charactersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        charactersSpinner.setAdapter(charactersAdapter);
+
+        // Initialize the random button
+        randomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Randomize the timer, sentences, and characters
+                Random random = new Random();
+                timerInput.setText(String.valueOf(random.nextInt(300) + 1));
+                sentencesSpinner.setSelection(random.nextInt(sentencesSpinner.getCount()));
+                charactersSpinner.setSelection(random.nextInt(charactersSpinner.getCount()));
+            }
+        });
     }
 
     private void checkUserRole() {
@@ -244,9 +244,7 @@ public class CreateRoomActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 }
+
 
 

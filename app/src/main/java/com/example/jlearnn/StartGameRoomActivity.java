@@ -41,7 +41,7 @@ public class StartGameRoomActivity extends AppCompatActivity {
     private ArrayAdapter<String> usersAdapter;
     private List<String> usersList = new ArrayList<>();
     private DatabaseReference lobbyRef;
-    private DatabaseReference usersRef;
+    private DatabaseReference userRef;
     private String userId;
     private CountDownTimer lobbyTimer;
 
@@ -50,16 +50,8 @@ public class StartGameRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_game_room);
 
-        lobbyStatusTextView = findViewById(R.id.lobbyStatusTextView);
-        usersListView = findViewById(R.id.usersListView);
-        usersAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, usersList);
-        usersListView.setAdapter(usersAdapter);
-
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        lobbyRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("lobbies");
-        usersRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("users").child(userId);
+        initializeUI();
+        initializeFirebase();
 
         String lobbyId = getIntent().getStringExtra("LOBBY_ID");
         if (lobbyId != null) {
@@ -69,8 +61,21 @@ public class StartGameRoomActivity extends AppCompatActivity {
         }
     }
 
+    private void initializeUI() {
+        lobbyStatusTextView = findViewById(R.id.lobbyStatusTextView);
+        usersListView = findViewById(R.id.usersListView);
+        usersAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, usersList);
+        usersListView.setAdapter(usersAdapter);
+    }
+
+    private void initializeFirebase() {
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        lobbyRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("lobbies");
+        userRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("users").child(userId);
+    }
+
     private void checkOrCreateLobby() {
-        lobbyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        lobbyRef.orderByChild("gameState").equalTo("waiting").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -94,10 +99,27 @@ public class StartGameRoomActivity extends AppCompatActivity {
 
     private void joinLobby(String lobbyId) {
         lobbyRef = lobbyRef.child(lobbyId);
-        lobbyStatusTextView.setText("Joined lobby: " + lobbyId);
-        addUserToLobby(lobbyId);
-        listenForLobbyUpdates();
-        syncLobbyTimer();
+        lobbyRef.child("gameState").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String gameState = snapshot.getValue(String.class);
+                if ("started".equals(gameState)) {
+                    // Lobby has already started, find or create a new lobby
+                    checkOrCreateLobby();
+                } else {
+                    // Lobby is waiting, join it
+                    lobbyStatusTextView.setText("Joined lobby: " + lobbyId);
+                    addUserToLobby(lobbyId);
+                    listenForLobbyUpdates();
+                    syncLobbyTimer();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("StartGameRoomActivity", "Error joining lobby: " + error.getMessage());
+            }
+        });
     }
 
     private void createLobby() {
@@ -105,6 +127,7 @@ public class StartGameRoomActivity extends AppCompatActivity {
         if (newLobbyId != null) {
             lobbyRef = lobbyRef.child(newLobbyId);
             lobbyRef.child("creator").setValue(userId);
+            lobbyRef.child("gameState").setValue("waiting"); // Set default game state
             lobbyStatusTextView.setText("Created lobby: " + newLobbyId);
             addUserToLobby(newLobbyId);
             listenForLobbyUpdates();
@@ -114,14 +137,12 @@ public class StartGameRoomActivity extends AppCompatActivity {
     }
 
     private void addUserToLobby(String lobbyId) {
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.child("username").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String username = snapshot.child("username").getValue(String.class);
-                    if (username != null) {
-                        lobbyRef.child("players").child(userId).setValue(username);
-                    }
+                String username = snapshot.getValue(String.class);
+                if (username != null) {
+                    lobbyRef.child("players").child(userId).setValue(username);
                 }
             }
 

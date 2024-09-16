@@ -2,6 +2,7 @@ package com.example.jlearnn;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +22,8 @@ public class JoinRoomActivity extends AppCompatActivity {
     private EditText gameCodeEditText;
     private Button clearButton, enterButton;
     private UserModel userModel;
+    private DatabaseReference gameRoomRef;
+    private String gameCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,7 @@ public class JoinRoomActivity extends AppCompatActivity {
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String gameCode = gameCodeEditText.getText().toString().trim();
+                gameCode = gameCodeEditText.getText().toString().trim();
                 if (!gameCode.isEmpty()) {
                     checkGameCodeExists(gameCode);
                 }
@@ -58,17 +61,27 @@ public class JoinRoomActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Game code exists
-                    String userId = userModel.getFirebaseAuth().getCurrentUser().getUid();
-                    userModel.getUserRef(userId).child("joinedRoomCode").setValue(1).addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Intent intent = new Intent(JoinRoomActivity.this, CreateRoomActivity.class);
-                            intent.putExtra("GAME_CODE", gameCode);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(JoinRoomActivity.this, "Failed to update user data.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    // Game code exists, check the game state
+                    String gameState = dataSnapshot.child("gameState").getValue(String.class);
+                    Boolean gameStarted = dataSnapshot.child("gameStarted").getValue(Boolean.class);
+
+                    if ("waiting".equals(gameState) && (gameStarted == null || !gameStarted)) {
+                        // Game is waiting and not started
+                        String userId = userModel.getFirebaseAuth().getCurrentUser().getUid();
+                        userModel.getUserRef(userId).child("joinedRoomCode").setValue(gameCode).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                // Join the game room and start listening for game start
+                                gameRoomRef = gameRoomsReference.child(gameCode);
+                                addUserToGameRoom(userId);
+                                listenForGameStart();
+                            } else {
+                                Toast.makeText(JoinRoomActivity.this, "Failed to update user data.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        // Game has already started or is in a state that does not allow joining
+                        Toast.makeText(JoinRoomActivity.this, "Sorry, the game has already started.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     // Game code does not exist
                     Toast.makeText(JoinRoomActivity.this, "Game code does not exist.", Toast.LENGTH_SHORT).show();
@@ -79,6 +92,37 @@ public class JoinRoomActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle error
                 Toast.makeText(JoinRoomActivity.this, "Error checking game code. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addUserToGameRoom(String userId) {
+        gameRoomRef.child("players").child(userId).setValue(userModel.getFirebaseAuth().getCurrentUser().getDisplayName()).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // User added to game room successfully
+                Toast.makeText(JoinRoomActivity.this, "Joined game room successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Failed to add user to game room
+                Toast.makeText(JoinRoomActivity.this, "Failed to join game room.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void listenForGameStart() {
+        gameRoomRef.child("gameStarted").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Boolean gameStarted = snapshot.getValue(Boolean.class);
+                if (gameStarted != null && gameStarted) {
+                    Intent intent = new Intent(JoinRoomActivity.this, MultiplayerGameActivity.class);
+                    intent.putExtra("GAME_CODE", gameCode);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("JoinRoomActivity", "Error listening for game start: " + error.getMessage());
             }
         });
     }
