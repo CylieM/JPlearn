@@ -50,13 +50,18 @@
             android:exported="false" />
         <activity
             android:name=".LessonGrammarExercise"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            />
         <activity
             android:name=".LessonGrammarIntroActivity"
             android:exported="false" />
         <activity
             android:name=".LessonGrammarActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+
+            />
         <activity android:name=".ChooseLessonActivity" />
         <activity
             android:name=".LessonReview"
