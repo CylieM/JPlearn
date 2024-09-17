@@ -42,6 +42,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:backgroundTint="@null"
         android:background="@drawable/button_background"
         android:text="Option 1"
         android:textColor="#666666"

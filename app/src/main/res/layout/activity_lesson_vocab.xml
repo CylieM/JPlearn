@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LessonDiscussionActivity">
+    tools:context=".LessonVocab">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +23,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical" >
+
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -39,7 +42,7 @@
                         android:gravity="center"
                         android:text="TextView"
                         android:textColor="#008577"
-                        android:textSize="60sp"
+                        android:textSize="34sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -49,7 +52,7 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="50dp"
                         android:text="Romaji"
-                        android:textSize="34sp"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -57,7 +60,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="75dp"
+                        android:layout_marginTop="90dp"
                         android:text="Romaji"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -184,10 +187,10 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:paddingLeft="30dp"
+                    android:paddingLeft="50dp"
                     android:paddingTop="50dp"
-                    android:paddingRight="30dp"
-                    android:paddingBottom="15dp">
+                    android:paddingRight="50dp"
+                    android:paddingBottom="30dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -196,22 +199,22 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="75dp"
+                            android:layout_height="46dp"
                             android:orientation="horizontal"
                             android:layout_marginBottom="10dp">
 
                             <TextView
                                 android:id="@+id/Tv_op_1"
-                                android:layout_width="wrap_content"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Pronunciation : "
+                                android:text="Translation : "
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/Tv_desc_1"
-                                android:layout_width="235dp"
+                                android:layout_width="215dp"
                                 android:layout_height="match_parent"
                                 android:text="Lorem Ipsum Lorem Ipsum Lorem Ipsum"
                                 android:textSize="14sp"
@@ -255,25 +258,24 @@
                     android:clickable="true"
                     app:srcCompat="@drawable/speaker_or_volume_icon_free_vector_removebg_preview" />
 
+
+
+
             </LinearLayout>
+
+
+
+
+
         </ScrollView>
-
-        <ImageView
-            android:id="@+id/imageView11"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:layout_marginLeft="30dp"
-            android:background="#e8d320"
-            android:backgroundTint="#e8d320"
-            app:srcCompat="@drawable/objex_unlimited_black_line1"
-            tools:srcCompat="@drawable/objex_unlimited_black_line1___copy" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-        </FrameLayout>
-
+                <ImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_marginLeft="30dp"
+                    android:background="#e8d320"
+                    android:backgroundTint="#e8d320"
+                    app:srcCompat="@drawable/objex_unlimited_black_line1"
+                    tools:srcCompat="@drawable/objex_unlimited_black_line1___copy" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

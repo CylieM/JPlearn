@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -17,25 +16,52 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Jlearnn"
         tools:targetApi="31">
+        
+        <!-- Merged activities -->
+        <activity
+            android:name=".VocabForeignIntro"
+            android:exported="false" />
+        <activity
+            android:name=".VocabWeekdayIntro"
+            android:exported="false" />
+        <activity
+            android:name=".VocabGreetingIntro"
+            android:exported="false" />
+        <activity
+            android:name=".VocabIntro"
+            android:exported="false" />
+        <activity
+            android:name=".KatakanaIntro"
+            android:exported="false" />
+        <activity
+            android:name=".HiraganaIntro"
+            android:exported="false" />
+        <activity
+            android:name=".LessonVocab"
+            android:exported="false" />
         <activity
             android:name=".NihonBoardActivity"
             android:exported="false" />
         <activity
             android:name=".KanaBoardActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Jlearnn" />
+            android:exported="false" />
         <activity
             android:name=".bottom_nav_menu"
             android:exported="false" />
         <activity
             android:name=".LessonGrammarExercise"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            />
         <activity
             android:name=".LessonGrammarIntroActivity"
             android:exported="false" />
         <activity
             android:name=".LessonGrammarActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+
+            />
         <activity android:name=".ChooseLessonActivity" />
         <activity
             android:name=".LessonReview"
@@ -57,7 +83,9 @@
             android:exported="false" />
         <activity
             android:name=".UserManagementActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            />
         <activity
             android:name=".ForgotPasswordBActivity"
             android:exported="false" />
@@ -125,7 +153,6 @@
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
