@@ -186,11 +186,11 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:paddingLeft="50dp"
+                    android:layout_height="250dp"
+                    android:paddingLeft="30dp"
                     android:paddingTop="50dp"
-                    android:paddingRight="50dp"
-                    android:paddingBottom="30dp">
+                    android:paddingRight="30dp"
+                    android:paddingBottom="15dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -199,13 +199,13 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="46dp"
+                            android:layout_height="80dp"
                             android:orientation="horizontal"
                             android:layout_marginBottom="10dp">
 
                             <TextView
                                 android:id="@+id/Tv_op_1"
-                                android:layout_width="50dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Translation : "

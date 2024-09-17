@@ -66,7 +66,7 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         tv_op_2 = findViewById(R.id.Tv_op_2);
         audioIcon = findViewById(R.id.btn_lesson_audio);
         tvTitle = findViewById(R.id.tvTitle);
-        JapaneseChar = findViewById(R.id.JapaneseChar);
+
         storage = FirebaseStorage.getInstance();
 
 
@@ -124,6 +124,7 @@ public class LessonDiscussionActivity extends AppCompatActivity {
             if (lessonItemIndex < lessonCount - 1) {
                 lessonItemIndex++;
                 loadLesson(lessonNumber, lessonItemIndex); // Load the next lesson item
+
             } else {
                 showEndOfLessonPopup(); // Show end of lesson popup
             }
@@ -149,7 +150,7 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         });
 
         // Set up click listener for the audio icon
-        audioIcon.setOnClickListener(v -> playLessonAudio(JapaneseChar.getText().toString())); // Implement playLessonAudio method
+        audioIcon.setOnClickListener(v -> playLessonAudio(tvFront.getText().toString())); // Implement playLessonAudio method
     }
 
     private void setNameOptionActive() {
@@ -247,25 +248,65 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         // This method can be used to load additional data specific to the Example option if required
     }
 
-    private void playLessonAudio(String japaneseChar) {
-        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "" + japaneseChar);
-        StorageReference audioRef = storage.getInstance().getReference().child("audios/" + sanitizedJapaneseChar);
-        audioRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            if (mediaPlayer == null) {
-                mediaPlayer = new MediaPlayer();
-            }
+    private void playLessonAudio(String tvFront) {
+        // Get lesson number from intent
+        int lessonNumber = getIntent().getIntExtra("lessonNumber", 1);
 
+        // Define the path based on the lesson number
+        String lessonNumberPath = lessonNumber == 1 ? "audios/" : "audioKana/";
+
+        // Define the audio file name with or without .mp3 based on the lesson number
+        String audioFileName = lessonNumber == 2 ? tvFront + ".mp3" : tvFront;
+
+        // Get a reference to the audio file in Firebase Storage
+        StorageReference audioRef = storage.getReference().child(lessonNumberPath + audioFileName);
+
+        // Check if MediaPlayer is already in use
+        if (mediaPlayer != null) {
+            mediaPlayer.reset();  // Reset it to reuse the same player
+        } else {
+            mediaPlayer = new MediaPlayer();  // Initialize new MediaPlayer if it's null
+        }
+
+        // Fetch the download URL for the audio file
+        audioRef.getDownloadUrl().addOnSuccessListener(uri -> {
             try {
-                mediaPlayer.reset();
-                mediaPlayer.setDataSource(uri.toString());
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-                Toast.makeText(LessonDiscussionActivity.this, "Playing Audio", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                Toast.makeText(LessonDiscussionActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                mediaPlayer.setDataSource(uri.toString());  // Set the data source to Firebase URL
+                mediaPlayer.setOnPreparedListener(mp -> {
+                    mp.start();  // Start playback when it's prepared
+                    Log.d(TAG, "Playing audio from: " + uri.toString());
+                });
+                mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                    Log.e(TAG, "MediaPlayer error: " + what + ", " + extra);
+                    Toast.makeText(LessonDiscussionActivity.this, "Error playing audio", Toast.LENGTH_SHORT).show();
+                    return true;  // Return true to indicate the error has been handled
+                });
+                mediaPlayer.prepareAsync();  // Use async preparation to avoid blocking the main thread
+            } catch (IOException e) {
+                Log.e(TAG, "Error setting data source for MediaPlayer", e);
+                Toast.makeText(LessonDiscussionActivity.this, "Error playing audio", Toast.LENGTH_SHORT).show();
             }
-        }).addOnFailureListener(e -> Toast.makeText(LessonDiscussionActivity.this, "Failed to get audio URL: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        }).addOnFailureListener(exception -> {
+            Log.e(TAG, "Error fetching audio file URL", exception);
+            Toast.makeText(LessonDiscussionActivity.this, "Audio file not found", Toast.LENGTH_SHORT).show();
+        });
+
+        // Log the audio path for debugging purposes
+        Log.d(TAG, "Audio path: " + lessonNumberPath + audioFileName);
     }
+
+
+    @Override
+    protected void onDestroy() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();  // Release the media player to free up resources
+            mediaPlayer = null;
+        }
+        super.onDestroy();
+    }
+
+
+
 
     private void showEndOfLessonPopup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
