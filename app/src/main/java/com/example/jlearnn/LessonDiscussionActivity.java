@@ -29,7 +29,7 @@ import java.io.IOException;
 
 public class LessonDiscussionActivity extends AppCompatActivity {
 
-    private TextView JapaneseChar;
+
     private MediaPlayer mediaPlayer;
     private Button playAudio;
     private static final String TAG = "LessonDiscussionActivity";

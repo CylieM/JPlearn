@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,6 +21,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.io.IOException;
 
 public class LessonVocab extends AppCompatActivity {
@@ -26,6 +31,7 @@ public class LessonVocab extends AppCompatActivity {
     private static final String TAG = "LessonVocab";
     private TextView tvFront, tvBtnName, tvBtnExample, tvRomaji, tv_op_1, tv_op_2, tv_desc_1, tv_desc_2, tvTitle;
     private ImageView audioIcon;
+    private MediaPlayer mediaPlayer;
     private int lessonCount = 0;
     private boolean isRomajiName = true; // Flag to track if Romaji is currently set to Name or Examples
     private DatabaseReference database;
@@ -36,6 +42,7 @@ public class LessonVocab extends AppCompatActivity {
     private String exampleJp = "";
     private boolean isReviewMode = false; // Flag to check if it's in review mode
     private int lessonItemIndex = 0; // Only declared once
+    private FirebaseStorage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +67,7 @@ public class LessonVocab extends AppCompatActivity {
         tv_op_2 = findViewById(R.id.Tv_op_2);
         audioIcon = findViewById(R.id.btn_lesson_audio);
         tvTitle = findViewById(R.id.tvTitle);
+        storage = FirebaseStorage.getInstance();
 
         // Initialize Firebase Database
         database = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
@@ -151,7 +159,7 @@ public class LessonVocab extends AppCompatActivity {
             }
         });
 
-        audioIcon.setOnClickListener(v -> playLessonAudio()); // Implement playLessonAudio method
+        audioIcon.setOnClickListener(v -> playLessonAudio(tvFront.getText().toString())); // Implement playLessonAudio method
     }
 
 
@@ -249,18 +257,47 @@ public class LessonVocab extends AppCompatActivity {
         // This method can be used to load additional data specific to the Example option if required
     }
 
-    private void playLessonAudio() {
-        String audioUrl = "URL_FROM_FIREBASE"; // Replace with actual URL retrieval logic
+    private void playLessonAudio(String tvFront) {
+        // Replace slashes with underscores for filenames
+        String formattedFileName = tvFront.replace("/", "_");
 
+        // Get a reference to the audio file in Firebase Storage
+        StorageReference audioRef = storage.getReference().child("audioVocab/" + formattedFileName + ".mp3");
+
+        // Initialize MediaPlayer
         MediaPlayer mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.setDataSource(audioUrl);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (IOException e) {
-            Log.e(TAG, "Error playing audio", e);
-        }
+        audioRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            try {
+                mediaPlayer.setDataSource(uri.toString());  // Use Firebase URL
+                mediaPlayer.setOnPreparedListener(mp -> {
+                    mp.start();
+                    Log.d(TAG, "Playing audio from: " + uri.toString());
+                });
+                mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                    Log.e(TAG, "MediaPlayer error: " + what + ", " + extra);
+                    Toast.makeText(LessonVocab.this, "Error playing audio", Toast.LENGTH_SHORT).show();
+                    return true;  // Return true to indicate the error has been handled
+                });
+                mediaPlayer.prepareAsync();  // Use async preparation to avoid blocking the main thread
+            } catch (IOException e) {
+                Log.e(TAG, "Error setting data source for MediaPlayer", e);
+                Toast.makeText(LessonVocab.this, "Error playing audio", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(exception -> {
+            Log.e(TAG, "Error fetching audio file URL", exception);
+            Toast.makeText(LessonVocab.this, "Audio file not found", Toast.LENGTH_SHORT).show();
+        });
     }
+
+    @Override
+    protected void onDestroy() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();  // Release the media player to free up resources
+            mediaPlayer = null;
+        }
+        super.onDestroy();
+    }
+
 
     private void showEndOfLessonPopup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
