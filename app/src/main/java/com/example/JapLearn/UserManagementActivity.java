@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,28 +58,38 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
 
         databaseReference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("users");
 
-        // Query users with joinedRoomCode equal to 1
-        eventListener = databaseReference.orderByChild("joinedRoomCode").equalTo(1).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userList.clear();
-                fullUserList.clear();
-                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                    RegistrationActivity.User user = itemSnapshot.getValue(RegistrationActivity.User.class);
-                    if (user != null) {
-                        userList.add(user);
-                        fullUserList.add(user);
-                    }
-                }
-                adapter.notifyDataSetChanged();
-                dialog.dismiss();
-            }
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String userEmail = currentUser.getEmail(); // Fetch the logged-in user's email
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                dialog.dismiss();
-            }
-        });
+            // Query users with teacherEmail equal to the logged-in user's email
+            eventListener = databaseReference.orderByChild("teacherEmail").equalTo(userEmail).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    userList.clear();
+                    fullUserList.clear();
+                    for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                        RegistrationActivity.User user = itemSnapshot.getValue(RegistrationActivity.User.class);
+                        if (user != null) {
+                            userList.add(user);
+                            fullUserList.add(user);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    dialog.dismiss();
+                }
+            });
+        } else {
+            // Handle the case where there is no logged-in user
+            dialog.dismiss();
+            // Optionally show a message or redirect to login
+        }
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

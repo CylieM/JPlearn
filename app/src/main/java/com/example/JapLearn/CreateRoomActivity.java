@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -73,7 +74,7 @@ public class CreateRoomActivity extends AppCompatActivity {
 
         // Set default values for game room
         setDefaultGameRoomValues();
-
+        checkUserRole();
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,13 +98,37 @@ public class CreateRoomActivity extends AppCompatActivity {
     }
 
     private void fetchAndAddCurrentUser() {
-        DatabaseReference userRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("users").child(userId).child("username");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        String email = currentUser.getEmail(); // Fetch the email directly from Firebase Authentication
+        String userId = currentUser.getUid(); // Get the user ID
+
+        DatabaseReference userRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("users").child(userId).child("username");
+
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String username = snapshot.getValue(String.class);
                 if (username != null) {
+                    // Add user to game room
                     addUserToGameRoom(username);
+
+                    // Check if creator is already set
+                    gameRoomRef.child("creator").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot creatorSnapshot) {
+                            if (!creatorSnapshot.exists()) {
+                                // Set the creator's username only if it doesn't exist
+                                gameRoomRef.child("creator").setValue(email);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // Handle error
+                        }
+                    });
                 }
             }
 
@@ -165,6 +190,11 @@ public class CreateRoomActivity extends AppCompatActivity {
         int timer = Integer.parseInt(timerInput.getText().toString());
         int sentences = Integer.parseInt(sentencesSpinner.getSelectedItem().toString());
         String characters = charactersSpinner.getSelectedItem().toString();
+
+        // Set the game rules in the database
+        gameRoomRef.child("timer").setValue(timer);
+        gameRoomRef.child("sentences").setValue(sentences);
+        gameRoomRef.child("characters").setValue(characters);
 
         // Set the game state to "started"
         gameRoomRef.child("gameState").setValue("started");
@@ -245,6 +275,3 @@ public class CreateRoomActivity extends AppCompatActivity {
         });
     }
 }
-
-
-

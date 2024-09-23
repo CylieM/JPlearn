@@ -67,17 +67,28 @@ public class JoinRoomActivity extends AppCompatActivity {
 
                     if ("waiting".equals(gameState) && (gameStarted == null || !gameStarted)) {
                         // Game is waiting and not started
-                        String userId = userModel.getFirebaseAuth().getCurrentUser().getUid();
-                        userModel.getUserRef(userId).child("joinedRoomCode").setValue(gameCode).addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                // Join the game room and start listening for game start
-                                gameRoomRef = gameRoomsReference.child(gameCode);
-                                addUserToGameRoom(userId);
-                                listenForGameStart();
-                            } else {
-                                Toast.makeText(JoinRoomActivity.this, "Failed to update user data.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        String creatorUsername = dataSnapshot.child("creator").getValue(String.class);
+                        if (creatorUsername != null) {
+                            String userId = userModel.getFirebaseAuth().getCurrentUser().getUid();
+                            userModel.getUserRef(userId).child("teacherEmail").setValue(creatorUsername).addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    // Join the game room and start listening for game start
+                                    gameRoomRef = gameRoomsReference.child(gameCode);
+                                    addUserToGameRoom(userId);
+                                    listenForGameStart();
+
+                                    // Start the CreateRoomActivity
+                                    Intent intent = new Intent(JoinRoomActivity.this, CreateRoomActivity.class);
+                                    intent.putExtra("GAME_CODE", gameCode);
+                                    startActivity(intent);
+                                    finish(); // Optional: Finish the JoinRoomActivity if you don't want to keep it in the back stack
+                                } else {
+                                    Toast.makeText(JoinRoomActivity.this, "Failed to update user data.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            Toast.makeText(JoinRoomActivity.this, "Failed to retrieve creator username.", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         // Game has already started or is in a state that does not allow joining
                         Toast.makeText(JoinRoomActivity.this, "Sorry, the game has already started.", Toast.LENGTH_SHORT).show();
@@ -127,3 +138,4 @@ public class JoinRoomActivity extends AppCompatActivity {
         });
     }
 }
+

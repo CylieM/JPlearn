@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -81,7 +82,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
 
         initializePlayers();
         listenForPlayerProgressUpdates();
-        startGame();
+        listenForGameConfiguration(); // Changed to fetch game configuration
 
         textInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -96,6 +97,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
     }
+
     private void getRoomOwnerId() {
         gameRoomRef.child("roomOwner").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -109,12 +111,12 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             }
         });
     }
+
     private void initializePlayers() {
         gameRoomRef.child("players").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot playerSnapshot : snapshot.getChildren()) {
-                    String firstPlacePlayerId = null;
                     String playerId = playerSnapshot.getKey();
                     String username = playerSnapshot.getValue(String.class);
 
@@ -132,8 +134,6 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void listenForPlayerProgressUpdates() {
         gameRoomRef.child("progress").addValueEventListener(new ValueEventListener() {
@@ -155,18 +155,34 @@ public class MultiplayerGameActivity extends AppCompatActivity {
         });
     }
 
-    private void startGame() {
+    private void listenForGameConfiguration() {
+        gameRoomRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    long timerSeconds = snapshot.child("timer").getValue(Long.class);
+                    String category = snapshot.child("characters").getValue(String.class); // Adjust this based on your data structure
+                    int sentences = snapshot.child("sentences").getValue(Integer.class);
+                    startGame(timerSeconds, category, sentences);
+                } else {
+                    Toast.makeText(MultiplayerGameActivity.this, "Game configuration not found.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MultiplayerGameActivity.this, "Failed to load game configuration.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void startGame(long timerSeconds, String category, int sentences) {
         dbHelper.logAllData();
-        Log.e("MultiplayerGameActivity", "Current Paragraph: " + currentParagraph);
-        String[] paragraph = getParagraph();
+        String[] paragraph = getParagraph(category, sentences);
         currentParagraph = paragraph[0].replace(" ", "");
         currentRomaji = paragraph[1].trim();
         textDisplay.setText(currentParagraph);
 
-        startTimeMillis = System.currentTimeMillis();
-
-        // Retrieve the timer value from the intent extras
-        int timerSeconds = getIntent().getIntExtra("TIMER", 30); // Default to 30 if not found
         long startTime = timerSeconds * 1000; // Convert to milliseconds
 
         if (timer != null) {
@@ -183,41 +199,24 @@ public class MultiplayerGameActivity extends AppCompatActivity {
                 endGame();
             }
         }.start();
-        Log.e("MultiplayerGameActivity", "Current Paragraph (after retrieval): " + currentParagraph);
     }
 
-
-    private String[] getParagraph() {
+    private String[] getParagraph(String category, int sentences) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String category = getIntent().getStringExtra("CATEGORY"); // Get the category from the intent extras
-        int sentences = getIntent().getIntExtra("SENTENCES", 1); // Get the number of sentences from the intent extras
-        Log.e("MultiplayerGameActivity", "Category: " + category + ", Sentences: " + sentences);
-        // Log column names and indices
-
-
-        // Query the database
         Cursor cursor = db.rawQuery("SELECT * FROM " + ParagraphSQLiteDB.TABLE_PARAGRAPHS + " WHERE " + ParagraphSQLiteDB.COLUMN_CATEGORY + " = ? AND " + ParagraphSQLiteDB.COLUMN_SENTENCES + " = ? ORDER BY RANDOM() LIMIT 1", new String[]{category, String.valueOf(sentences)});
 
         if (cursor.moveToFirst()) {
-            // Log column names and indices
             int columnIndexParagraph = cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_PARAGRAPH);
             int columnIndexRomaji = cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_ROMAJI);
-            Log.e("MultiplayerGameActivity", "Column Index for Paragraph: " + columnIndexParagraph);
-            Log.e("MultiplayerGameActivity", "Column Index for Romaji: " + columnIndexRomaji);
-
             String paragraph = cursor.getString(columnIndexParagraph);
             String romaji = cursor.getString(columnIndexRomaji);
             cursor.close();
-
-            Log.e("MultiplayerGameActivity", "Retrieved Paragraph: " + paragraph); // Log the retrieved paragraph
-
             return new String[]{paragraph, romaji};
         } else {
             cursor.close();
-            return new String[]{"", ""}; // Handle the case where no data is found
+            return new String[]{"", ""}; // Handle case where no data is found
         }
     }
-
 
     private void handleTyping(String typedText) {
         String[] romajiCharacters = currentRomaji.split(" ");
@@ -425,11 +424,8 @@ public class MultiplayerGameActivity extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Replace fragment with NihongoRaceFragment
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new NihongoRaceFragment())
-                        .addToBackStack(null)  // Optional: add to back stack if you want to enable back navigation
-                        .commit();
+                finish();
+
             }
         });
 
