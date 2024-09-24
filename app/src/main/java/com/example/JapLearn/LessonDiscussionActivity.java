@@ -172,7 +172,6 @@ public class LessonDiscussionActivity extends AppCompatActivity {
 
     private void loadLesson(int lessonNumber, int lessonItemIndex) {
         String lessonItemPath = "Lessons/" + lessonNumber;
-
         Log.d(TAG, "Loading lesson items for lesson: " + lessonNumber + ", index: " + lessonItemIndex);
 
         database.child(lessonItemPath).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -210,7 +209,6 @@ public class LessonDiscussionActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, "Error getting lesson data", databaseError.toException());
             }
-
         });
     }
 
@@ -227,13 +225,14 @@ public class LessonDiscussionActivity extends AppCompatActivity {
         tvFront.setText(japaneseChar);
         tvRomaji.setText(currentRomaji);
 
-        // Set default values for Name option
+        // Set the active option based on isRomajiName
         if (isRomajiName) {
             setNameOptionActive();
         } else {
             setExampleOptionActive();
         }
     }
+
 
     private void loadNameOptionData() {
         // This method can be used to load additional data specific to the Name option if required
