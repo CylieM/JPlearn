@@ -9,11 +9,11 @@ plugins {
 
 
 android {
-    namespace = "com.example.jlearnn"
+    namespace = "com.example.JapLearn"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.jlearnn"
+        applicationId = "com.example.JapLearn"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

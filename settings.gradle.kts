@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "jlearnn"
+rootProject.name = "JapLearn"
 include(":app")
  
