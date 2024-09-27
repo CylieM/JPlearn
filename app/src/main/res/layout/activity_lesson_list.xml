@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LessonList">
+    tools:context=".LessonList"
+    android:background="@drawable/bg22">
 
 
     <LinearLayout
