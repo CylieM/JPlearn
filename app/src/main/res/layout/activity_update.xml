@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".LessonItemUpdateActivity">
+    tools:context=".LessonItemUpdateActivity"
+    android:background="@drawable/bg29">
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
