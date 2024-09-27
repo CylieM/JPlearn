@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserManagementActivity">
+    tools:context=".UserManagementActivity"
+    android:background="@drawable/bg30">
 
     <!-- SearchView -->
     <androidx.appcompat.widget.SearchView
