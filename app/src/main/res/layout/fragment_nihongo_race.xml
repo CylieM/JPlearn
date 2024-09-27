@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".NihongoRaceFragment">
+    tools:context=".NihongoRaceFragment"
+    android:background="@drawable/bg24">
 
     <Button
         android:id="@+id/btnPlay"
