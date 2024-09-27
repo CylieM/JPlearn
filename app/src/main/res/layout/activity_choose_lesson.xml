@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".ChooseLessonActivity">
+    tools:context=".ChooseLessonActivity"
+    android:background="@drawable/bg17">
 
     <Button
         android:id="@+id/btnLesson1"
