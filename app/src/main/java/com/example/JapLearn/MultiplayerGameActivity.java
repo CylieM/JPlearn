@@ -182,7 +182,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
         currentParagraph = paragraph[0].replace(" ", "");
         currentRomaji = paragraph[1].trim();
         textDisplay.setText(currentParagraph);
-
+        startTimeMillis = System.currentTimeMillis();
         long startTime = timerSeconds * 1000; // Convert to milliseconds
 
         if (timer != null) {
@@ -192,6 +192,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 timerDisplay.setText("Time remaining: " + millisUntilFinished / 1000);
+                timerDisplay.setTextColor(Color.BLACK); // Set timer text color to black
             }
 
             @Override
@@ -233,6 +234,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             updatePlayerProgress(progress);
 
         }
+        textInput.setTextColor(Color.BLACK);
     }
 
     private void updatePlayerProgress(double progress) {
@@ -403,16 +405,19 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             TextView usernameTextView = new TextView(this);
             usernameTextView.setText(result.username);
             usernameTextView.setPadding(4, 4, 4, 4);
+            usernameTextView.setTextColor(Color.BLACK);
             row.addView(usernameTextView);
 
             TextView progressTextView = new TextView(this);
             progressTextView.setText(String.format("%.2f%%", result.progress * 100));
             progressTextView.setPadding(4, 4, 4, 4);
+            progressTextView.setTextColor(Color.BLACK);
             row.addView(progressTextView);
 
             TextView wpmTextView = new TextView(this);
             wpmTextView.setText(String.format("%.2f", result.wpm));
             wpmTextView.setPadding(4, 4, 4, 4);
+            wpmTextView.setTextColor(Color.BLACK);
             row.addView(wpmTextView);
 
             tableLayout.addView(row);
@@ -452,11 +457,12 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             super(context);
             setOrientation(VERTICAL);
 
-
-
+            // Initialize and configure the username TextView
             usernameTextView = new TextView(context);
+            usernameTextView.setTextColor(Color.BLACK); // Set text color to black
             addView(usernameTextView);
 
+            // Initialize and configure the progress bar
             progressBar = new View(context);
             progressBar.setBackgroundColor(Color.BLUE);
             LinearLayout.LayoutParams progressLayoutParams = new LinearLayout.LayoutParams(

@@ -1,5 +1,6 @@
 package com.example.JapLearn;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,9 +57,23 @@ public class StartGameRoomActivity extends AppCompatActivity {
     private void initializeUI() {
         lobbyStatusTextView = findViewById(R.id.lobbyStatusTextView);
         usersListView = findViewById(R.id.usersListView);
-        usersAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, usersList);
+
+        // Create a custom ArrayAdapter to set text color
+        usersAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, usersList) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                // Get the default view
+                View view = super.getView(position, convertView, parent);
+                // Get the TextView from the view and set its color
+                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                textView.setTextColor(Color.BLACK); // Set the text color to black
+                return view;
+            }
+        };
+
         usersListView.setAdapter(usersAdapter);
     }
+
 
     private void initializeFirebase() {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -93,9 +110,12 @@ public class StartGameRoomActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String gameState = snapshot.getValue(String.class);
-                if ("started".equals(gameState)) {
-                    // Lobby has already started, find or create a new lobby
-                    checkOrCreateLobby();
+                if ("started".equals(gameState) || "ongoing".equals(gameState) || "finished".equals(gameState)) {
+                    // Lobby has already started, is ongoing, or finished, create a new lobby
+                    // Reset lobbyRef to the main lobbies reference
+                    lobbyRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
+                            .getReference("lobbies");
+                    createLobby();
                 } else {
                     // Lobby is waiting, join it
                     lobbyStatusTextView.setText("Joined lobby: " + lobbyId);
@@ -112,6 +132,7 @@ public class StartGameRoomActivity extends AppCompatActivity {
         });
     }
 
+
     private void createLobby() {
         String newLobbyId = lobbyRef.push().getKey();
         if (newLobbyId != null) {
@@ -119,6 +140,7 @@ public class StartGameRoomActivity extends AppCompatActivity {
             lobbyRef.child("creator").setValue(userId);
             lobbyRef.child("gameState").setValue("waiting"); // Set default game state
             lobbyStatusTextView.setText("Created lobby: " + newLobbyId);
+            lobbyStatusTextView.setTextColor(Color.BLACK);
             addUserToLobby(newLobbyId);
             listenForLobbyUpdates();
             lobbyRef.child("startTime").setValue(System.currentTimeMillis());
@@ -197,6 +219,7 @@ public class StartGameRoomActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 lobbyStatusTextView.setText("Game starting in: " + millisUntilFinished / 1000 + " seconds");
+                lobbyStatusTextView.setTextColor(Color.BLACK);
             }
 
             @Override

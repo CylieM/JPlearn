@@ -150,7 +150,7 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
         currentParagraph = paragraph[0].replace(" ", "");
         currentRomaji = paragraph[1].trim();
         textDisplay.setText(currentParagraph);
-
+        lobbyRef.child("gameState").setValue("finished");
         startTimeMillis = System.currentTimeMillis();
 
         // Retrieve the timer value from the intent extras
@@ -164,6 +164,7 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 timerDisplay.setText("Time remainingg: " + millisUntilFinished / 1000);
+                timerDisplay.setTextColor(Color.BLACK);
             }
 
             @Override
@@ -206,6 +207,7 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
             float progress = (float) currentIndex / romajiCharacters.length;
             updatePlayerProgress(progress);
         }
+        textInput.setTextColor(Color.BLACK);
     }
 
     private void updatePlayerProgress(double progress) {
@@ -428,11 +430,12 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
             super(context);
             setOrientation(VERTICAL);
 
-
-
+            // Initialize and configure the username TextView
             usernameTextView = new TextView(context);
+            usernameTextView.setTextColor(Color.BLACK); // Set text color to black
             addView(usernameTextView);
 
+            // Initialize and configure the progress bar
             progressBar = new View(context);
             progressBar.setBackgroundColor(Color.BLUE);
             LinearLayout.LayoutParams progressLayoutParams = new LinearLayout.LayoutParams(

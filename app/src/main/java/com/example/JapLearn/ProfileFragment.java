@@ -93,7 +93,7 @@ public class ProfileFragment extends Fragment {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.isSuccessful()) {
                     DataSnapshot dataSnapshot = task.getResult();
-                    RegistrationActivity.User user = dataSnapshot.getValue(RegistrationActivity.User.class);
+                    UserModel.User user = dataSnapshot.getValue(UserModel.User.class);
 
                     if (user != null) {
                         usernameTextView.setText("Username: " + user.getUsername());

@@ -1,8 +1,10 @@
 package com.example.JapLearn;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,15 +86,19 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         switch (category) {
             case "DailyStreak":
                 headerLastWave.setText("Daily Streak");
+                headerLastWave.setTextColor(Color.BLACK);
                 break;
             case "KanaShoot":
                 headerLastWave.setText("Wave");
+                headerLastWave.setTextColor(Color.BLACK);
                 break;
             case "NihongoRace":
                 headerLastWave.setText("WPM");
+                headerLastWave.setTextColor(Color.BLACK);
                 break;
             default:
                 headerLastWave.setText("Score");
+                headerLastWave.setTextColor(Color.BLACK);
                 break;
         }
 
@@ -101,9 +107,9 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 tableLayout.removeAllViews();
 
-                List<RegistrationActivity.User> userList = new ArrayList<>();
+                List<UserModel.User> userList = new ArrayList<>();
                 for (DataSnapshot data : snapshot.getChildren()) {
-                    RegistrationActivity.User user = data.getValue(RegistrationActivity.User.class);
+                    UserModel.User user = data.getValue(UserModel.User.class);
                     if (user != null) {
                         userList.add(user);
                     }
@@ -118,7 +124,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
 
                 // Display only the top 10 users
                 int rank = 1;
-                for (RegistrationActivity.User user : userList) {
+                for (UserModel.User user : userList) {
                     if (rank > 10) break; // Limit to top 10
                     int categoryValue = getCategoryValue(user, category);
                     if (categoryValue > 0) {
@@ -135,7 +141,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         });
     }
 
-    private int getCategoryValue(RegistrationActivity.User user, String category) {
+    private int getCategoryValue(UserModel.User user, String category) {
         switch (category) {
             case "DailyStreak":
                 return user.getDailyStreak();
@@ -154,24 +160,44 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         TextView rankTextView = new TextView(getContext());
         rankTextView.setText(String.valueOf(rank));
         rankTextView.setPadding(40, 8, 40, 8);
+        rankTextView.setTextColor(Color.BLACK);
         tableRow.addView(rankTextView);
 
         ImageView profileImageView = new ImageView(getContext());
-        profileImageView.setPadding(40, 8, 40, 8);
+        profileImageView.setPadding(20, 8, 20, 8); // Adjust padding as needed
         profileImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        Glide.with(getContext()).load(profilePictureUrl).apply(RequestOptions.circleCropTransform()).into(profileImageView);
-        tableRow.addView(profileImageView, new TableRow.LayoutParams(100, 100));
+        profileImageView.setAdjustViewBounds(true); // Allow the ImageView to adjust its bounds
+
+// Set a larger size for the ImageView
+        int imageSize = 120; // Set desired size (e.g., 150dp)
+        TableRow.LayoutParams params = new TableRow.LayoutParams(imageSize, imageSize);
+        params.gravity = Gravity.CENTER; // Center the image in the TableRow
+        profileImageView.setLayoutParams(params);
+
+        Glide.with(this)
+                .load(profilePictureUrl)
+                .apply(new RequestOptions()
+                        .override(imageSize, imageSize) // Specify the size of the ImageView
+                        .placeholder(R.drawable.loading) // Set a placeholder image
+                        .error(R.drawable.error) // Set an error image if loading fails
+                        .circleCrop()) // Crop the image into a circle
+                .into(profileImageView);
+
+        tableRow.addView(profileImageView); // Add ImageView to the row
+
 
         TextView usernameTextView = new TextView(getContext());
         usernameTextView.setText(username);
-        usernameTextView.setPadding(40, 8, 240, 8);
+        usernameTextView.setPadding(45, 8, 140, 8);
         usernameTextView.setMaxLines(1);
         usernameTextView.setEllipsize(TextUtils.TruncateAt.END);
+        usernameTextView.setTextColor(Color.BLACK);
         tableRow.addView(usernameTextView);
 
         TextView categoryValueTextView = new TextView(getContext());
         categoryValueTextView.setText(String.valueOf(categoryValue));
-        categoryValueTextView.setPadding(24, 8, 24, 8);
+        categoryValueTextView.setPadding(1, 8, 24, 8);
+        categoryValueTextView.setTextColor(Color.BLACK);
         tableRow.addView(categoryValueTextView);
 
         tableLayout.addView(tableRow);

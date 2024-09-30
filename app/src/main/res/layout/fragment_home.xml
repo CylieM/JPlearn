@@ -205,7 +205,7 @@
                     android:layout_width="71dp"
                     android:layout_height="69dp"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/usericon"
+                    android:src="@drawable/ic_person_24"
                     android:background="@color/myblue"
                     android:contentDescription="Icon description" />
 
