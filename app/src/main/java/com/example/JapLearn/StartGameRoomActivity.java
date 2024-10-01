@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class StartGameRoomActivity extends AppCompatActivity {
 
@@ -139,6 +140,19 @@ public class StartGameRoomActivity extends AppCompatActivity {
             lobbyRef = lobbyRef.child(newLobbyId);
             lobbyRef.child("creator").setValue(userId);
             lobbyRef.child("gameState").setValue("waiting"); // Set default game state
+
+            // Randomly select values for characters and sentences
+            String[] charactersOptions = {"Hiragana", "Mixed"};
+            int[] sentencesOptions = {1, 2};
+
+            Random random = new Random();
+            String randomCharacter = charactersOptions[random.nextInt(charactersOptions.length)];
+            int randomSentence = sentencesOptions[random.nextInt(sentencesOptions.length)];
+
+            // Store the randomly selected values in the lobby
+            lobbyRef.child("characters").setValue(randomCharacter);
+            lobbyRef.child("sentences").setValue(randomSentence);
+
             lobbyStatusTextView.setText("Created lobby: " + newLobbyId);
             lobbyStatusTextView.setTextColor(Color.BLACK);
             addUserToLobby(newLobbyId);

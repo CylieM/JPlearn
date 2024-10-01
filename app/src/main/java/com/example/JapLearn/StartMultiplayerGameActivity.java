@@ -14,11 +14,13 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -28,6 +30,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -81,7 +85,7 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
 
         initializePlayers();
         listenForPlayerProgressUpdates();
-        startGame();
+        listenForGameConfiguration();
 
         textInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -102,25 +106,50 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot playerSnapshot : snapshot.getChildren()) {
-                    String firstPlacePlayerId = null;
                     String playerId = playerSnapshot.getKey();
-                    String username = playerSnapshot.getValue(String.class);
 
-                    PlayerView playerView = new PlayerView(StartMultiplayerGameActivity.this);
-                    playerView.setPlayerId(playerId);
-                    playerView.setUsername(username);
+                    // Retrieve user information using UserModel
+                    UserModel userModel = new UserModel();
+                    userModel.getUserRef(playerId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                            // Check if the user data exists
+                            if (userSnapshot.exists()) {
+                                // Create a User object from the snapshot
+                                UserModel.User user = userSnapshot.getValue(UserModel.User.class);
 
-                    raceTrackContainer.addView(playerView);
+                                // Extract username and profile picture URL
+                                String username = user.getUsername();
+                                String profilePictureUrl = user.getProfilePicture();
+
+                                StartMultiplayerGameActivity.PlayerView playerView = new StartMultiplayerGameActivity.PlayerView(StartMultiplayerGameActivity.this);
+                                playerView.setPlayerId(playerId);
+                                playerView.setUsername(username);
+
+                                // Set the profile image
+                                playerView.setProfileImage(profilePictureUrl, StartMultiplayerGameActivity.this);
+
+                                // Add the PlayerView to the container
+                                raceTrackContainer.addView(playerView);
+                            } else {
+                                Log.d("MultiplayerGameActivity", "User not found for player ID: " + playerId);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("MultiplayerGameActivity", "Error retrieving user data: " + error.getMessage());
+                        }
+                    });
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle possible errors.
+                Log.e("MultiplayerGameActivity", "Error loading players: " + error.getMessage());
             }
         });
     }
-
 
 
     private void listenForPlayerProgressUpdates() {
@@ -142,14 +171,32 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
             }
         });
     }
+    private void listenForGameConfiguration() {
+        lobbyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String category = snapshot.child("characters").getValue(String.class); // Adjust this based on your data structure
+                    int sentences = snapshot.child("sentences").getValue(Integer.class);
+                    startGame(category, sentences);
+                } else {
+                    Toast.makeText(StartMultiplayerGameActivity.this, "Game configuration not found.", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-    private void startGame() {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(StartMultiplayerGameActivity.this, "Failed to load game configuration.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void startGame(String category, int sentences) {
         dbHelper.logAllData();
-        Log.e("MultiplayerGameActivity", "Current Paragraph: " + currentParagraph);
-        String[] paragraph = getRandomParagraph();
+        String[] paragraph = getParagraph(category, sentences);
         currentParagraph = paragraph[0].replace(" ", "");
         currentRomaji = paragraph[1].trim();
         textDisplay.setText(currentParagraph);
+        textDisplay.setTextSize(24);
         lobbyRef.child("gameState").setValue("finished");
         startTimeMillis = System.currentTimeMillis();
 
@@ -163,7 +210,7 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
         timer = new CountDownTimer(startTime, interval) {
             @Override
             public void onTick(long millisUntilFinished) {
-                timerDisplay.setText("Time remainingg: " + millisUntilFinished / 1000);
+                timerDisplay.setText("Time remaining: " + millisUntilFinished / 1000);
                 timerDisplay.setTextColor(Color.BLACK);
             }
 
@@ -176,19 +223,22 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
     }
 
 
-    private String[] getRandomParagraph() {
+
+    private String[] getParagraph(String category, int sentences) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + ParagraphSQLiteDB.TABLE_PARAGRAPHS, null);
-        int count = cursor.getCount();
-        if (count == 0) {
-            return new String[] {"", ""}; // Handle case with no paragraphs in the database
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ParagraphSQLiteDB.TABLE_PARAGRAPHS + " WHERE " + ParagraphSQLiteDB.COLUMN_CATEGORY + " = ? AND " + ParagraphSQLiteDB.COLUMN_SENTENCES + " = ? ORDER BY RANDOM() LIMIT 1", new String[]{category, String.valueOf(sentences)});
+
+        if (cursor.moveToFirst()) {
+            int columnIndexParagraph = cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_PARAGRAPH);
+            int columnIndexRomaji = cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_ROMAJI);
+            String paragraph = cursor.getString(columnIndexParagraph);
+            String romaji = cursor.getString(columnIndexRomaji);
+            cursor.close();
+            return new String[]{paragraph, romaji};
+        } else {
+            cursor.close();
+            return new String[]{"", ""}; // Handle case where no data is found
         }
-        int randomIndex = new Random().nextInt(count);
-        cursor.moveToPosition(randomIndex);
-        String paragraph = cursor.getString(cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_PARAGRAPH));
-        String romaji = cursor.getString(cursor.getColumnIndexOrThrow(ParagraphSQLiteDB.COLUMN_ROMAJI));
-        cursor.close();
-        return new String[] {paragraph, romaji};
     }
 
 
@@ -423,17 +473,40 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
 
         private String playerId;
 
+        private ImageView profileImageView;
         private TextView usernameTextView;
         private View progressBar;
 
         public PlayerView(Context context) {
             super(context);
             setOrientation(VERTICAL);
+            setPadding(16, 16, 16, 16); // Optional: add some padding for better aesthetics
+
+            // Create a horizontal layout for the profile image and username
+            LinearLayout playerInfoLayout = new LinearLayout(context);
+            playerInfoLayout.setOrientation(HORIZONTAL);
+            playerInfoLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            playerInfoLayout.setGravity(Gravity.CENTER_VERTICAL); // Center vertically
+
+            // Initialize and configure the profile ImageView
+            profileImageView = new ImageView(context);
+            int imageSize = 100; // Set your desired size
+            LinearLayout.LayoutParams imageLayoutParams = new LinearLayout.LayoutParams(imageSize, imageSize);
+            imageLayoutParams.setMargins(0, 0, 16, 3); // Optional: add margin to separate image and text
+            profileImageView.setLayoutParams(imageLayoutParams);
+            profileImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            playerInfoLayout.addView(profileImageView);
 
             // Initialize and configure the username TextView
             usernameTextView = new TextView(context);
             usernameTextView.setTextColor(Color.BLACK); // Set text color to black
-            addView(usernameTextView);
+            usernameTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            playerInfoLayout.addView(usernameTextView);
+
+            // Add player info layout to PlayerView
+            addView(playerInfoLayout);
 
             // Initialize and configure the progress bar
             progressBar = new View(context);
@@ -454,11 +527,21 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
             return playerId;
         }
 
-
+        public void setProfileImage(String imageUrl, Context context) {
+            Glide.with(context)
+                    .load(imageUrl)
+                    .apply(new RequestOptions()
+                            .override(120, 120) // Specify size
+                            .placeholder(R.drawable.loading) // Placeholder image
+                            .error(R.drawable.error) // Error image
+                            .circleCrop()) // Crop into a circle
+                    .into(profileImageView);
+        }
 
         public void setUsername(String username) {
             usernameTextView.setText(username);
         }
+
         public void updateProgress(double progress) {
             int parentWidth = ((ViewGroup) getParent()).getWidth();
             int newWidth = (int) (parentWidth * progress);

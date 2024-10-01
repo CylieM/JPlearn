@@ -12,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -48,11 +50,11 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
             }
         } else {
             // Default category if no arguments are passed
-            fetchLeaderboardData("DailyStreak");
+            fetchLeaderboardData("Progression");
         }
 
         // Set onClickListener for buttons
-        view.findViewById(R.id.buttonDailyStreak).setOnClickListener(this);
+        view.findViewById(R.id.buttonProgression).setOnClickListener(this);
         view.findViewById(R.id.buttonKanaShoot).setOnClickListener(this);
         view.findViewById(R.id.buttonNihongoRace).setOnClickListener(this);
 
@@ -66,10 +68,10 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
 
     private void onLeaderboardButtonClick(View view) {
         int viewId = view.getId();
-        String category = "DailyStreak";
+        String category = "Progression";
 
-        if (viewId == R.id.buttonDailyStreak) {
-            category = "DailyStreak";
+        if (viewId == R.id.buttonProgression) {
+            category = "Progression";
         } else if (viewId == R.id.buttonKanaShoot) {
             category = "KanaShoot";
         } else if (viewId == R.id.buttonNihongoRace) {
@@ -84,8 +86,8 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         DatabaseReference usersRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("users");
 
         switch (category) {
-            case "DailyStreak":
-                headerLastWave.setText("Daily Streak");
+            case "Progression":
+                headerLastWave.setText("Progression");
                 headerLastWave.setTextColor(Color.BLACK);
                 break;
             case "KanaShoot":
@@ -143,8 +145,8 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
 
     private int getCategoryValue(UserModel.User user, String category) {
         switch (category) {
-            case "DailyStreak":
-                return user.getDailyStreak();
+            case "Progression":
+                return user.getHiraganaProgress() + user.getKatakanaProgress() + user.getVocabularyProgress();
             case "KanaShoot":
                 return user.getKSWaves();
             case "NihongoRace":
@@ -168,7 +170,7 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         profileImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         profileImageView.setAdjustViewBounds(true); // Allow the ImageView to adjust its bounds
 
-// Set a larger size for the ImageView
+        // Set a larger size for the ImageView
         int imageSize = 120; // Set desired size (e.g., 150dp)
         TableRow.LayoutParams params = new TableRow.LayoutParams(imageSize, imageSize);
         params.gravity = Gravity.CENTER; // Center the image in the TableRow
@@ -179,12 +181,11 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
                 .apply(new RequestOptions()
                         .override(imageSize, imageSize) // Specify the size of the ImageView
                         .placeholder(R.drawable.loading) // Set a placeholder image
-                        .error(R.drawable.error) // Set an error image if loading fails
+                        .error(R.drawable.loading) // Set an error image if loading fails
                         .circleCrop()) // Crop the image into a circle
                 .into(profileImageView);
 
         tableRow.addView(profileImageView); // Add ImageView to the row
-
 
         TextView usernameTextView = new TextView(getContext());
         usernameTextView.setText(username);
@@ -201,5 +202,18 @@ public class LeaderboardFragment extends Fragment implements View.OnClickListene
         tableRow.addView(categoryValueTextView);
 
         tableLayout.addView(tableRow);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Disable back button handling when the fragment is visible
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Do nothing to prevent back navigation
+                // Optionally show a message or toast if you want
+                Toast.makeText(getActivity(), "Use the logout option to exit", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

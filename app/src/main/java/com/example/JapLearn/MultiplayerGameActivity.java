@@ -14,11 +14,13 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -29,6 +31,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -118,22 +122,51 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot playerSnapshot : snapshot.getChildren()) {
                     String playerId = playerSnapshot.getKey();
-                    String username = playerSnapshot.getValue(String.class);
 
-                    PlayerView playerView = new PlayerView(MultiplayerGameActivity.this);
-                    playerView.setPlayerId(playerId);
-                    playerView.setUsername(username);
+                    // Retrieve user information using UserModel
+                    UserModel userModel = new UserModel();
+                    userModel.getUserRef(playerId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                            // Check if the user data exists
+                            if (userSnapshot.exists()) {
+                                // Create a User object from the snapshot
+                                UserModel.User user = userSnapshot.getValue(UserModel.User.class);
 
-                    raceTrackContainer.addView(playerView);
+                                // Extract username and profile picture URL
+                                String username = user.getUsername();
+                                String profilePictureUrl = user.getProfilePicture();
+
+                                PlayerView playerView = new PlayerView(MultiplayerGameActivity.this);
+                                playerView.setPlayerId(playerId);
+                                playerView.setUsername(username);
+
+                                // Set the profile image
+                                playerView.setProfileImage(profilePictureUrl, MultiplayerGameActivity.this);
+
+                                // Add the PlayerView to the container
+                                raceTrackContainer.addView(playerView);
+                            } else {
+                                Log.d("MultiplayerGameActivity", "User not found for player ID: " + playerId);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("MultiplayerGameActivity", "Error retrieving user data: " + error.getMessage());
+                        }
+                    });
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle possible errors.
+                Log.e("MultiplayerGameActivity", "Error loading players: " + error.getMessage());
             }
         });
     }
+
+
 
     private void listenForPlayerProgressUpdates() {
         gameRoomRef.child("progress").addValueEventListener(new ValueEventListener() {
@@ -182,6 +215,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
         currentParagraph = paragraph[0].replace(" ", "");
         currentRomaji = paragraph[1].trim();
         textDisplay.setText(currentParagraph);
+        textDisplay.setTextSize(24);
         startTimeMillis = System.currentTimeMillis();
         long startTime = timerSeconds * 1000; // Convert to milliseconds
 
@@ -450,17 +484,40 @@ public class MultiplayerGameActivity extends AppCompatActivity {
 
         private String playerId;
 
+        private ImageView profileImageView;
         private TextView usernameTextView;
         private View progressBar;
 
         public PlayerView(Context context) {
             super(context);
             setOrientation(VERTICAL);
+            setPadding(16, 16, 16, 16); // Optional: add some padding for better aesthetics
+
+            // Create a horizontal layout for the profile image and username
+            LinearLayout playerInfoLayout = new LinearLayout(context);
+            playerInfoLayout.setOrientation(HORIZONTAL);
+            playerInfoLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            playerInfoLayout.setGravity(Gravity.CENTER_VERTICAL); // Center vertically
+
+            // Initialize and configure the profile ImageView
+            profileImageView = new ImageView(context);
+            int imageSize = 100; // Set your desired size
+            LinearLayout.LayoutParams imageLayoutParams = new LinearLayout.LayoutParams(imageSize, imageSize);
+            imageLayoutParams.setMargins(0, 0, 16, 3); // Optional: add margin to separate image and text
+            profileImageView.setLayoutParams(imageLayoutParams);
+            profileImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            playerInfoLayout.addView(profileImageView);
 
             // Initialize and configure the username TextView
             usernameTextView = new TextView(context);
             usernameTextView.setTextColor(Color.BLACK); // Set text color to black
-            addView(usernameTextView);
+            usernameTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            playerInfoLayout.addView(usernameTextView);
+
+            // Add player info layout to PlayerView
+            addView(playerInfoLayout);
 
             // Initialize and configure the progress bar
             progressBar = new View(context);
@@ -481,11 +538,21 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             return playerId;
         }
 
-
+        public void setProfileImage(String imageUrl, Context context) {
+            Glide.with(context)
+                    .load(imageUrl)
+                    .apply(new RequestOptions()
+                            .override(120, 120) // Specify size
+                            .placeholder(R.drawable.loading) // Placeholder image
+                            .error(R.drawable.error) // Error image
+                            .circleCrop()) // Crop into a circle
+                    .into(profileImageView);
+        }
 
         public void setUsername(String username) {
             usernameTextView.setText(username);
         }
+
         public void updateProgress(double progress) {
             int parentWidth = ((ViewGroup) getParent()).getWidth();
             int newWidth = (int) (parentWidth * progress);

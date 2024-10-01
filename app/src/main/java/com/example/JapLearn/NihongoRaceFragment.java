@@ -3,6 +3,7 @@ package com.example.JapLearn;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -158,5 +160,18 @@ public class NihongoRaceFragment extends Fragment {
     private void redirectToPracticeActivity() {
         Intent intent = new Intent(getActivity(), PracticeNihongoRaceActivity.class);
         startActivity(intent);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Disable back button handling when the fragment is visible
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Do nothing to prevent back navigation
+                // Optionally show a message or toast if you want
+                Toast.makeText(getActivity(), "Use the logout option to exit", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -38,6 +39,7 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.io.InputStream;
 import android.Manifest;
+import android.widget.Toast;
 
 public class ProfileFragment extends Fragment {
 
@@ -187,5 +189,17 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Disable back button handling when the fragment is visible
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Do nothing to prevent back navigation
+                // Optionally show a message or toast if you want
+                Toast.makeText(getActivity(), "Use the logout option to exit", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

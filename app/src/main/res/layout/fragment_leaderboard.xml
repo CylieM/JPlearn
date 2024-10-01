@@ -72,8 +72,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Daily Streak"
-            android:id="@+id/buttonDailyStreak"
+            android:text="Progression"
+            android:id="@+id/buttonProgression"
             android:onClick="onLeaderboardButtonClick"/>
         <Button
             android:layout_width="0dp"

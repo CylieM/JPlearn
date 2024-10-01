@@ -110,7 +110,7 @@ public class KanaBoardActivity extends AppCompatActivity {
                 .apply(new RequestOptions()
                         .override(imageSize, imageSize) // Specify the size of the ImageView
                         .placeholder(R.drawable.loading) // Set a placeholder image
-                        .error(R.drawable.error) // Set an error image if loading fails
+                        .error(R.drawable.loading) // Set an error image if loading fails
                         .circleCrop()) // Crop the image into a circle
                 .into(profileImageView);
 
