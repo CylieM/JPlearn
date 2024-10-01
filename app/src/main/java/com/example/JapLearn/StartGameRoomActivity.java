@@ -39,6 +39,7 @@ public class StartGameRoomActivity extends AppCompatActivity {
     private String userId;
     private CountDownTimer lobbyTimer;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,16 +87,24 @@ public class StartGameRoomActivity extends AppCompatActivity {
         lobbyRef.orderByChild("gameState").equalTo("waiting").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean waitingLobbyFound = false;
+
                 if (snapshot.exists()) {
                     for (DataSnapshot lobbySnapshot : snapshot.getChildren()) {
                         String lobbyId = lobbySnapshot.getKey();
-                        if (lobbyId != null) {
+                        String gameState = lobbySnapshot.child("gameState").getValue(String.class);
+
+                        if (lobbyId != null && "waiting".equals(gameState)) {
                             joinLobby(lobbyId);
-                            return;
+                            waitingLobbyFound = true;
+                            break;
                         }
                     }
                 }
-                createLobby();
+
+                if (!waitingLobbyFound) {
+                    createLobby();
+                }
             }
 
             @Override
@@ -159,6 +168,19 @@ public class StartGameRoomActivity extends AppCompatActivity {
             listenForLobbyUpdates();
             lobbyRef.child("startTime").setValue(System.currentTimeMillis());
             syncLobbyTimer();
+            // Start a timer to delete the lobby after 2 minutes
+            new CountDownTimer(120000, 1000) { // 120000 ms = 2 minutes
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    // Optional: Update status if needed (e.g., countdown timer)
+                }
+
+                @Override
+                public void onFinish() {
+                    lobbyRef.removeValue(); // Automatically delete the lobby
+                    Log.d("StartGameRoomActivity", "Lobby " + newLobbyId + " has been destroyed due to inactivity.");
+                }
+            }.start();
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.JapLearn;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -449,11 +450,7 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Replace fragment with NihongoRaceFragment
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new NihongoRaceFragment())
-                        .addToBackStack(null)  // Optional: add to back stack if you want to enable back navigation
-                        .commit();
+                StartMultiplayerGameActivity.super.onBackPressed();
             }
         });
 
@@ -564,4 +561,22 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
             this.wpm = wpm;
         }
     }
+    @Override
+    public void onBackPressed() {
+        // Create an AlertDialog to confirm exit
+        new AlertDialog.Builder(this)
+                .setTitle("Quit Game")
+                .setMessage("Are you sure you want to quit the game?")
+                .setCancelable(false) // Prevents dialog from being dismissed on outside touch
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // User chose to exit the game
+                        StartMultiplayerGameActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("No", null) // Dismiss dialog on "No"
+                .show();
+    }
+
 }
