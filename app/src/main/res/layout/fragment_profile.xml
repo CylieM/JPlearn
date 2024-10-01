@@ -24,6 +24,16 @@
             android:src="@drawable/uploadimg"
             android:scaleType="fitCenter"/>
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tap your profile picture to update it."
+            android:textSize="12sp"
+            android:textColor="@color/myblue"
+            android:layout_gravity="center"
+
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+        <TextView
             android:id="@+id/emailTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
