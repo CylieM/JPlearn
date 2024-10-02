@@ -3,6 +3,7 @@ package com.example.JapLearn;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,9 +47,11 @@ public class NihongoRaceFragment extends Fragment {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkOrCreateLobby();
+                Intent intent = new Intent(getActivity(), StartGameRoomActivity.class);
+                startActivity(intent);
             }
         });
+
 
         joinRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,50 +109,7 @@ public class NihongoRaceFragment extends Fragment {
         }
     }
 
-    private void checkOrCreateLobby() {
-        DatabaseReference lobbyRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("lobbies");
 
-        lobbyRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot lobbySnapshot : snapshot.getChildren()) {
-                        String lobbyId = lobbySnapshot.getKey();
-                        if (lobbyId != null) {
-                            joinLobby(lobbyId);
-                            return;
-                        }
-                    }
-                }
-                createLobby();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("NihongoRaceFragment", "Error checking lobbies: " + error.getMessage());
-            }
-        });
-    }
-
-    private void joinLobby(String lobbyId) {
-        Intent intent = new Intent(getActivity(), StartGameRoomActivity.class);
-        intent.putExtra("LOBBY_ID", lobbyId);
-        startActivity(intent);
-    }
-
-    private void createLobby() {
-        DatabaseReference lobbyRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
-                .getReference("lobbies");
-        String userId = userModel.getFirebaseAuth().getCurrentUser().getUid();
-        String newLobbyId = lobbyRef.push().getKey();
-        if (newLobbyId != null) {
-            lobbyRef.child(newLobbyId).child("creator").setValue(userId);
-            Intent intent = new Intent(getActivity(), StartGameRoomActivity.class);
-            intent.putExtra("LOBBY_ID", newLobbyId);
-            startActivity(intent);
-        }
-    }
 
     private void redirectToJoinRoom() {
         Intent intent = new Intent(getActivity(), JoinRoomActivity.class);
@@ -158,5 +119,18 @@ public class NihongoRaceFragment extends Fragment {
     private void redirectToPracticeActivity() {
         Intent intent = new Intent(getActivity(), PracticeNihongoRaceActivity.class);
         startActivity(intent);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Disable back button handling when the fragment is visible
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Do nothing to prevent back navigation
+                // Optionally show a message or toast if you want
+                Toast.makeText(getActivity(), "Use the logout option to exit", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

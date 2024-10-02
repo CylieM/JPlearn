@@ -19,15 +19,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private static final String TAG = "UserAdapter";
 
     private Context context;
-    private ArrayList<RegistrationActivity.User> userList;
-    private ArrayList<RegistrationActivity.User> fullUserList;
+    private ArrayList<UserModel.User> userList;
+    private ArrayList<UserModel.User> fullUserList;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(RegistrationActivity.User user);
+        void onItemClick(UserModel.User user);
     }
 
-    public UserAdapter(Context context, ArrayList<RegistrationActivity.User> userList, OnItemClickListener listener) {
+    public UserAdapter(Context context, ArrayList<UserModel.User> userList, OnItemClickListener listener) {
         this.context = context;
         this.userList = userList;
         this.listener = listener;
@@ -43,7 +43,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
-        RegistrationActivity.User user = userList.get(position);
+        UserModel.User user = userList.get(position);
         holder.usernameTextView.setText(user.getUsername());
         holder.emailTextView.setText(user.getEmail());
 
@@ -78,7 +78,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
     }
 
-    public void searchDataList(ArrayList<RegistrationActivity.User> searchList) {
+    public void searchDataList(ArrayList<UserModel.User> searchList) {
         userList.clear();
         userList.addAll(searchList);
         notifyDataSetChanged();

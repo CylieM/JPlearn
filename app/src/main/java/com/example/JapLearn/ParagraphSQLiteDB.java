@@ -45,9 +45,9 @@ public class ParagraphSQLiteDB extends SQLiteOpenHelper {
 
     private void initializeDatabase(SQLiteDatabase db) {
         Object[][] initialParagraphs = {
-                {"こ ん し ゅ う  の  セ  ー  ル  は  と う ふ  と  チ ョ こ　レ ー ト  で す", "ko n sh u u no se e ru wa to u fu to ch o ko re e to de su", "Mixed", 2}, // 2 sentence, mixed
+                {"こ ん し ゅ う  の  セ  ー  ル  は  と う ふ  と  チ ョ こ　レ ー ト  で す", "ko n sh u u no se e ru wa to u fu to cho ko re e to de su", "Mixed", 2}, // 2 sentence, mixed
                 {"き ょ う  は  す  ー ぱ  ー  に か い も の  に い き ま し た  ま め の  か ん づ め と  ぱ ん  を  か い ま し た", "k yo u wa su u pa a ni ka i mo no ni i ki ma shi ta ma me no ka n zu me to pa n o ka i ma shi ta", "Hiragana", 2}, //2 sentence, pure hiragana
-                {"き ょ う  と  あ し た  は が っ こ う  が  や す み  で す  き ょ う  は  と も だ ち  と  こ う え ん  に  い き ま す", "k yo u to a shi ta wa ga k　   ko u ga ya su mi de su k yo u wa to mo da chi to ko u e n ni i ki ma su", "Hiragana", 2}, //2 sentence, pure hiragana
+                {"き ょ う  と  あ し た  は が っ こ う  が  や す み  で す  き ょ う  は  と も だ ち  と  こ う え ん  に  い き ま す", "k yo u to a shi ta wa ga k ko u ga ya su mi de su k yo u wa to mo da chi to ko u e n ni i ki ma su", "Hiragana", 2}, //2 sentence, pure hiragana
                 {"こ こ  は  ア メ リ カ で す", "ko ko wa a me ri ka de su", "Mixed", 1}, //1 sentence, mixed
                 {"に ほ ん ご が は な せ ま せ ん", "ni ho n go ga ha na se ma se n", "Hiragana", 1} //1 sentence, pure hiragana
         };

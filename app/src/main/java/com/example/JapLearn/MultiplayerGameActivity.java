@@ -2,6 +2,7 @@ package com.example.JapLearn;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,11 +15,13 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -29,6 +32,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -118,22 +123,51 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot playerSnapshot : snapshot.getChildren()) {
                     String playerId = playerSnapshot.getKey();
-                    String username = playerSnapshot.getValue(String.class);
 
-                    PlayerView playerView = new PlayerView(MultiplayerGameActivity.this);
-                    playerView.setPlayerId(playerId);
-                    playerView.setUsername(username);
+                    // Retrieve user information using UserModel
+                    UserModel userModel = new UserModel();
+                    userModel.getUserRef(playerId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                            // Check if the user data exists
+                            if (userSnapshot.exists()) {
+                                // Create a User object from the snapshot
+                                UserModel.User user = userSnapshot.getValue(UserModel.User.class);
 
-                    raceTrackContainer.addView(playerView);
+                                // Extract username and profile picture URL
+                                String username = user.getUsername();
+                                String profilePictureUrl = user.getProfilePicture();
+
+                                PlayerView playerView = new PlayerView(MultiplayerGameActivity.this);
+                                playerView.setPlayerId(playerId);
+                                playerView.setUsername(username);
+
+                                // Set the profile image
+                                playerView.setProfileImage(profilePictureUrl, MultiplayerGameActivity.this);
+
+                                // Add the PlayerView to the container
+                                raceTrackContainer.addView(playerView);
+                            } else {
+                                Log.d("MultiplayerGameActivity", "User not found for player ID: " + playerId);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("MultiplayerGameActivity", "Error retrieving user data: " + error.getMessage());
+                        }
+                    });
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle possible errors.
+                Log.e("MultiplayerGameActivity", "Error loading players: " + error.getMessage());
             }
         });
     }
+
+
 
     private void listenForPlayerProgressUpdates() {
         gameRoomRef.child("progress").addValueEventListener(new ValueEventListener() {
@@ -182,7 +216,8 @@ public class MultiplayerGameActivity extends AppCompatActivity {
         currentParagraph = paragraph[0].replace(" ", "");
         currentRomaji = paragraph[1].trim();
         textDisplay.setText(currentParagraph);
-
+        textDisplay.setTextSize(24);
+        startTimeMillis = System.currentTimeMillis();
         long startTime = timerSeconds * 1000; // Convert to milliseconds
 
         if (timer != null) {
@@ -192,6 +227,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 timerDisplay.setText("Time remaining: " + millisUntilFinished / 1000);
+                timerDisplay.setTextColor(Color.BLACK); // Set timer text color to black
             }
 
             @Override
@@ -233,6 +269,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             updatePlayerProgress(progress);
 
         }
+        textInput.setTextColor(Color.BLACK);
     }
 
     private void updatePlayerProgress(double progress) {
@@ -403,16 +440,19 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             TextView usernameTextView = new TextView(this);
             usernameTextView.setText(result.username);
             usernameTextView.setPadding(4, 4, 4, 4);
+            usernameTextView.setTextColor(Color.BLACK);
             row.addView(usernameTextView);
 
             TextView progressTextView = new TextView(this);
             progressTextView.setText(String.format("%.2f%%", result.progress * 100));
             progressTextView.setPadding(4, 4, 4, 4);
+            progressTextView.setTextColor(Color.BLACK);
             row.addView(progressTextView);
 
             TextView wpmTextView = new TextView(this);
             wpmTextView.setText(String.format("%.2f", result.wpm));
             wpmTextView.setPadding(4, 4, 4, 4);
+            wpmTextView.setTextColor(Color.BLACK);
             row.addView(wpmTextView);
 
             tableLayout.addView(row);
@@ -424,7 +464,7 @@ public class MultiplayerGameActivity extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+            MultiplayerGameActivity.super.onBackPressed();
 
             }
         });
@@ -445,18 +485,42 @@ public class MultiplayerGameActivity extends AppCompatActivity {
 
         private String playerId;
 
+        private ImageView profileImageView;
         private TextView usernameTextView;
         private View progressBar;
 
         public PlayerView(Context context) {
             super(context);
             setOrientation(VERTICAL);
+            setPadding(16, 16, 16, 16); // Optional: add some padding for better aesthetics
 
+            // Create a horizontal layout for the profile image and username
+            LinearLayout playerInfoLayout = new LinearLayout(context);
+            playerInfoLayout.setOrientation(HORIZONTAL);
+            playerInfoLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            playerInfoLayout.setGravity(Gravity.CENTER_VERTICAL); // Center vertically
 
+            // Initialize and configure the profile ImageView
+            profileImageView = new ImageView(context);
+            int imageSize = 100; // Set your desired size
+            LinearLayout.LayoutParams imageLayoutParams = new LinearLayout.LayoutParams(imageSize, imageSize);
+            imageLayoutParams.setMargins(0, 0, 16, 3); // Optional: add margin to separate image and text
+            profileImageView.setLayoutParams(imageLayoutParams);
+            profileImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            playerInfoLayout.addView(profileImageView);
 
+            // Initialize and configure the username TextView
             usernameTextView = new TextView(context);
-            addView(usernameTextView);
+            usernameTextView.setTextColor(Color.BLACK); // Set text color to black
+            usernameTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            playerInfoLayout.addView(usernameTextView);
 
+            // Add player info layout to PlayerView
+            addView(playerInfoLayout);
+
+            // Initialize and configure the progress bar
             progressBar = new View(context);
             progressBar.setBackgroundColor(Color.BLUE);
             LinearLayout.LayoutParams progressLayoutParams = new LinearLayout.LayoutParams(
@@ -475,11 +539,21 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             return playerId;
         }
 
-
+        public void setProfileImage(String imageUrl, Context context) {
+            Glide.with(context)
+                    .load(imageUrl)
+                    .apply(new RequestOptions()
+                            .override(120, 120) // Specify size
+                            .placeholder(R.drawable.loading) // Placeholder image
+                            .error(R.drawable.error) // Error image
+                            .circleCrop()) // Crop into a circle
+                    .into(profileImageView);
+        }
 
         public void setUsername(String username) {
             usernameTextView.setText(username);
         }
+
         public void updateProgress(double progress) {
             int parentWidth = ((ViewGroup) getParent()).getWidth();
             int newWidth = (int) (parentWidth * progress);
@@ -502,4 +576,22 @@ public class MultiplayerGameActivity extends AppCompatActivity {
             this.wpm = wpm;
         }
     }
+    @Override
+    public void onBackPressed() {
+        // Create an AlertDialog to confirm exit
+        new AlertDialog.Builder(this)
+                .setTitle("Quit Game")
+                .setMessage("Are you sure you want to quit the game?")
+                .setCancelable(false) // Prevents dialog from being dismissed on outside touch
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // User chose to exit the game
+                        MultiplayerGameActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("No", null) // Dismiss dialog on "No"
+                .show();
+    }
+
 }

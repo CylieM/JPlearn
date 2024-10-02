@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+
     android:gravity="center">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +40,7 @@ Complete sentences with appropriate grammar elements."
             android:layout_gravity="center"
             android:id="@+id/detailExample"
             android:textSize="18sp"
-            android:textColor="@color/myblue"/>
+            android:textColor="@color/black"/>
         <Button
             android:id="@+id/btnGrammar"
             android:layout_width="280dp"

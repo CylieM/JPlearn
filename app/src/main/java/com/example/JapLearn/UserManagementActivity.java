@@ -28,8 +28,8 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     DatabaseReference databaseReference;
     ValueEventListener eventListener;
     RecyclerView recyclerView;
-    ArrayList<RegistrationActivity.User> userList;
-    ArrayList<RegistrationActivity.User> fullUserList;
+    ArrayList<UserModel.User> userList;
+    ArrayList<UserModel.User> fullUserList;
     UserAdapter adapter;
     SearchView searchView;
 
@@ -69,7 +69,7 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
                     userList.clear();
                     fullUserList.clear();
                     for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                        RegistrationActivity.User user = itemSnapshot.getValue(RegistrationActivity.User.class);
+                        UserModel.User user = itemSnapshot.getValue(UserModel.User.class);
                         if (user != null) {
                             userList.add(user);
                             fullUserList.add(user);
@@ -106,7 +106,7 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
     }
 
     @Override
-    public void onItemClick(RegistrationActivity.User user) {
+    public void onItemClick(UserModel.User user) {
         Bundle bundle = new Bundle();
         bundle.putString("userId", user.getUserId());
         bundle.putString("username", user.getUsername());
@@ -130,8 +130,8 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
         if (text.isEmpty()) {
             adapter.searchDataList(fullUserList);
         } else {
-            ArrayList<RegistrationActivity.User> searchList = new ArrayList<>();
-            for (RegistrationActivity.User user : fullUserList) {
+            ArrayList<UserModel.User> searchList = new ArrayList<>();
+            for (UserModel.User user : fullUserList) {
                 if (user.getUsername().toLowerCase().contains(text.toLowerCase())) {
                     searchList.add(user);
                 }

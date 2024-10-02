@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -39,6 +40,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.InputStream;
+
+import android.Manifest;
+import android.widget.Toast;
+
+
 public class ProfileFragment extends Fragment {
 
     private TextView emailTextView, usernameTextView, progHiragana, progKatakana, progVocab, progGrammar;
@@ -104,7 +110,7 @@ public class ProfileFragment extends Fragment {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.isSuccessful()) {
                     DataSnapshot dataSnapshot = task.getResult();
-                    RegistrationActivity.User user = dataSnapshot.getValue(RegistrationActivity.User.class);
+                    UserModel.User user = dataSnapshot.getValue(UserModel.User.class);
 
                     if (user != null) {
                         usernameTextView.setText("Username: " + user.getUsername());
@@ -261,5 +267,17 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Disable back button handling when the fragment is visible
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Do nothing to prevent back navigation
+                // Optionally show a message or toast if you want
+                Toast.makeText(getActivity(), "Use the logout option to exit", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
