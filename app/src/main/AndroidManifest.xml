@@ -66,9 +66,9 @@
         <activity
             android:name=".LessonList"
             android:exported="false" />
-        <activity
-            android:name=".LessonList"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".LessonList"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".LessonReview"
             android:exported="false" />
@@ -138,10 +138,10 @@
             android:name=".LessonItemList"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-        <activity
-            android:name=".LessonList"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+<!--        <activity-->
+<!--            android:name=".LessonList"-->
+<!--            android:exported="false"-->
+<!--            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />-->
         <activity
             android:name=".KanaShootActivity"
             android:exported="false"

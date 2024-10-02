@@ -3,28 +3,16 @@ package com.example.JapLearn;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-<<<<<<< HEAD
 import android.preference.PreferenceManager;
-=======
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.fragment.app.Fragment;
-
-import android.os.Handler;
->>>>>>> de2acc811958758b74b67ef8d78f9e1a83d0462f
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-<<<<<<< HEAD
-
-import androidx.fragment.app.Fragment;
-=======
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
->>>>>>> de2acc811958758b74b67ef8d78f9e1a83d0462f
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.fragment.app.Fragment;
 
 public class HomeFragment extends Fragment {
 
