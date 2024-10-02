@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream:app/src/main/java/com/example/JapLearn/LessonList.java
 package com.example.JapLearn;
 
 import android.content.Intent;
@@ -9,6 +10,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+=======
+package com.example.jlearnn;
+
+import android.content.Intent;
+import android.os.Bundle;
+>>>>>>> Stashed changes:app/src/main/java/com/example/jlearnn/LessonList.java
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +23,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+<<<<<<< Updated upstream:app/src/main/java/com/example/JapLearn/LessonList.java
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,12 +44,17 @@ public class LessonList extends AppCompatActivity {
     private ImageView lockKata, lockVocab, lockGrammar;
 
 
+=======
+public class LessonList extends AppCompatActivity {
+
+>>>>>>> Stashed changes:app/src/main/java/com/example/jlearnn/LessonList.java
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_lesson_list);
 
+<<<<<<< Updated upstream:app/src/main/java/com/example/JapLearn/LessonList.java
         // Initialize lesson layouts
         lessonHiragana = findViewById(R.id.lessonHiragana);
         lessonKatakana = findViewById(R.id.lessonKatakana);
@@ -56,12 +69,15 @@ public class LessonList extends AppCompatActivity {
         // Initialize SharedPreferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+=======
+>>>>>>> Stashed changes:app/src/main/java/com/example/jlearnn/LessonList.java
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+<<<<<<< Updated upstream:app/src/main/java/com/example/JapLearn/LessonList.java
         // Initialize Firebase instances
         auth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance(); // FirebaseStorage instance
@@ -302,6 +318,18 @@ public class LessonList extends AppCompatActivity {
 
     private void startGrammarIntro() {
         Intent intent = new Intent(LessonList.this, LessonGrammarIntroActivity.class);
+=======
+        // Set up click listeners for each lesson
+        findViewById(R.id.lessonHiragana).setOnClickListener(v -> startLessonDiscussionActivity(1));
+        findViewById(R.id.lessonKatakana).setOnClickListener(v -> startLessonDiscussionActivity(2));
+        findViewById(R.id.lessonVocabulary).setOnClickListener(v -> startLessonDiscussionActivity(3));
+        findViewById(R.id.lessonParticles).setOnClickListener(v -> startLessonDiscussionActivity(4));
+    }
+
+    private void startLessonDiscussionActivity(int lessonNumber) {
+        Intent intent = new Intent(LessonList.this, LessonDiscussionActivity.class);
+        intent.putExtra("lessonNumber", lessonNumber);
+>>>>>>> Stashed changes:app/src/main/java/com/example/jlearnn/LessonList.java
         startActivity(intent);
     }
 }

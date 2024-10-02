@@ -127,9 +127,15 @@
                     android:layout_width="71dp"
                     android:layout_height="69dp"
                     android:layout_marginEnd="8dp"
+<<<<<<< Updated upstream
                     android:src="@drawable/leaderboard"
                     android:background="@color/myblue"
                     android:contentDescription="Icon description" />
+=======
+                    android:contentDescription="Icon description"
+
+                    app:srcCompat="@drawable/leaderboard" />
+>>>>>>> Stashed changes
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView1"
@@ -153,9 +159,15 @@
                     android:layout_width="71dp"
                     android:layout_height="69dp"
                     android:layout_marginEnd="8dp"
+<<<<<<< Updated upstream
                     android:src="@drawable/kanashoot"
                     android:background="@color/myblue"
                     android:contentDescription="Icon description" />
+=======
+                    android:contentDescription="Icon description"
+
+                    app:srcCompat="@drawable/kanashoot" />
+>>>>>>> Stashed changes
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView2"
@@ -179,9 +191,15 @@
                     android:layout_width="71dp"
                     android:layout_height="69dp"
                     android:layout_marginEnd="8dp"
+<<<<<<< Updated upstream
                     android:src="@drawable/nihongorace"
                     android:background="@color/myblue"
                     android:contentDescription="Icon description" />
+=======
+                    android:contentDescription="Icon description"
+
+                    app:srcCompat="@drawable/nihongorace" />
+>>>>>>> Stashed changes
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView3"
@@ -205,9 +223,15 @@
                     android:layout_width="71dp"
                     android:layout_height="69dp"
                     android:layout_marginEnd="8dp"
+<<<<<<< Updated upstream
                     android:src="@drawable/ic_person_24"
                     android:background="@color/myblue"
                     android:contentDescription="Icon description" />
+=======
+                    android:contentDescription="Icon description"
+
+                    app:srcCompat="@drawable/profile_border" />
+>>>>>>> Stashed changes
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView4"

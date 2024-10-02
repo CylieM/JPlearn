@@ -64,6 +64,9 @@
             />
         <activity android:name=".ChooseLessonActivity" />
         <activity
+            android:name=".LessonList"
+            android:exported="false" />
+        <activity
             android:name=".LessonReview"
             android:exported="false" />
         <activity
