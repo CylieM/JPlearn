@@ -157,13 +157,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="142dp"
+                    android:layout_gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/img_lock123dasd"
+                        android:id="@+id/lock_kata"
                         android:layout_width="35dp"
                         android:layout_height="50dp"
-                        android:layout_marginTop="200px"
+                        android:layout_gravity="center"
                         app:srcCompat="@drawable/padlock_removebg_preview" />
 
                     <LinearLayout
@@ -272,14 +273,13 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="142dp"
-                    android:layout_marginBottom="10dp"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/img_locke"
+                        android:id="@+id/lock_vocab"
                         android:layout_width="35dp"
                         android:layout_height="50dp"
-                        android:layout_marginTop="200px"
+                        android:layout_gravity="center"
                         app:srcCompat="@drawable/padlock_removebg_preview" />
 
                     <LinearLayout
@@ -346,14 +346,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="142dp"
-                    android:layout_marginTop="7dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/img_lock1"
+                        android:id="@+id/lock_grammar"
                         android:layout_width="35dp"
                         android:layout_height="50dp"
-                        android:layout_marginTop="170px"
+                        android:layout_gravity="center"
                         app:srcCompat="@drawable/padlock_removebg_preview" />
 
                     <LinearLayout

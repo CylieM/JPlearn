@@ -1,28 +1,17 @@
 package com.example.JapLearn;
 
+import static android.content.ContentValues.TAG;
+
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.bumptech.glide.Glide;
-
-
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,19 +23,32 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.InputStream;
-import android.Manifest;
-
 public class ProfileFragment extends Fragment {
 
-    private TextView emailTextView, usernameTextView;
+    private TextView emailTextView, usernameTextView, progHiragana, progKatakana, progVocab, progGrammar;
     private ImageView detailImage;
     private DatabaseReference usersRef;
     private FirebaseAuth firebaseAuth;
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    private String userId;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,11 +66,17 @@ public class ProfileFragment extends Fragment {
         detailImage = view.findViewById(R.id.detailImage);
         usernameTextView = view.findViewById(R.id.usernameTextView);
         detailImage = view.findViewById(R.id.detailImage);
+        progHiragana = view.findViewById(R.id.prog_hiragana);
+        progKatakana = view.findViewById(R.id.prog_katakana);
+        progVocab = view.findViewById(R.id.prog_vocab);
+        progGrammar = view.findViewById(R.id.prog_grammar);
+
 
         TextView dailyStreakTextView = view.findViewById(R.id.DailyStreakTextView);
         TextView hiraganaProgressTextView = view.findViewById(R.id.HiraganaProgressTextView);
         TextView katakanaProgressTextView = view.findViewById(R.id.KatakanaProgressTextView);
         TextView vocabProgressTextView = view.findViewById(R.id.VocabProgressTextView);
+        TextView grammarProgressTextView = view.findViewById(R.id.GrammarProgressTextView);
         TextView kanaShootWaveTextView = view.findViewById(R.id.KanaShootWaveTextView);
         TextView kanaShootHSTextView = view.findViewById(R.id.KanaShootHSTextView);
         TextView nihongoRaceTextView = view.findViewById(R.id.NihongoRaceTextView);
@@ -78,14 +86,17 @@ public class ProfileFragment extends Fragment {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app");
         usersRef = firebaseDatabase.getReference("users");
 
-        // Retrieve user ID of the user whose profile is to be displayed
+        // Retrieve user ID
         Bundle arguments = getArguments();
-        String userId;
         if (arguments != null && arguments.containsKey("userId")) {
             userId = arguments.getString("userId");
         } else {
             userId = firebaseAuth.getCurrentUser().getUid();
         }
+
+        // Fetch current lesson progress
+
+
 
         // Retrieve and display user's username and profile picture from Realtime Database
         usersRef.child(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -99,9 +110,10 @@ public class ProfileFragment extends Fragment {
                         usernameTextView.setText("Username: " + user.getUsername());
                         emailTextView.setText("Email: " + user.getEmail());
                         dailyStreakTextView.setText("Daily Streak: " + user.getDailyStreak());
-                        hiraganaProgressTextView.setText("Hiragana Progress: " + user.getHiraganaProgress());
-                        katakanaProgressTextView.setText("Katakana Progress: " + user.getKatakanaProgress());
-                        vocabProgressTextView.setText("Vocabulary Progress: " + user.getVocabularyProgress());
+                        hiraganaProgressTextView.setText("Hiragana Progress: " );
+                        katakanaProgressTextView.setText("Katakana Progress: " );
+                        vocabProgressTextView.setText("Vocabulary Progress: " );
+                        grammarProgressTextView.setText("Grammar Progress: ");
                         kanaShootWaveTextView.setText("Kanashoot Game Mode final wave: " + user.getKSWaves());
                         kanaShootHSTextView.setText("Kanashoot Game Mode highest score: " + user.getKSHighScore());
                         nihongoRaceTextView.setText("NihongoRace Game Mode best WPM: " + user.getNRaceBestWPM());
@@ -134,8 +146,70 @@ public class ProfileFragment extends Fragment {
             detailImage.setOnClickListener(null);
         }
 
+        fetchCurrentLesson();
+
+
         return view;
+
+
     }
+
+    private void fetchCurrentLesson() {
+        usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String currentLesson = dataSnapshot.child("currentLesson").getValue(String.class);
+
+                    // Set the progress of Hiragana, Katakana, Vocab, and Grammar based on currentLesson
+                    switch (currentLesson) {
+                        case "1":
+                            progHiragana.setText("In-Progress");
+                            progKatakana.setText("Locked");
+                            progVocab.setText("Locked");
+                            progGrammar.setText("Locked");
+                            break;
+
+                        case "2":
+                            progHiragana.setText("Completed");
+                            progKatakana.setText("In-Progress");
+                            progVocab.setText("Locked");
+                            progGrammar.setText("Locked");
+                            break;
+
+                        case "3":
+                            progHiragana.setText("Completed");
+                            progKatakana.setText("Completed");
+                            progVocab.setText("In-Progress");
+                            progGrammar.setText("Locked");
+                            break;
+
+                        case "4":
+                            progHiragana.setText("Completed");
+                            progKatakana.setText("Completed");
+                            progVocab.setText("Completed");
+                            progGrammar.setText("In-Progress");
+                            break;
+
+                        default:
+                            progHiragana.setText("Completed");
+                            progKatakana.setText("Completed");
+                            progVocab.setText("Completed");
+                            progGrammar.setText("Completed");
+                            break;
+                    }
+                } else {
+                    Log.e(TAG, "User data does not exist for userId: " + userId);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Error fetching user data", databaseError.toException());
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
