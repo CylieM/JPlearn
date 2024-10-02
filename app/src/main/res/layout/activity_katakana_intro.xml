@@ -152,6 +152,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:backgroundTint="@color/red"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+
                                 android:layout_weight="1"
 
                                 android:text="Let's Proceed!" />

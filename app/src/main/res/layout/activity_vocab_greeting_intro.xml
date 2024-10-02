@@ -120,7 +120,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:backgroundTint="@color/red"
-
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
                                 android:text="Let's Go!" />
                         </LinearLayout>
 
