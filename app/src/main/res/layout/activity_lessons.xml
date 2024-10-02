@@ -53,7 +53,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="#ff00d6"
+                        android:background="@color/red"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingLeft="120dp"
@@ -97,9 +97,7 @@
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:rotationY="190"
-                                app:srcCompat="@drawable/wood2"
-                                tools:srcCompat="@drawable/wood2"
-                                android:background="@drawable/bg31"
+                                android:background="@drawable/arrow"
                                 />
 
                             <EditText
@@ -120,9 +118,7 @@
                                 android:id="@+id/btnNext"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                app:srcCompat="@drawable/wood2"
-                                tools:srcCompat="@drawable/wood2"
-                                android:background="@drawable/bg31"
+                                android:background="@drawable/arrow"
                                 />
 
                         </LinearLayout>
@@ -193,7 +189,7 @@
                                 android:foreground="?android:attr/selectableItemBackground"
                                 android:foregroundTint="#2196F3"
                                 android:translationZ="4dp"
-                                app:srcCompat="@drawable/speaker_or_volume_icon_free_vector_removebg_preview_2_67_2_30" />
+                                app:srcCompat="@drawable/speak" />
 
                         </LinearLayout>
 

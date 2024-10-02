@@ -28,7 +28,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="650dp"
-                    android:layout_marginTop="70dp"
+                    android:layout_marginTop="100dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
                     android:paddingLeft="30dp"
@@ -52,7 +52,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:textColor="#008577"
+                                android:textColor="@color/red"
                                 android:text="Welcome to Lesson Katakana!"
                                 android:textSize="34sp"
                                 android:textStyle="bold" />
@@ -70,6 +70,7 @@
                                 android:id="@+id/textView62"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:textColor="@color/gray"
 
                                 android:layout_weight="1"
                                 android:gravity="center"
@@ -91,6 +92,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:textColor="@color/gray"
+
                                 android:text="コンピュータ (konpyu-ta) - computer"
                                 android:textStyle="bold|italic" />
 
@@ -108,6 +111,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:textColor="@color/gray"
+
                                 android:text="コーヒー (ko-hi-) - coffee"
                                 android:textStyle="bold|italic" />
 
@@ -127,6 +132,8 @@
                                 android:gravity="center"
                                 android:text="By the end of this lesson, you'll know all 46 Katakana characters, including their English translations, Japanese examples, and Romaji. This will help you read and write basic Japanese."
                                 android:textSize="16sp"
+                                android:textColor="@color/gray"
+
                                 android:textStyle="bold" />
 
                         </LinearLayout>
@@ -144,7 +151,7 @@
                                 android:id="@+id/btnKataProceed"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:backgroundTint="#008577"
+                                android:backgroundTint="@color/red"
                                 android:layout_weight="1"
 
                                 android:text="Let's Proceed!" />

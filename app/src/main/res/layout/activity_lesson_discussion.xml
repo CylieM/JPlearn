@@ -147,12 +147,10 @@
 
                             <ImageButton
                                 android:id="@+id/btnPrev"
+                                android:rotationY="190"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:rotationY="190"
-                                app:srcCompat="@drawable/wood2"
-                                tools:srcCompat="@drawable/wood2"
-                                android:background="@drawable/bg31"
+                                android:background="@drawable/arrow"
                                 />
 
                             <TextView
@@ -173,10 +171,7 @@
                                 android:id="@+id/btnNext"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                app:srcCompat="@drawable/wood2"
-                                android:background="@drawable/bg31"
-
-                                tools:srcCompat="@drawable/wood2"
+                                android:background="@drawable/arrow"
                                 />
 
 

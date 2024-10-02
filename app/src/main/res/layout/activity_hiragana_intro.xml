@@ -51,7 +51,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:textColor="#008577"
+                                android:textColor="@color/red"
                                 android:text="Welcome to Lesson Hiragana!"
                                 android:textSize="34sp"
                                 android:textStyle="bold" />
@@ -69,6 +69,7 @@
                                 android:id="@+id/textView62"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:textColor="@color/gray"
 
                                 android:layout_weight="1"
                                 android:gravity="center"
@@ -90,6 +91,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:textColor="@color/gray"
+
                                 android:text="さくら (sakura) - Cherry Blossom"
                                 android:textStyle="bold|italic" />
 
@@ -107,6 +110,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:textColor="@color/gray"
+
                                 android:text="ありがとう (arigatou) - Thank you"
                                 android:textStyle="bold|italic" />
 
@@ -126,6 +131,8 @@
                                 android:gravity="center"
                                 android:text="By the end of this lesson, you'll know all 48 Hiragana characters, including their English translations, Japanese examples, and Romaji. This will help you read and write basic Japanese."
                                 android:textSize="16sp"
+                                android:textColor="@color/gray"
+
                                 android:textStyle="bold" />
 
                         </LinearLayout>
@@ -143,7 +150,7 @@
                                 android:id="@+id/btnProceed"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:backgroundTint="#008577"
+                                android:backgroundTint="@color/red"
                                 android:layout_weight="1"
 
                                 android:text="Let's Proceed!" />
