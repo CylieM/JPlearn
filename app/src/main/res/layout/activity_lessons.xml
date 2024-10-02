@@ -238,6 +238,8 @@
                                 android:layout_width="215dp"
                                 android:layout_height="70dp"
                                 android:layout_weight="1"
+                                android:textColor="@color/gray"
+
                                 android:text="TextView" />
                         </LinearLayout>
 
@@ -261,6 +263,8 @@
                                 android:layout_width="215dp"
                                 android:layout_height="100dp"
                                 android:layout_weight="1"
+                                android:textColor="@color/gray"
+
                                 android:text="TextView" />
                         </LinearLayout>
 
