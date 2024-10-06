@@ -19,15 +19,16 @@
         <item name="cornerSize">50%</item>
     </style>
 
-    <style name="Theme.Jlearnn" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="Theme.Main" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="android:textAppearance">@style/CustomTextStyle</item>
     </style>
     <!-- Base application theme. -->
-    <style name="Base.Theme.Jlearnn" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
 
+    <style name="CustomTextStyle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 
 
 </resources>

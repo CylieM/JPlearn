@@ -1,5 +1,6 @@
 package com.example.JapLearn;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 
@@ -107,21 +108,17 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
 
     @Override
     public void onItemClick(UserModel.User user) {
-        Bundle bundle = new Bundle();
-        bundle.putString("userId", user.getUserId());
-        bundle.putString("username", user.getUsername());
-        bundle.putString("email", user.getEmail());
+        Intent intent = new Intent(UserManagementActivity.this, ProfileActivity.class);
 
-        ProfileFragment profileFragment = new ProfileFragment();
-        profileFragment.setArguments(bundle);
+        // Pass user details to the ProfileActivity
+        intent.putExtra("userId", user.getUserId());
+        intent.putExtra("username", user.getUsername());
+        intent.putExtra("email", user.getEmail());
+        intent.putExtra("isFromUserManagement", true);
+        // Start the ProfileActivity
+        startActivity(intent);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.other_user_profile_fragment, profileFragment)
-                .commit();
-
-        FrameLayout frameLayout = findViewById(R.id.other_user_profile_fragment);
-        frameLayout.setVisibility(View.VISIBLE);
-
+        // Optionally hide the recyclerView and searchView if needed
         recyclerView.setVisibility(View.GONE);
         searchView.setVisibility(View.GONE);
     }
@@ -139,16 +136,14 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
             adapter.searchDataList(searchList);
         }
     }
-
     @Override
     public void onBackPressed() {
-        FrameLayout frameLayout = findViewById(R.id.other_user_profile_fragment);
-        if (frameLayout.getVisibility() == View.VISIBLE) {
-            frameLayout.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-            searchView.setVisibility(View.VISIBLE);
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
+        Intent intent = new Intent(this, HomeActivity.class);
+        // Add flags to clear the activity stack if you want to ensure a clean navigation back to HomeActivity
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish(); // Optional: Call finish if you want to close the current activity
     }
+
 }

@@ -1,15 +1,19 @@
 package com.example.JapLearn;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,7 +31,7 @@ import java.util.List;
 public class NihonBoardActivity extends AppCompatActivity {
 
     private TableLayout tableLayout;
-    private TextView headerLastWave;
+
     private Button buttonBackToHome;
 
     @Override
@@ -36,18 +40,25 @@ public class NihonBoardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nihonboard);
 
         tableLayout = findViewById(R.id.tableLayout);
-        headerLastWave = findViewById(R.id.lastColumnHeader);
+
         buttonBackToHome = findViewById(R.id.buttonBackToHome);
 
         fetchLeaderboardData();
 
+        buttonBackToHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an intent to start HomeActivity
+                Intent intent = new Intent(NihonBoardActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish(); // Optionally call finish() if you want to remove this activity from the back stack
+            }
+        });
     }
 
     private void fetchLeaderboardData() {
         DatabaseReference usersRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("users");
 
-        headerLastWave.setText("WPM");
-        headerLastWave.setTextColor(Color.BLACK);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -81,54 +92,39 @@ public class NihonBoardActivity extends AppCompatActivity {
     }
 
     private void addTableRow(int rank, String username, int categoryValue, String profilePictureUrl) {
-        TableRow tableRow = new TableRow(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        TableRow tableRow = (TableRow) inflater.inflate(R.layout.table_row_leaderboard, null);
 
-        TextView rankTextView = new TextView(this);
+        TextView rankTextView = tableRow.findViewById(R.id.rankTextView);
+        ImageView profileImageView = tableRow.findViewById(R.id.profileImageView);
+        TextView usernameTextView = tableRow.findViewById(R.id.usernameTextView);
+        TextView categoryValueTextView = tableRow.findViewById(R.id.categoryValueTextView);
+
         rankTextView.setText(String.valueOf(rank));
-        rankTextView.setPadding(40, 8, 40, 8);
-        rankTextView.setTextColor(Color.BLACK);
-        tableRow.addView(rankTextView);
-
-        ImageView profileImageView = new ImageView(this);
-        profileImageView.setPadding(20, 8, 20, 8); // Adjust padding as needed
-        profileImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        profileImageView.setAdjustViewBounds(true); // Allow the ImageView to adjust its bounds
-
-// Set a larger size for the ImageView
-        int imageSize = 120; // Set desired size (e.g., 150dp)
-        TableRow.LayoutParams params = new TableRow.LayoutParams(imageSize, imageSize);
-        params.gravity = Gravity.CENTER; // Center the image in the TableRow
-        profileImageView.setLayoutParams(params);
+        usernameTextView.setText(username);
+        categoryValueTextView.setText(String.valueOf(categoryValue));
 
         Glide.with(this)
                 .load(profilePictureUrl)
                 .apply(new RequestOptions()
-                        .override(imageSize, imageSize) // Specify the size of the ImageView
+                        .override(100, 100) // Specify the size of the ImageView
                         .placeholder(R.drawable.loading) // Set a placeholder image
                         .error(R.drawable.loading) // Set an error image if loading fails
                         .circleCrop()) // Crop the image into a circle
                 .into(profileImageView);
 
-        tableRow.addView(profileImageView); // Add ImageView to the row
-
-
-        TextView usernameTextView = new TextView(this);
-        usernameTextView.setText(username);
-        usernameTextView.setPadding(45, 8, 140, 8);
-        usernameTextView.setMaxLines(1);
-        usernameTextView.setEllipsize(TextUtils.TruncateAt.END);
-        usernameTextView.setTextColor(Color.BLACK);
-        tableRow.addView(usernameTextView);
-
-        TextView categoryValueTextView = new TextView(this);
-        categoryValueTextView.setText(String.valueOf(categoryValue));
-        categoryValueTextView.setPadding(1, 8, 24, 8);
-        categoryValueTextView.setTextColor(Color.BLACK);
-        tableRow.addView(categoryValueTextView);
-
         tableLayout.addView(tableRow);
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Disable back button handling when the activity is visible
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
 
-
-
+            }
+        });
+    }
 }
+

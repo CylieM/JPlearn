@@ -104,4 +104,13 @@ public class LessonItemList extends AppCompatActivity {
         }
         adapter.searchDataList(searchList);
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, HomeActivity.class);
+        // Add flags to clear the activity stack if you want to ensure a clean navigation back to HomeActivity
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish(); // Optional: Call finish if you want to close the current activity
+    }
 }

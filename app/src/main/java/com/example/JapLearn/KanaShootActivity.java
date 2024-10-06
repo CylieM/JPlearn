@@ -3,19 +3,28 @@ package com.example.JapLearn;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 public class KanaShootActivity extends AppCompatActivity {
     private WebView webView;
+
     private UserModel userModel;
 
     @Override
@@ -24,7 +33,7 @@ public class KanaShootActivity extends AppCompatActivity {
         setContentView(R.layout.activity_kana_shoot);
 
         webView = findViewById(R.id.webView);
-
+        userModel = new UserModel();
         // Enable JavaScript in the WebView
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -40,6 +49,17 @@ public class KanaShootActivity extends AppCompatActivity {
 
         // Initialize UserModel
         userModel = new UserModel();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, HomeActivity.class);
+        // Add flags to clear the activity stack if you want to ensure a clean navigation back to HomeActivity
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish(); // Optional: Call finish if you want to close the current activity
     }
 
     public class MyJavaScriptInterface {
@@ -93,6 +113,10 @@ public class KanaShootActivity extends AppCompatActivity {
 
         } else {
             Toast.makeText(KanaShootActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+            // Redirect to login if user is not logged in
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish(); // Optional: Finish the current activity
         }
     }
 }

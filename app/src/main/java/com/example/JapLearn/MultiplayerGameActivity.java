@@ -464,10 +464,16 @@ public class MultiplayerGameActivity extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            MultiplayerGameActivity.super.onBackPressed();
+                // Call the super method to handle back press
+                MultiplayerGameActivity.super.onBackPressed();
 
+                // Create an intent to start HomeActivity
+                Intent intent = new Intent(MultiplayerGameActivity.this, HomeActivity.class);
+                startActivity(intent); // Start the new activity
+                finish(); // Optionally call finish() to remove this activity from the back stack
             }
         });
+
 
         btnShowAllLeaderboards.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -522,10 +528,10 @@ public class MultiplayerGameActivity extends AppCompatActivity {
 
             // Initialize and configure the progress bar
             progressBar = new View(context);
-            progressBar.setBackgroundColor(Color.BLUE);
+            progressBar.setBackgroundColor(Color.RED);
             LinearLayout.LayoutParams progressLayoutParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    10 // Set your desired height for the progress bar
+                    15 // Set your desired height for the progress bar
             );
             progressBar.setLayoutParams(progressLayoutParams);
             addView(progressBar);

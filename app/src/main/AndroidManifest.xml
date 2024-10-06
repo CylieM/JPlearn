@@ -14,40 +14,37 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Jlearnn"
         tools:targetApi="31">
         
         <!-- Merged activities -->
         <activity
             android:name=".VocabForeignIntro"
-            android:exported="false" />
+            android:exported="false"          android:theme="@style/Theme.Main" />
         <activity
             android:name=".VocabWeekdayIntro"
-            android:exported="false" />
+            android:exported="false"          android:theme="@style/Theme.Main" />
         <activity
             android:name=".VocabGreetingIntro"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".VocabIntro"
-            android:exported="false" />
+            android:exported="false"          android:theme="@style/Theme.Main" />
         <activity
             android:name=".KatakanaIntro"
-            android:exported="false" />
+            android:exported="false"          android:theme="@style/Theme.Main" />
         <activity
             android:name=".HiraganaIntro"
-            android:exported="false" />
+            android:exported="false"          android:theme="@style/Theme.Main" />
         <activity
             android:name=".LessonVocab"
-            android:exported="false" />
+            android:exported="false"          android:theme="@style/Theme.Main" />
         <activity
             android:name=".NihonBoardActivity"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".KanaBoardActivity"
-            android:exported="false" />
-        <activity
-            android:name=".bottom_nav_menu"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
+
         <activity
             android:name=".LessonGrammarExercise"
             android:exported="false"
@@ -55,103 +52,113 @@
             />
         <activity
             android:name=".LessonGrammarIntroActivity"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".LessonGrammarActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
 
             />
-        <activity android:name=".ChooseLessonActivity" />
+        <activity android:name=".ChooseLessonActivity"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".LessonReview"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".LessonTestYourself"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".LessonDiscussionActivity"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".LessonsActivity"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".StartMultiplayerGameActivity"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".StartGameRoomActivity"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".UserManagementActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            android:theme="@style/Theme.Main"
             />
         <activity
             android:name=".ForgotPasswordBActivity"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main" />
         <activity
             android:name=".ForgotPasswordActivity"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main" />
         <activity
-            android:name=".ProfileFragment"
-            android:exported="false" />
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Main"
+            />
         <activity
-            android:name=".HomeFragment"
-            android:exported="false" />
+            android:name=".HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Main"
+            />
         <activity
-            android:name=".LeaderboardFragment"
-            android:exported="false" />
+            android:name=".LeaderboardActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Main"
+            />
 
         <activity
             android:name=".MultiplayerGameActivity"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".PracticeNihongoRaceActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/Theme.Main" />
+        <activity
+            android:name=".NihongoRaceActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Main" />
         <activity
             android:name=".LessonItemUpdateActivity"
-            android:exported="false" />
+            android:exported="false"           android:theme="@style/Theme.Main"/>
         <activity
             android:name=".LessonItemDetailActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/Theme.Main"/>
         <activity
             android:name=".CreateRoomActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/Theme.Main" />
         <activity
             android:name=".JoinRoomActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/Theme.Main"/>
         <activity
             android:name=".LessonItemUploadActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/Theme.Main"/>
         <activity
             android:name=".LessonItemList"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/Theme.Main"/>
         <activity
             android:name=".LessonList"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/Theme.Main"/>
         <activity
             android:name=".KanaShootActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/Theme.Main" />
         <activity
             android:name=".navBar"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/Theme.Main"/>
         <activity
             android:name=".LoginActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/Theme.Main"/>
         <activity
             android:name=".RegistrationActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+            android:theme="@style/Theme.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

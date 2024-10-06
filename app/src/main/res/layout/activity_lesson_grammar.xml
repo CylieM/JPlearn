@@ -130,18 +130,18 @@
 
                     <Button
                         android:id="@+id/btndataExample"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:padding="16dp"
-                        android:maxLines="2"
-                        android:text="Example"
-                        android:background="@drawable/button_background"
-                        android:textColor="#666666"
-                        android:textAllCaps="false"
-                        android:textSize="16sp"
-                        android:gravity="start|top"
-                        android:lineSpacingExtra="4dp" />
+                        android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="16dp"
+                    android:maxLines="2"
+                    android:text="Example"
+                    android:background="@drawable/button_background"
+                    android:textColor="#666666"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4dp" />
 
                     <Button
                         android:id="@+id/btnOption2"

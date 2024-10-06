@@ -507,10 +507,10 @@ public class StartMultiplayerGameActivity extends AppCompatActivity {
 
             // Initialize and configure the progress bar
             progressBar = new View(context);
-            progressBar.setBackgroundColor(Color.BLUE);
+            progressBar.setBackgroundColor(Color.RED);
             LinearLayout.LayoutParams progressLayoutParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    10 // Set your desired height for the progress bar
+                    15 // Set your desired height for the progress bar
             );
             progressBar.setLayoutParams(progressLayoutParams);
             addView(progressBar);

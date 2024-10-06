@@ -8,58 +8,56 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="8dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/Username"
+            android:text="Username"
+            android:textStyle="bold"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:padding="2dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:paddingStart="60dp"
+            android:textColor="@color/black"
+            />
 
-            <TextView
-                android:textStyle="bold"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="8dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:text="Username"
-                android:textStyle="bold"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:padding="8dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/lastColumnHeader"
-                android:text="WPM"
-                android:textStyle="bold"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="8dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <TableLayout
-                android:id="@+id/tableLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <!-- Rows will be added programmatically -->
-
-            </TableLayout>
-        </ScrollView>
+        <TextView
+            android:id="@+id/lastColumnHeader"
+            android:text="WPM"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="8dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black" />
     </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Rows will be added programmatically -->
+
+        </TableLayout>
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -71,7 +69,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Back to Game Results"
+            android:text="Back to Home"
             android:id="@+id/buttonBackToHome" />
 
     </LinearLayout>

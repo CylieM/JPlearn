@@ -26,7 +26,7 @@ public class LessonGrammarExercise extends AppCompatActivity {
     private Animation scaleUp, scaleDown;
     private int currentQuestionIndex = 1;
     private int correctCount = 0;
-    private static final int TOTAL_QUESTIONS = 5;
+    private static final int TOTAL_QUESTIONS = 8;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

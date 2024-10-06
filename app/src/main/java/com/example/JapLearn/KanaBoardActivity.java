@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -29,6 +30,7 @@ public class KanaBoardActivity extends AppCompatActivity {
 
     private TableLayout tableLayout;
     private TextView headerLastWave;
+    private TextView headerUsername;
     private Button buttonPlayAgain, buttonBackToHome;
 
     @Override
@@ -38,20 +40,24 @@ public class KanaBoardActivity extends AppCompatActivity {
 
         tableLayout = findViewById(R.id.tableLayout);
         headerLastWave = findViewById(R.id.lastColumnHeader);
+        headerUsername = findViewById(R.id.Username);
         buttonPlayAgain = findViewById(R.id.buttonPlayAgain);
-
+        buttonBackToHome = findViewById(R.id.buttonBackToHome);
 
         fetchLeaderboardData();
 
         buttonPlayAgain.setOnClickListener(v -> restartKanaShoot());
+        buttonBackToHome.setOnClickListener(v -> {
+            Intent intent = new Intent(KanaBoardActivity.this, HomeActivity.class); // Replace CurrentActivity with your current activity class name
+            startActivity(intent);
+            finish(); // Optional: Call finish() if you want to remove the current activity from the back stack
+        });
 
     }
 
     private void fetchLeaderboardData() {
         DatabaseReference usersRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("users");
 
-        headerLastWave.setText("Wave");
-        headerLastWave.setTextColor(Color.BLACK);
 
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -86,50 +92,26 @@ public class KanaBoardActivity extends AppCompatActivity {
     }
 
     private void addTableRow(int rank, String username, int categoryValue, String profilePictureUrl) {
-        TableRow tableRow = new TableRow(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        TableRow tableRow = (TableRow) inflater.inflate(R.layout.table_row_leaderboard, null);
 
-        TextView rankTextView = new TextView(this);
+        TextView rankTextView = tableRow.findViewById(R.id.rankTextView);
+        ImageView profileImageView = tableRow.findViewById(R.id.profileImageView);
+        TextView usernameTextView = tableRow.findViewById(R.id.usernameTextView);
+        TextView categoryValueTextView = tableRow.findViewById(R.id.categoryValueTextView);
+
         rankTextView.setText(String.valueOf(rank));
-        rankTextView.setPadding(40, 8, 40, 8);
-        rankTextView.setTextColor(Color.BLACK);
-        tableRow.addView(rankTextView);
-
-        ImageView profileImageView = new ImageView(this);
-        profileImageView.setPadding(20, 8, 20, 8); // Adjust padding as needed
-        profileImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        profileImageView.setAdjustViewBounds(true); // Allow the ImageView to adjust its bounds
-
-// Set a larger size for the ImageView
-        int imageSize = 120; // Set desired size (e.g., 150dp)
-        TableRow.LayoutParams params = new TableRow.LayoutParams(imageSize, imageSize);
-        params.gravity = Gravity.CENTER; // Center the image in the TableRow
-        profileImageView.setLayoutParams(params);
+        usernameTextView.setText(username);
+        categoryValueTextView.setText(String.valueOf(categoryValue));
 
         Glide.with(this)
                 .load(profilePictureUrl)
                 .apply(new RequestOptions()
-                        .override(imageSize, imageSize) // Specify the size of the ImageView
+                        .override(100, 100) // Specify the size of the ImageView
                         .placeholder(R.drawable.loading) // Set a placeholder image
                         .error(R.drawable.loading) // Set an error image if loading fails
                         .circleCrop()) // Crop the image into a circle
                 .into(profileImageView);
-
-        tableRow.addView(profileImageView); // Add ImageView to the row
-
-
-        TextView usernameTextView = new TextView(this);
-        usernameTextView.setText(username);
-        usernameTextView.setPadding(45, 8, 140, 8);
-        usernameTextView.setMaxLines(1);
-        usernameTextView.setEllipsize(TextUtils.TruncateAt.END);
-        usernameTextView.setTextColor(Color.BLACK);
-        tableRow.addView(usernameTextView);
-
-        TextView categoryValueTextView = new TextView(this);
-        categoryValueTextView.setText(String.valueOf(categoryValue));
-        categoryValueTextView.setPadding(1, 8, 24, 8);
-        categoryValueTextView.setTextColor(Color.BLACK);
-        tableRow.addView(categoryValueTextView);
 
         tableLayout.addView(tableRow);
     }
@@ -139,6 +121,4 @@ public class KanaBoardActivity extends AppCompatActivity {
         startActivity(intent);
         finish(); // Optionally finish the current activity
     }
-
-
 }

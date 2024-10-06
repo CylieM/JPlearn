@@ -1,15 +1,21 @@
 package com.example.JapLearn;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.PopupMenu;
-
+import android.widget.Button;
+import android.widget.TextView;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,7 +24,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-public class navBar extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
+
+    private SharedPreferences sharedPreferences;
+    private TextView tvCurrLesson;
+    private boolean isBackPressedOnce = false;
     UserModel userModel;
     FirebaseUser user;
     private BottomNavigationView bottomNavigationView;
@@ -26,17 +36,37 @@ public class navBar extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_home); // Make sure to update the layout resource name
+
+        // Initialize components
         initializeComponents();
         checkUserAuthentication();
         setBottomNavigationListener();
-        loadHomeActivity();
+
+        // Initialize SharedPreferences
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Handle button clicks
+        Button btnLessons = findViewById(R.id.btnLessons);
+        Button btnTest = findViewById(R.id.btnTest);
+        tvCurrLesson = findViewById(R.id.tv_currLesson);
+
+        btnLessons.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, LessonList.class);
+            intent.putExtra("reviewMode", false); // Not in review mode
+            startActivity(intent);
+        });
+
+        btnTest.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, LessonsActivity.class);
+            intent.putExtra("reviewMode", false); // Not in review mode
+            startActivity(intent);
+        });
+
+        // Load the current lesson from SharedPreferences
+        loadCurrentLesson();
     }
-    private void loadHomeActivity() {
-        Intent intent = new Intent(navBar.this, HomeActivity.class);
-        startActivity(intent);
-        finish(); // Optional: call finish() to prevent back navigation
-    }
+
     private void initializeComponents() { // Initializes the necessary UI components and the UserModel.
         bottomNavigationView = findViewById(R.id.bottomNavView);
         userModel = new UserModel();
@@ -68,13 +98,13 @@ public class navBar extends AppCompatActivity {
         Intent intent = null;
 
         if (itemId == R.id.navHome) {
-            intent = new Intent(navBar.this, HomeActivity.class);
+            intent = new Intent(HomeActivity.this, HomeActivity.class);
         } else if (itemId == R.id.navLeaderboard) {
-            intent = new Intent(navBar.this, LeaderboardActivity.class);
+            intent = new Intent(HomeActivity.this, LeaderboardActivity.class);
         } else if (itemId == R.id.navKanashoot) {
-            intent = new Intent(navBar.this, KanaShootActivity.class);
+            intent = new Intent(HomeActivity.this, KanaShootActivity.class);
         } else if (itemId == R.id.navNihongorace) {
-            intent = new Intent(navBar.this, NihongoRaceActivity.class);
+            intent = new Intent(HomeActivity.this, NihongoRaceActivity.class);
         } else if (itemId == R.id.navProfile) {
             handleProfileSelection();
             return false;  // Return false to not select the profile item
@@ -87,7 +117,6 @@ public class navBar extends AppCompatActivity {
 
         return true;  // Item was handled
     }
-
 
     private void handleProfileSelection() {
         getUserRole(user.getUid(), new UserRoleCallback() {
@@ -105,7 +134,7 @@ public class navBar extends AppCompatActivity {
 
     private void showProfilePopupMenu(String role) { //Displays the profile popup menu based on the user's role.
         View view = bottomNavigationView.findViewById(R.id.navProfile);
-        PopupMenu popupMenu = new PopupMenu(navBar.this, view);
+        PopupMenu popupMenu = new PopupMenu(HomeActivity.this, view);
 
         if ("Admin".equals(role)) {
             popupMenu.getMenuInflater().inflate(R.menu.profile_menu, popupMenu.getMenu());
@@ -128,14 +157,14 @@ public class navBar extends AppCompatActivity {
         Intent intent = null;
 
         if (itemId == R.id.navProfile) {
-            intent = new Intent(navBar.this, ProfileActivity.class);
+            intent = new Intent(HomeActivity.this, ProfileActivity.class);
         } else if (itemId == R.id.navLogout) {
             handleLogout();
             return true;  // Return true to indicate the logout action was handled
         } else if (itemId == R.id.navAdminPanel) {
-            intent = new Intent(navBar.this, LessonItemList.class);
+            intent = new Intent(HomeActivity.this, LessonItemList.class);
         } else if (itemId == R.id.navUserPanel) {
-            intent = new Intent(navBar.this, UserManagementActivity.class);
+            intent = new Intent(HomeActivity.this, UserManagementActivity.class);
         }
 
         if (intent != null) {
@@ -144,7 +173,6 @@ public class navBar extends AppCompatActivity {
         }
         return false;  // Return false if no intent was started
     }
-
 
     private void handleLogout() { //Logs out the user and redirects to the login activity.
         userModel.getFirebaseAuth().signOut();
@@ -172,6 +200,23 @@ public class navBar extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 callback.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    private void loadCurrentLesson() {
+        String currentLesson = sharedPreferences.getString("currentLesson", "Katakana and Hiragana");
+        tvCurrLesson.setText(currentLesson);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Disable back button handling when the activity is visible
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
             }
         });
     }
