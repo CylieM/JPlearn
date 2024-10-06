@@ -46,7 +46,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="142dp"
                     android:layout_marginTop="70dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center">
 
                     <LinearLayout
                         android:id="@+id/lessonHiragana"
@@ -157,20 +159,21 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="142dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/img_lock123dasd"
+                        android:id="@+id/lock_kata"
                         android:layout_width="35dp"
                         android:layout_height="50dp"
-                        android:layout_marginTop="200px"
                         app:srcCompat="@drawable/padlock_removebg_preview" />
 
                     <LinearLayout
                         android:id="@+id/lessonKatakana"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+
                         android:background="@drawable/locked_content_roundbg"
                         android:clickable="true"
                         android:focusable="true"
@@ -272,14 +275,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="142dp"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/img_locke"
+                        android:id="@+id/lock_vocab"
                         android:layout_width="35dp"
                         android:layout_height="50dp"
-                        android:layout_marginTop="200px"
+
                         app:srcCompat="@drawable/padlock_removebg_preview" />
 
                     <LinearLayout
@@ -346,14 +350,17 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="142dp"
-                    android:layout_marginTop="7dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+
+                    >
 
                     <ImageView
-                        android:id="@+id/img_lock1"
+                        android:id="@+id/lock_grammar"
                         android:layout_width="35dp"
                         android:layout_height="50dp"
-                        android:layout_marginTop="170px"
+
                         app:srcCompat="@drawable/padlock_removebg_preview" />
 
                     <LinearLayout

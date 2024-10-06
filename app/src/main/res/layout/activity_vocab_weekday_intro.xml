@@ -53,7 +53,7 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:text="Days of the Week"
-                                android:textColor="#008577"
+                                android:textColor="@color/red"
                                 android:textSize="30sp"
                                 android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
                                 android:id="@+id/textView62"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-
+                                android:textColor="@color/gray"
                                 android:layout_weight="1"
                                 android:gravity="center"
 
@@ -90,6 +90,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:textColor="@color/gray"
+
                                 android:gravity="center"
                                 android:text="Basic Greetings: Common phrases used for greeting in Japanese."
                                 android:textStyle="bold|italic" />
@@ -114,8 +116,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:backgroundTint="#008577"
-
+                                android:backgroundTint="@color/red"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
                                 android:text="Let's Go!" />
                         </LinearLayout>
 

@@ -53,7 +53,7 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:text="Welcome to Lesson Vocabulary!"
-                                android:textColor="#008577"
+                                android:textColor="@color/red"
                                 android:textSize="30sp"
                                 android:textStyle="bold" />
 
@@ -70,16 +70,18 @@
                                 android:id="@+id/textView62"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:textColor="@color/gray"
 
                                 android:layout_weight="1"
                                 android:gravity="center"
 
                                 android:text="In this lesson, you’ll learn essential vocabulary including:"
-                                android:textSize="20sp"
+                                android:textSize="22sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
                         <LinearLayout
+                            android:layout_marginTop="15dp"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:gravity="center"
@@ -90,6 +92,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:textColor="@color/gray"
+
                                 android:gravity="center"
                                 android:text="Basic Greetings: Common phrases used for greeting in Japanese."
                                 android:textStyle="bold|italic" />
@@ -107,6 +111,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:textColor="@color/gray"
+
                                 android:gravity="center"
                                 android:text="Weekdays: Names of the days of the week."
                                 android:textStyle="bold|italic" />
@@ -124,6 +130,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:textColor="@color/gray"
+
                                 android:gravity="center"
                                 android:text="Foreign Words: Terms borrowed from other languages."
                                 android:textStyle="bold|italic" />
@@ -142,16 +150,18 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:textColor="@color/gray"
+
                                 android:gravity="center"
                                 android:text="By the end of this lesson, you'll be familiar with basic greetings, weekdays, and common foreign words in Japanese, along with their English translations, Japanese examples, and Romaji."
-                                android:textSize="16sp"
+                                android:textSize="18sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="150dp"
+                            android:layout_height="100dp"
                             android:gravity="center"
                             android:paddingLeft="50dp"
                             android:paddingRight="50dp"
@@ -162,8 +172,10 @@
                                 android:id="@+id/btnVocabProceed"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:backgroundTint="#008577"
+                                android:backgroundTint="@color/red"
                                 android:layout_weight="1"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
 
                                 android:text="Let's Proceed!" />
                         </LinearLayout>

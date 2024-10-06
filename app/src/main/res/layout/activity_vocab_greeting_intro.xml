@@ -52,9 +52,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+
                                 android:gravity="center"
                                 android:text="Basic Greetings"
-                                android:textColor="#008577"
+                                android:textColor="@color/red"
                                 android:textSize="30sp"
                                 android:textStyle="bold" />
 
@@ -74,6 +75,7 @@
 
                                 android:layout_weight="1"
                                 android:gravity="center"
+                                android:textColor="@color/gray"
 
                                 android:text="In this lesson, you’ll learn some of the basic Greetings commonly used in Japan:"
                                 android:textSize="20sp"
@@ -91,6 +93,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:textColor="@color/gray"
+
                                 android:gravity="center"
                                 android:text="Basic Greetings: Common phrases used for greeting in Japanese."
                                 android:textStyle="bold|italic" />
@@ -115,8 +119,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:backgroundTint="#008577"
-
+                                android:backgroundTint="@color/red"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
                                 android:text="Let's Go!" />
                         </LinearLayout>
 

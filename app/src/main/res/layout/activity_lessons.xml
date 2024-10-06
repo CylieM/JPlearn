@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LessonsActivity"
-    android:background="@drawable/bg14">
+    android:background="@drawable/bg25">
 
 
     <LinearLayout
@@ -29,7 +29,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="193dp"
                     android:layout_margin="20dp"
-                    android:background="@drawable/rounded_border"
                     android:backgroundTint="#d34746">
 
 
@@ -40,7 +39,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="こんにちは"
-                        android:textColor="@color/black"
+                        android:textColor="@color/gray"
                         android:textSize="48sp"
                         android:textStyle="bold" />
 
@@ -54,7 +53,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="#ff00d6"
+                        android:background="@color/red"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingLeft="120dp"
@@ -95,30 +94,32 @@
 
                             <ImageButton
                                 android:id="@+id/btnPrev"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@color/white"
-                                android:rotation="360"
-                                app:srcCompat="@drawable/__1_1_removebg_previewssssss"
-                                tools:srcCompat="@drawable/__1_1_removebg_previewssssss" />
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:rotationY="190"
+                                android:background="@drawable/arrow"
+                                />
 
                             <EditText
                                 android:id="@+id/txtUserInput"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginEnd="20dp"
+
+                                android:background="@color/white"
+                                android:textColor="@color/gray"
+
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:inputType="textPersonName" />
 
                             <ImageButton
                                 android:id="@+id/btnNext"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@color/white"
-                                app:srcCompat="@drawable/arrright"
-                                tools:srcCompat="@drawable/arrright" />
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:background="@drawable/arrow"
+                                />
 
                         </LinearLayout>
 
@@ -188,7 +189,7 @@
                                 android:foreground="?android:attr/selectableItemBackground"
                                 android:foregroundTint="#2196F3"
                                 android:translationZ="4dp"
-                                app:srcCompat="@drawable/speaker_or_volume_icon_free_vector_removebg_preview_2_67_2_30" />
+                                app:srcCompat="@drawable/speak" />
 
                         </LinearLayout>
 
@@ -204,6 +205,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="15dp"
+                                android:textColor="@color/gray"
 
                                 android:gravity="center"
                                 android:text="TextView"
@@ -222,6 +224,8 @@
                                 android:layout_width="110dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:textColor="@color/red"
+
                                 android:text="Pronunciation : "
                                 android:textStyle="bold" />
 
@@ -230,6 +234,8 @@
                                 android:layout_width="215dp"
                                 android:layout_height="70dp"
                                 android:layout_weight="1"
+                                android:textColor="@color/gray"
+
                                 android:text="TextView" />
                         </LinearLayout>
 
@@ -243,6 +249,8 @@
                                 android:layout_width="70dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:textColor="@color/red"
+
                                 android:text="Description : "
                                 android:textStyle="bold" />
 
@@ -251,6 +259,8 @@
                                 android:layout_width="215dp"
                                 android:layout_height="100dp"
                                 android:layout_weight="1"
+                                android:textColor="@color/gray"
+
                                 android:text="TextView" />
                         </LinearLayout>
 
