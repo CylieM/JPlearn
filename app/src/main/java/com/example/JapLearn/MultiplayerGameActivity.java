@@ -256,6 +256,12 @@ public class MultiplayerGameActivity extends AppCompatActivity {
 
     private void handleTyping(String typedText) {
         String[] romajiCharacters = currentRomaji.split(" ");
+        // Log the current Japanese text and corresponding romaji
+
+        Log.e("TranslationDebug", "Correct Romaji: " + currentRomaji);
+        Log.e("TranslationDebug", "Current Index: " + currentIndex);
+        Log.e("TranslationDebug", "Typed Text: " + typedText);
+        Log.e("TranslationDebug", "Expected Romaji: " + (currentIndex < romajiCharacters.length ? romajiCharacters[currentIndex] : "N/A"));
         if (currentIndex < romajiCharacters.length && typedText.equals(romajiCharacters[currentIndex])) {
             currentIndex++;
             textInput.setText("");
