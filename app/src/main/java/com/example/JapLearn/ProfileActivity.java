@@ -1,79 +1,41 @@
 package com.example.JapLearn;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.bumptech.glide.Glide;
-
-
-import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
-import com.google.firebase.database.DataSnapshot;
-
-import java.io.InputStream;
-import android.Manifest;
-import android.widget.Toast;
-
-import android.Manifest;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -82,12 +44,13 @@ import java.io.InputStream;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private TextView emailTextView, usernameTextView, dailyStreakTextView, hiraganaProgressTextView, katakanaProgressTextView, vocabProgressTextView, kanaShootWaveTextView, kanaShootHSTextView, nihongoRaceTextView, nihongoRaceWinsTextView;
+    private TextView progHiragana, progKatakana, progVocab, progGrammar, emailTextView, usernameTextView, dailyStreakTextView, hiraganaProgressTextView, katakanaProgressTextView, vocabProgressTextView, kanaShootWaveTextView, kanaShootHSTextView, grammarProgressTextView, nihongoRaceTextView, nihongoRaceWinsTextView;
     private ImageView detailImage;
     private DatabaseReference usersRef;
     private FirebaseAuth firebaseAuth;
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    private String userId;
     UserModel userModel;
     FirebaseUser user;
     private BottomNavigationView bottomNavigationView;
@@ -114,11 +77,16 @@ public class ProfileActivity extends AppCompatActivity {
         hiraganaProgressTextView = findViewById(R.id.HiraganaProgressTextView);
         katakanaProgressTextView = findViewById(R.id.KatakanaProgressTextView);
         vocabProgressTextView = findViewById(R.id.VocabProgressTextView);
+        grammarProgressTextView = findViewById(R.id.GrammarProgressTextView);
         kanaShootWaveTextView = findViewById(R.id.KanaShootWaveTextView);
         kanaShootHSTextView = findViewById(R.id.KanaShootHSTextView);
         nihongoRaceTextView = findViewById(R.id.NihongoRaceTextView);
         nihongoRaceWinsTextView = findViewById(R.id.NihongoRaceWinsTextView);
         detailImage = findViewById(R.id.detailImage);
+        progHiragana =findViewById(R.id.prog_hiragana);
+        progKatakana = findViewById(R.id.prog_katakana);
+        progVocab = findViewById(R.id.prog_vocab);
+        progGrammar = findViewById(R.id.prog_grammar);
 
         // Initialize Firebase
         firebaseAuth = FirebaseAuth.getInstance();
@@ -135,8 +103,8 @@ public class ProfileActivity extends AppCompatActivity {
             userId = intent.getStringExtra("userId");
         } else {
             // Get the user ID of the logged-in user
-            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-            userId = (currentUser != null) ? currentUser.getUid() : null;
+            userId = firebaseAuth.getCurrentUser().getUid();
+
         }
 
         if (userId != null) {
@@ -147,23 +115,24 @@ public class ProfileActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DataSnapshot dataSnapshot = task.getResult();
                         UserModel.User user = dataSnapshot.getValue(UserModel.User.class);
-
                         if (user != null) {
                             usernameTextView.setText("Username: " + user.getUsername());
                             emailTextView.setText("Email: " + user.getEmail());
                             dailyStreakTextView.setText("Daily Streak: " + user.getDailyStreak());
-                            hiraganaProgressTextView.setText("Hiragana Progress: " + user.getHiraganaProgress());
-                            katakanaProgressTextView.setText("Katakana Progress: " + user.getKatakanaProgress());
-                            vocabProgressTextView.setText("Vocabulary Progress: " + user.getVocabularyProgress());
-                            kanaShootWaveTextView.setText("KanaShoot Game Mode final wave: " + user.getKSWaves());
-                            kanaShootHSTextView.setText("KanaShoot Game Mode highest score: " + user.getKSHighScore());
+                            kanaShootWaveTextView.setText("Kanashoot Game Mode final wave: " + user.getKSWaves());
+                            kanaShootHSTextView.setText("Kanashoot Game Mode highest score: " + user.getKSHighScore());
                             nihongoRaceTextView.setText("NihongoRace Game Mode best WPM: " + user.getNRaceBestWPM());
-                            nihongoRaceWinsTextView.setText("NihongoRace Game Mode First Place wins: " + user.getNRaceFirstPlace());
+                            nihongoRaceWinsTextView.setText("NihongoRace Game Mode First Place Wins: " + user.getNRaceFirstPlace());
+                            hiraganaProgressTextView.setText("Hiragana Progress: ");
+                            katakanaProgressTextView.setText("Katakana Progress: ");
+                            vocabProgressTextView.setText("Vocabulary Progress: " );
+                            grammarProgressTextView.setText("Grammar Progress: " );
 
                             Glide.with(ProfileActivity.this)
-                                    .load(user.getProfilePicture()) // Load image from profilePicture URL or Firebase Storage reference
+                                    .load(user.getProfilePicture())
                                     .into(detailImage);
-                        } else {
+                        }
+ else {
                             usernameTextView.setText("Username: Not Found");
                             emailTextView.setText("Email: Not Found");
                         }
@@ -184,7 +153,71 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivityForResult(intent, PICK_IMAGE_REQUEST);
             }
         });
+
+        fetchCurrentLesson();
+
     }
+
+
+    private void fetchCurrentLesson() {
+
+        if (firebaseAuth.getCurrentUser() != null) {
+            userId = firebaseAuth.getCurrentUser().getUid();
+        }
+        usersRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String currentLesson = dataSnapshot.child("currentLesson").getValue(String.class);
+
+                    switch (currentLesson) {
+                        case "1":
+                            progHiragana.setText("In-Progress");
+                            progKatakana.setText("Locked");
+                            progVocab.setText("Locked");
+                            progGrammar.setText("Locked");
+//                            kanaShootWaveTextView.setText("Kanashoot Game Mode final wave: " + user.getKSWaves());
+//                            kanaShootHSTextView.setText("Kanashoot Game Mode highest score: " + user.getKSHighScore());
+//                            nihongoRaceTextView.setText("NihongoRace Game Mode best WPM: " + user.getNRaceBestWPM());
+//                            nihongoRaceWinsTextView.setText("NihongoRace Game Mode First Place Wins: " + user.getNRaceFirstPlace());
+                            break;
+                        case "2":
+                            progHiragana.setText("Completed");
+                            progKatakana.setText("In-Progress");
+                            progVocab.setText("Locked");
+                            progGrammar.setText("Locked");
+                            break;
+                        case "3":
+                            progHiragana.setText("Completed");
+                            progKatakana.setText("Completed");
+                            progVocab.setText("In-Progress");
+                            progGrammar.setText("Locked");
+                            break;
+                        case "4":
+                            progHiragana.setText("Completed");
+                            progKatakana.setText("Completed");
+                            progVocab.setText("Completed");
+                            progGrammar.setText("In-Progress");
+                            break;
+                        default:
+                            progHiragana.setText("In-Progress");
+                            progKatakana.setText("Locked");
+                            progVocab.setText("Locked");
+                            progGrammar.setText("Locked");
+                            break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle possible errors.
+                Log.e("ProfileActivity", "Database error: " + databaseError.getMessage());
+            }
+
+        });
+    }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
