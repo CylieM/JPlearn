@@ -26,6 +26,11 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+
 public class LessonsActivity extends AppCompatActivity {
 
     private static final String TAG = "Lesson421";
@@ -55,6 +60,7 @@ public class LessonsActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private FirebaseAuth auth;
 
+    private List<Integer> randomizedIndexes = new ArrayList<>();
 
 
 
@@ -170,7 +176,17 @@ public class LessonsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     totalItems = (int) dataSnapshot.getChildrenCount();
-                    loadLesson(lesson, currentItemIndex);
+
+                    // Create a list of question indexes and shuffle it
+                    randomizedIndexes.clear();
+                    for (int i = 1; i <= totalItems; i++) {
+                        randomizedIndexes.add(i);
+                    }
+                    Collections.shuffle(randomizedIndexes);
+
+                    // Load the first random question
+                    currentItemIndex = 0; // Start from the first shuffled index
+                    loadNextQuestion();
                 } else {
                     Log.e(TAG, "Lesson does not exist: " + lesson);
                 }
@@ -357,13 +373,12 @@ public class LessonsActivity extends AppCompatActivity {
     }
 
     private void loadNextQuestion() {
-        currentItemIndex++;
-        if (currentItemIndex <= totalItems) {
-            resetViewsForNewQuestion();
-            loadLesson(currentLesson, currentItemIndex);
-            answerVerified = false; // Reset verification status
+        if (currentItemIndex < randomizedIndexes.size()) {
+            int randomIndex = randomizedIndexes.get(currentItemIndex);
+            loadLesson(currentLesson, randomIndex); // Load the lesson based on the random index
+            currentItemIndex++; // Move to the next question
         } else {
-            showScoreAndRedirect();
+            Toast.makeText(this, "You have completed all questions.", Toast.LENGTH_SHORT).show();
         }
     }
     private void incrementCurrentLesson() {
