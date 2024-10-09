@@ -271,12 +271,15 @@ public class LessonsActivity extends AppCompatActivity {
                 correctAnswers++;
                 answerVerified = true;
 
+                // Update progression score in Firebase
+                updateProgressionInFirebase(correctAnswers);
+
                 txtUserInput.postDelayed(() -> {
                     txtUserInput.setBackgroundColor(getResources().getColor(android.R.color.white));
                     loadNextQuestion();
                 }, 1000);
-
-            } else {
+            }
+            else {
                 handleIncorrectAnswer(userInput);
             }
         }
@@ -413,6 +416,38 @@ public class LessonsActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void updateProgressionInFirebase(int score) {
+        String progressPath;
+
+        switch (currentLesson) {
+            case "1":
+                // Hiragana Progression Path
+                progressPath = "users/" + userId + "/hiraganaProgress";
+                break;
+            case "2":
+                // Katakana Progression Path
+                progressPath = "users/" + userId + "/katakanaProgress";
+                break;
+            case "3":
+                // Vocabulary Progression Path
+                progressPath = "users/" + userId + "/vocabularyProgress";
+                break;
+            default:
+                Log.e(TAG, "Unknown lesson: " + currentLesson);
+                return;  // Exit if the lesson is unknown
+        }
+
+        DatabaseReference progressRef = FirebaseDatabase.getInstance().getReference(progressPath);
+        progressRef.setValue(score).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.i(TAG, "Progress updated successfully for lesson: " + currentLesson);
+            } else {
+                Log.e(TAG, "Error updating progress for lesson: " + currentLesson, task.getException());
+            }
+        });
+    }
+
 
 
 

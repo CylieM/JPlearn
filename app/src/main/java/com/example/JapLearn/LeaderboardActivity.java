@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -269,6 +270,10 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
                         rank++;
                     }
                 }
+
+                // Optional: You can add a total progression value display at the end if required
+                int totalProgression = calculateTotalProgression(userList);
+                addTotalProgressionRow(totalProgression);
             }
 
             @Override
@@ -277,6 +282,28 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
             }
         });
     }
+
+
+    // Method to calculate total progression value from all users
+    private int calculateTotalProgression(List<UserModel.User> userList) {
+        int total = 0;
+        for (UserModel.User user : userList) {
+            total += getCategoryValue(user, "Progression");
+        }
+        return total;
+    }
+
+
+    // Method to add a row to display the total progression value in the leaderboard
+    private void addTotalProgressionRow(int totalProgression) {
+        TableRow totalRow = new TableRow(this);
+        TextView totalText = new TextView(this);
+        totalText.setTextColor(Color.BLACK);
+        totalText.setTextSize(18);
+        totalRow.addView(totalText);
+        tableLayout.addView(totalRow);
+    }
+
     private void checkUserAuthentication() { //Checks if the user is authenticated. If not, redirects to the login activity.
         if (user == null) {
             redirectToLogin();
@@ -323,4 +350,7 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
 
         tableLayout.addView(tableRow);
     }
+
+
+
 }
