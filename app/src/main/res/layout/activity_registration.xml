@@ -77,35 +77,6 @@
                 android:inputType="textPassword"
                 android:textColor="@color/black" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="I am a:"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-            <RadioGroup
-                android:id="@+id/roleRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="5dp">
-
-                <RadioButton
-                    android:id="@+id/radioStudent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Student"
-                    android:checked="true" />
-
-                <RadioButton
-                    android:id="@+id/radioTeacher"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Teacher" />
-            </RadioGroup>
-
             <Button
                 android:id="@+id/btnSignUp"
                 android:layout_width="match_parent"

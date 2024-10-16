@@ -30,7 +30,6 @@ public class RegistrationActivity extends AppCompatActivity {
     EditText signupEmail, signupPassword, signupUsername;
     Button btnSignUp;
     TextView loginRedirectText, forgotPasswordText;
-    RadioGroup roleRadioGroup;
     FirebaseAuth firebaseAuth;
     DatabaseReference usersRef;
 
@@ -51,7 +50,6 @@ public class RegistrationActivity extends AppCompatActivity {
         btnSignUp = findViewById(R.id.btnSignUp);
         loginRedirectText = findViewById(R.id.txtSignIn);
         forgotPasswordText = findViewById(R.id.txtForgotPassword);
-        roleRadioGroup = findViewById(R.id.roleRadioGroup);
 
         // Button click listener for SignUp
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -60,10 +58,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 final String emailID = signupEmail.getText().toString().trim();
                 String paswd = signupPassword.getText().toString().trim();
                 final String username = signupUsername.getText().toString().trim();
-
-                int selectedRoleId = roleRadioGroup.getCheckedRadioButtonId();
-                RadioButton selectedRoleButton = findViewById(selectedRoleId);
-                final String role = selectedRoleButton.getText().toString();
 
                 if (emailID.isEmpty()) {
                     signupEmail.setError("Provide your Email first!");
@@ -108,7 +102,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                                 String defaultProfilePictureUrl = uri.toString(); // Get the download URL
                                                 long currentTimeMillis = System.currentTimeMillis(); // Get the current time in milliseconds
 
-                                                UserModel.User userObj = new UserModel.User(username, emailID, defaultProfilePictureUrl, role,
+                                                UserModel.User userObj = new UserModel.User(username, emailID, defaultProfilePictureUrl, "Student",
                                                         0, 0, 0, 0, 0, 0, 0, 0, System.currentTimeMillis(), "1"); // Set lastLoginDate to current date
                                                 userObj.setUserId(userId);
 
@@ -161,3 +155,4 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     } // End of onCreate method
 } // End of RegistrationActivity class
+

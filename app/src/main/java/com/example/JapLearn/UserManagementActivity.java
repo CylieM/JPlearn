@@ -61,28 +61,77 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            String userEmail = currentUser.getEmail(); // Fetch the logged-in user's email
+            String currentUserId = currentUser.getUid();
+            DatabaseReference currentUserRef = databaseReference.child(currentUserId);
 
-            // Query users with teacherEmail equal to the logged-in user's email
-            eventListener = databaseReference.orderByChild("teacherEmail").equalTo(userEmail).addValueEventListener(new ValueEventListener() {
+            // Fetch the logged-in user's role
+            currentUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    userList.clear();
-                    fullUserList.clear();
-                    for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                        UserModel.User user = itemSnapshot.getValue(UserModel.User.class);
-                        if (user != null) {
-                            userList.add(user);
-                            fullUserList.add(user);
+                    UserModel.User currentUserModel = snapshot.getValue(UserModel.User.class);
+                    if (currentUserModel != null) {
+                        String userEmail = currentUserModel.getEmail();
+                        String userRole = currentUserModel.getRole();
+
+                        // Check the user's role
+                        if ("Admin".equals(userRole)) {
+                            // If the user is an Admin, show all users
+                            eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    userList.clear();
+                                    fullUserList.clear();
+                                    for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                                        UserModel.User user = itemSnapshot.getValue(UserModel.User.class);
+                                        if (user != null) {
+                                            userList.add(user);
+                                            fullUserList.add(user);
+                                        }
+                                    }
+                                    adapter.notifyDataSetChanged();
+                                    dialog.dismiss();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    dialog.dismiss();
+                                }
+                            });
+                        } else {
+                            // If the user is not an Admin (assumed to be a teacher), show only their students
+                            eventListener = databaseReference.orderByChild("teacherEmail").equalTo(userEmail).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    userList.clear();
+                                    fullUserList.clear();
+                                    for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                                        UserModel.User user = itemSnapshot.getValue(UserModel.User.class);
+                                        if (user != null) {
+                                            userList.add(user);
+                                            fullUserList.add(user);
+                                        }
+                                    }
+                                    adapter.notifyDataSetChanged();
+                                    dialog.dismiss();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    dialog.dismiss();
+                                }
+                            });
                         }
+                    } else {
+                        // Handle the case where the user's role is not found
+                        dialog.dismiss();
+                        // Optionally show a message or redirect to login
                     }
-                    adapter.notifyDataSetChanged();
-                    dialog.dismiss();
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     dialog.dismiss();
+                    // Optionally show a message or redirect to login
                 }
             });
         } else {
@@ -90,7 +139,6 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
             dialog.dismiss();
             // Optionally show a message or redirect to login
         }
-
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -136,6 +184,7 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
             adapter.searchDataList(searchList);
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -145,5 +194,4 @@ public class UserManagementActivity extends AppCompatActivity implements UserAda
         startActivity(intent);
         finish(); // Optional: Call finish if you want to close the current activity
     }
-
 }
