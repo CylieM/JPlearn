@@ -1,21 +1,19 @@
 package com.example.JapLearn;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
-
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.widget.Toast;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
@@ -205,33 +203,52 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadCurrentLesson() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        // Reference to Firebase Database for the current user
+        DatabaseReference currentLessonRef = userModel.getUserRef(user.getUid()).child("currentLesson");
 
-        // First, try to retrieve the current lesson as an int
-        int currentLesson = -1; // Default value indicating not set
+        // Attach a listener to retrieve the currentLesson value from Firebase
+        currentLessonRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Get the currentLesson value from Firebase (stored as a string)
+                    String currentLessonStr = dataSnapshot.getValue(String.class);
 
-        try {
-            currentLesson = sharedPreferences.getInt("currentLesson", -1);
-        } catch (ClassCastException e) {
-            // If there's a ClassCastException, it means the value was stored as a String
-            String currentLessonString = sharedPreferences.getString("currentLesson", null);
-            if (currentLessonString != null) {
-                try {
-                    currentLesson = Integer.parseInt(currentLessonString);
-                } catch (NumberFormatException ex) {
-                    // Handle the case where the String is not a valid integer
-                    currentLesson = 1; // Default to 1 (Hiragana)
+                    if (currentLessonStr != null) {
+                        try {
+                            // Parse the string into an integer for comparison
+                            int currentLesson = Integer.parseInt(currentLessonStr);
+
+                            // Map currentLesson to the corresponding lesson name
+                            updateCurrentLessonText(currentLesson);
+                        } catch (NumberFormatException e) {
+                            // In case of a parsing error, default to lesson 1 (Hiragana)
+                            updateCurrentLessonText(1);
+                        }
+                    } else {
+                        // Handle null value by defaulting to lesson 1 (Hiragana)
+                        updateCurrentLessonText(1);
+                    }
+                } else {
+                    // If no value exists, default to lesson 1 (Hiragana)
+                    updateCurrentLessonText(1);
                 }
             }
-        }
 
-        // If currentLesson is still -1, it means no valid value was found, so default to 1
-        if (currentLesson == -1) {
-            currentLesson = 1;
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle Firebase errors, if any
+                Log.e("Firebase", "Error fetching currentLesson: " + databaseError.getMessage());
+                // Default to lesson 1 (Hiragana) in case of error
+                updateCurrentLessonText(1);
+            }
+        });
+    }
 
-        // Map the current lesson value to the corresponding lesson name
+    private void updateCurrentLessonText(int currentLesson) {
         String lessonName;
+
+        // Map the current lesson number to the corresponding lesson name
         switch (currentLesson) {
             case 2:
                 lessonName = "Katakana";
@@ -239,18 +256,20 @@ public class HomeActivity extends AppCompatActivity {
             case 3:
                 lessonName = "Vocabulary";
                 break;
+            case 4:
+                lessonName = "Grammar";
+                break;
             case 1:
             default:
                 lessonName = "Hiragana";
                 break;
         }
 
-        // Display the lesson name
+        // Display the lesson name in tvCurrLesson
         tvCurrLesson.setText(lessonName);
-
-        // Save the currentLesson as an int in SharedPreferences to prevent future issues
-        sharedPreferences.edit().putInt("currentLesson", currentLesson).apply();
     }
+
+
 
 
 
