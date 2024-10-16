@@ -90,7 +90,7 @@ public class KanaShootActivity extends AppCompatActivity {
                 }
             });
 
-            userRef.child("KSHighScore").setValue(finalScore).addOnCompleteListener(task -> {
+            userRef.child("kshighScore").setValue(finalScore).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Log.d("Firebase", "Score data saved successfully: " + finalScore);
                 } else {

@@ -30,7 +30,7 @@ public class UserModel {
         private String userId;
         private String currentLesson;
         private int KSWaves;
-        private int KSHighScore;
+        private int kshighScore;
         private int HiraganaProgress;
         private int KatakanaProgress;
         private int VocabularyProgress;
@@ -43,7 +43,7 @@ public class UserModel {
         public User() {}
 
         public User(String username, String email, String profilePicture, String role,
-                    int KSWaves, int KSHighScore, int HiraganaProgress,
+                    int KSWaves, int kshighScore, int HiraganaProgress,
                     int KatakanaProgress, int VocabularyProgress,
                     int NRaceBestWPM, int NRaceFirstPlace,
                     int DailyStreak, long lastLoginDate, String currentLesson) {
@@ -52,7 +52,7 @@ public class UserModel {
             this.profilePicture = profilePicture;
             this.role = role;
             this.KSWaves = KSWaves;
-            this.KSHighScore = KSHighScore;
+            this.kshighScore = kshighScore;
             this.HiraganaProgress = HiraganaProgress;
             this.KatakanaProgress = KatakanaProgress;
             this.VocabularyProgress = VocabularyProgress;
@@ -70,7 +70,7 @@ public class UserModel {
         public String getProfilePicture() { return profilePicture; }
         public String getRole() { return role; }
         public int getKSWaves() { return KSWaves; }
-        public int getKSHighScore() { return KSHighScore; }
+        public int getkshighScore() { return kshighScore; }
         public int getHiraganaProgress() { return HiraganaProgress; }
         public int getKatakanaProgress() { return KatakanaProgress; }
         public int getVocabularyProgress() { return VocabularyProgress; }
@@ -87,7 +87,7 @@ public class UserModel {
         public void setRole(String role) { this.role = role; }
         public void setUserId(String userId) { this.userId = userId; }
         public void setKSWaves(int KSWaves) { this.KSWaves = KSWaves; }
-        public void setKSHighScore(int KSHighScore) { this.KSHighScore = KSHighScore; }
+        public void setkshighScore(int kshighScore) { this.kshighScore = kshighScore; }
         public void setHiraganaProgress(int HiraganaProgress) { this.HiraganaProgress = HiraganaProgress; }
         public void setKatakanaProgress(int KatakanaProgress) { this.KatakanaProgress = KatakanaProgress; }
         public void setVocabularyProgress(int VocabularyProgress) { this.VocabularyProgress = VocabularyProgress; }

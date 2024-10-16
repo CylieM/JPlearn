@@ -83,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
         nihongoRaceTextView = findViewById(R.id.NihongoRaceTextView);
         nihongoRaceWinsTextView = findViewById(R.id.NihongoRaceWinsTextView);
         detailImage = findViewById(R.id.detailImage);
-        progHiragana =findViewById(R.id.prog_hiragana);
+        progHiragana = findViewById(R.id.prog_hiragana);
         progKatakana = findViewById(R.id.prog_katakana);
         progVocab = findViewById(R.id.prog_vocab);
         progGrammar = findViewById(R.id.prog_grammar);
@@ -104,7 +104,6 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             // Get the user ID of the logged-in user
             userId = firebaseAuth.getCurrentUser().getUid();
-
         }
 
         if (userId != null) {
@@ -115,24 +114,30 @@ public class ProfileActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DataSnapshot dataSnapshot = task.getResult();
                         UserModel.User user = dataSnapshot.getValue(UserModel.User.class);
+
+                        // Debugging output
+                        Log.d("ProfileActivity", "Retrieved User: " + user);
+
                         if (user != null) {
                             usernameTextView.setText("Username: " + user.getUsername());
                             emailTextView.setText("Email: " + user.getEmail());
                             dailyStreakTextView.setText("Daily Streak: " + user.getDailyStreak());
                             kanaShootWaveTextView.setText("Kanashoot Game Mode final wave: " + user.getKSWaves());
-                            kanaShootHSTextView.setText("Kanashoot Game Mode highest score: " + user.getKSHighScore());
+                            kanaShootHSTextView.setText("Kanashoot Game Mode highest score: " + user.getkshighScore());
                             nihongoRaceTextView.setText("NihongoRace Game Mode best WPM: " + user.getNRaceBestWPM());
                             nihongoRaceWinsTextView.setText("NihongoRace Game Mode First Place Wins: " + user.getNRaceFirstPlace());
                             hiraganaProgressTextView.setText("Hiragana Progress: ");
                             katakanaProgressTextView.setText("Katakana Progress: ");
-                            vocabProgressTextView.setText("Vocabulary Progress: " );
-                            grammarProgressTextView.setText("Grammar Progress: " );
+                            vocabProgressTextView.setText("Vocabulary Progress: ");
+                            grammarProgressTextView.setText("Grammar Progress: ");
 
                             Glide.with(ProfileActivity.this)
                                     .load(user.getProfilePicture())
                                     .into(detailImage);
-                        }
- else {
+
+                            // Debugging output for KSHighScore
+
+                        } else {
                             usernameTextView.setText("Username: Not Found");
                             emailTextView.setText("Email: Not Found");
                         }
@@ -155,8 +160,8 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         fetchCurrentLesson();
-
     }
+
 
 
     private void fetchCurrentLesson() {
@@ -177,7 +182,7 @@ public class ProfileActivity extends AppCompatActivity {
                             progVocab.setText("Locked");
                             progGrammar.setText("Locked");
 //                            kanaShootWaveTextView.setText("Kanashoot Game Mode final wave: " + user.getKSWaves());
-//                            kanaShootHSTextView.setText("Kanashoot Game Mode highest score: " + user.getKSHighScore());
+//                            kanaShootHSTextView.setText("Kanashoot Game Mode highest score: " + user.getkshighScore());
 //                            nihongoRaceTextView.setText("NihongoRace Game Mode best WPM: " + user.getNRaceBestWPM());
 //                            nihongoRaceWinsTextView.setText("NihongoRace Game Mode First Place Wins: " + user.getNRaceFirstPlace());
                             break;

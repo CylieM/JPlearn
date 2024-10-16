@@ -56,34 +56,41 @@ public class LessonItemDetailActivity extends AppCompatActivity {
             }
         }
 
+
         deleteButton.setOnClickListener(view -> {
             if (key == null || key.isEmpty()) {
                 Toast.makeText(LessonItemDetailActivity.this, "Key is invalid", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Split the key to get the lesson number
+            // Split the key to get the lesson number and item identifier
             String[] keyParts = key.split("_");
-            if (keyParts.length == 2) {
-                String lessonNumber = keyParts[0];
+            if (keyParts.length > 0) {
+                String lessonNumber = keyParts[0]; // Gets the lesson number part (e.g., "4" from "4_1")
+
+                // Reference to the database
                 DatabaseReference reference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
                         .getReference("Lessons")
-                        .child("Lesson " + lessonNumber)
-                        .child(key);
+                        .child(lessonNumber) // Navigate to the specific lesson number (e.g., "4")
+                        .child(key); // Append the specific key to delete
 
-                reference.removeValue().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(LessonItemDetailActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), LessonItemList.class));
-                        finish();
-                    } else {
-                        Toast.makeText(LessonItemDetailActivity.this, "Failed to delete", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(e -> Toast.makeText(LessonItemDetailActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                // Remove the lesson item
+                reference.removeValue()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(LessonItemDetailActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), LessonItemList.class));
+                                finish();
+                            } else {
+                                Toast.makeText(LessonItemDetailActivity.this, "Failed to delete", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(e -> Toast.makeText(LessonItemDetailActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
             } else {
                 Toast.makeText(LessonItemDetailActivity.this, "Invalid key format", Toast.LENGTH_SHORT).show();
             }
         });
+
+
 
         editButton.setOnClickListener(view -> {
             Intent intent = new Intent(LessonItemDetailActivity.this, LessonItemUpdateActivity.class)

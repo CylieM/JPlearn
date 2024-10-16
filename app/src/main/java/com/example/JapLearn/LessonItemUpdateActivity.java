@@ -48,9 +48,8 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
             updateDesc.setText(bundle.getString("Description"));
             updateExample.setText(bundle.getString("Example"));
             updateJapaneseChar.setText(bundle.getString("JapaneseChar"));
-            key = bundle.getString("Key");
-            // Extract the lesson number from the key
-            lesson = key.split("_")[0]; // Assuming key format is lessonNumber_itemCount
+            key = bundle.getString("Key"); // e.g., "1_1" or "4_9"
+            lesson = key.split("_")[0]; // Extract lesson number from the key
         } else {
             // Handle the case where the lesson is not passed properly
             Toast.makeText(this, "Lesson information not provided", Toast.LENGTH_SHORT).show();
@@ -58,11 +57,11 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
             return;
         }
 
-        // Construct the correct database reference using the lesson variable
+        // Construct the correct database reference using the lesson variable and key
         databaseReference = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("Lessons")
-                .child("Lesson " + lesson) // Assuming the lesson number is passed as a string, adjust this accordingly if it's an integer
-                .child(key);
+                .child(lesson) // Use lesson number directly
+                .child(key); // Use the item key directly
 
         updateButton.setOnClickListener(view -> updateData());
 
@@ -92,6 +91,8 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
         japaneseChar = updateJapaneseChar.getText().toString().trim();
 
         LessonItemDataClass lessonItemDataClass = new LessonItemDataClass(romaji, desc, example, japaneseChar);
+
+        // Update the existing lesson item using the reference
         databaseReference.setValue(lessonItemDataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -114,7 +115,7 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("audios/");
 
         // Sanitize japaneseChar to ensure it can be used as a file name
-        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "" + updateJapaneseChar);
+        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "");
 
         StorageReference audioRef = storageRef.child(sanitizedJapaneseChar);
 

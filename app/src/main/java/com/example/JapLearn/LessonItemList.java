@@ -98,12 +98,13 @@ public class LessonItemList extends AppCompatActivity {
     public void searchList(String text) {
         ArrayList<LessonItemDataClass> searchList = new ArrayList<>();
         for (LessonItemDataClass lessonItemDataClass : dataList) {
-            if (lessonItemDataClass.getDataRomaji().toLowerCase().contains(text.toLowerCase())) {
+            if (lessonItemDataClass.getDataRomaji() != null && lessonItemDataClass.getDataRomaji().toLowerCase().contains(text.toLowerCase())) {
                 searchList.add(lessonItemDataClass);
             }
         }
         adapter.searchDataList(searchList);
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

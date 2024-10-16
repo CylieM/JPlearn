@@ -205,9 +205,54 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadCurrentLesson() {
-        String currentLesson = sharedPreferences.getString("currentLesson", "Katakana and Hiragana");
-        tvCurrLesson.setText(currentLesson);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // First, try to retrieve the current lesson as an int
+        int currentLesson = -1; // Default value indicating not set
+
+        try {
+            currentLesson = sharedPreferences.getInt("currentLesson", -1);
+        } catch (ClassCastException e) {
+            // If there's a ClassCastException, it means the value was stored as a String
+            String currentLessonString = sharedPreferences.getString("currentLesson", null);
+            if (currentLessonString != null) {
+                try {
+                    currentLesson = Integer.parseInt(currentLessonString);
+                } catch (NumberFormatException ex) {
+                    // Handle the case where the String is not a valid integer
+                    currentLesson = 1; // Default to 1 (Hiragana)
+                }
+            }
+        }
+
+        // If currentLesson is still -1, it means no valid value was found, so default to 1
+        if (currentLesson == -1) {
+            currentLesson = 1;
+        }
+
+        // Map the current lesson value to the corresponding lesson name
+        String lessonName;
+        switch (currentLesson) {
+            case 2:
+                lessonName = "Katakana";
+                break;
+            case 3:
+                lessonName = "Vocabulary";
+                break;
+            case 1:
+            default:
+                lessonName = "Hiragana";
+                break;
+        }
+
+        // Display the lesson name
+        tvCurrLesson.setText(lessonName);
+
+        // Save the currentLesson as an int in SharedPreferences to prevent future issues
+        sharedPreferences.edit().putInt("currentLesson", currentLesson).apply();
     }
+
+
 
     @Override
     public void onResume() {
