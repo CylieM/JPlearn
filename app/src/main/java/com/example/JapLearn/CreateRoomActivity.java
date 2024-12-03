@@ -1,13 +1,18 @@
 package com.example.JapLearn;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -90,6 +95,7 @@ public class CreateRoomActivity extends AppCompatActivity {
 
         // Initialize UI elements
         initializeUIElements();
+        showDirectionsDialog();
     }
 
     private void setDefaultGameRoomValues() {
@@ -273,5 +279,32 @@ public class CreateRoomActivity extends AppCompatActivity {
                 Log.e("GameRoomActivity", "Error fetching user role: " + error.getMessage());
             }
         });
+    }
+    private void showDirectionsDialog() {
+        SharedPreferences prefs = getSharedPreferences("JapLearnPrefs", MODE_PRIVATE);
+        boolean dontShowAgain = prefs.getBoolean("dont_show_directions", false);
+
+        if (!dontShowAgain) {
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View dialogView = inflater.inflate(R.layout.dialogue_direction, null);
+            CheckBox dontShowAgainCheckbox = dialogView.findViewById(R.id.checkbox_dont_show_again);
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Directions")
+                    .setView(dialogView)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dontShowAgainCheckbox.isChecked()) {
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putBoolean("dont_show_directions", true);
+                                editor.apply();
+                            }
+                            dialog.dismiss();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
     }
 }

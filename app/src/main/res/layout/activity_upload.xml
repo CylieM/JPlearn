@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".LessonItemUploadActivity"
     android:background="@drawable/bg29">
-    
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +16,7 @@
         android:layout_marginStart="20dp"
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,6 +24,7 @@
             android:layout_gravity="center_horizontal"
             android:padding="20dp"
             android:background="@drawable/maroon_border">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -31,16 +32,18 @@
                 android:textSize="30sp"
                 android:textAlignment="center"
                 android:textColor="@color/myblue"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:id="@+id/JapaneseChar"
+                android:id="@+id/uploadJapaneseChar"
                 android:background="@drawable/maroon_border"
                 android:layout_marginTop="20dp"
                 android:padding="16dp"
                 android:hint="Enter Japanese Character/Vocab"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/myblue"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -51,6 +54,7 @@
                 android:hint="Enter romaji"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/myblue"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
@@ -61,24 +65,47 @@
                 android:hint="Enter description"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/myblue"/>
+
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:id="@+id/uploadExample"
+                android:layout_height="80dp"
+                android:id="@+id/uploadExampleEn"
                 android:background="@drawable/maroon_border"
                 android:layout_marginTop="20dp"
                 android:padding="16dp"
-                android:hint="Enter example"
+                android:hint="Enter example (English)"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/myblue"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:id="@+id/uploadExampleJp"
+                android:background="@drawable/maroon_border"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:hint="Enter example (Japanese)"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/myblue"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/uploadPronun"
+                android:background="@drawable/maroon_border"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:hint="Enter pronunciation"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/myblue"/>
 
             <Spinner
                 android:id="@+id/lessonSpinner"
                 android:layout_marginTop="20dp"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown" />
+
             <Button
                 android:id="@+id/uploadAudioButton"
                 android:layout_width="match_parent"
@@ -87,6 +114,7 @@
                 android:textSize="18sp"
                 android:layout_marginTop="20dp"
                 app:cornerRadius="20dp"/>
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -94,7 +122,7 @@
                 android:id="@+id/saveButton"
                 android:textSize="18sp"
                 android:layout_marginTop="20dp"
-                app:cornerRadius = "20dp"/>
+                app:cornerRadius="20dp"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </ScrollView>

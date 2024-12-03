@@ -17,7 +17,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class LessonItemDetailActivity extends AppCompatActivity {
-    TextView detailDesc, detailRomaji, detailExample, detailJapaneseChar, detailLesson;
+    TextView detailDesc, detailRomaji, detailExampleEn, detailExampleJp, detailPronun, detailJapaneseChar, detailLesson;
     FloatingActionButton deleteButton, editButton;
     Button playAudio;
     String key = "";
@@ -30,9 +30,12 @@ public class LessonItemDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_item_detail);
 
+        // Initialize views
         detailDesc = findViewById(R.id.detailDesc);
         detailRomaji = findViewById(R.id.detailRomaji);
-        detailExample = findViewById(R.id.detailExample);
+        detailExampleEn = findViewById(R.id.detailExampleEn);
+        detailExampleJp = findViewById(R.id.detailExampleJp);
+        detailPronun = findViewById(R.id.detailPronun);
         detailJapaneseChar = findViewById(R.id.JapaneseChar);
         detailLesson = findViewById(R.id.LessonNumber);
         deleteButton = findViewById(R.id.deleteButton);
@@ -40,11 +43,14 @@ public class LessonItemDetailActivity extends AppCompatActivity {
         playAudio = findViewById(R.id.playAudio);
         storage = FirebaseStorage.getInstance();
 
+        // Retrieve data passed from the previous activity
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             detailDesc.setText(bundle.getString("Description"));
             detailRomaji.setText(bundle.getString("Romaji"));
-            detailExample.setText(bundle.getString("Example"));
+            detailExampleEn.setText(bundle.getString("ExampleEn"));
+            detailExampleJp.setText(bundle.getString("ExampleJp"));
+            detailPronun.setText(bundle.getString("Pronun"));
             detailJapaneseChar.setText(bundle.getString("JapaneseChar"));
             key = bundle.getString("Key");
 
@@ -56,7 +62,7 @@ public class LessonItemDetailActivity extends AppCompatActivity {
             }
         }
 
-
+        // Handle delete button click
         deleteButton.setOnClickListener(view -> {
             if (key == null || key.isEmpty()) {
                 Toast.makeText(LessonItemDetailActivity.this, "Key is invalid", Toast.LENGTH_SHORT).show();
@@ -90,23 +96,29 @@ public class LessonItemDetailActivity extends AppCompatActivity {
             }
         });
 
-
-
+        // Handle edit button click
         editButton.setOnClickListener(view -> {
+            // Create an intent to open the LessonItemUpdateActivity
             Intent intent = new Intent(LessonItemDetailActivity.this, LessonItemUpdateActivity.class)
                     .putExtra("Romaji", detailRomaji.getText().toString())
                     .putExtra("Description", detailDesc.getText().toString())
-                    .putExtra("Example", detailExample.getText().toString())
+                    .putExtra("ExampleEn", detailExampleEn.getText().toString())  // Corrected here
+                    .putExtra("ExampleJp", detailExampleJp.getText().toString())  // Added ExampleJp
+                    .putExtra("Pronun", detailPronun.getText().toString())        // Added Pronun
                     .putExtra("JapaneseChar", detailJapaneseChar.getText().toString())
-                    .putExtra("Key", key);
+                    .putExtra("Key", key);  // Key remains the same
             startActivity(intent);
         });
 
+        // Handle play audio button click
         playAudio.setOnClickListener(view -> playAudioFile(detailJapaneseChar.getText().toString()));
     }
 
+    // Updated method to play audio for the Japanese character
     private void playAudioFile(String japaneseChar) {
-        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "" + japaneseChar);
+        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "" + japaneseChar);  // Sanitize input
+
+        // Reference to Firebase Storage for the audio file
         StorageReference audioRef = storage.getReference().child("audios/" + sanitizedJapaneseChar);
 
         audioRef.getDownloadUrl().addOnSuccessListener(uri -> {
@@ -115,16 +127,17 @@ public class LessonItemDetailActivity extends AppCompatActivity {
             }
 
             try {
-                mediaPlayer.reset();
-                mediaPlayer.setDataSource(uri.toString());
-                mediaPlayer.prepare();
-                mediaPlayer.start();
+                mediaPlayer.reset();  // Reset the MediaPlayer to ensure it's in a ready state
+                mediaPlayer.setDataSource(uri.toString());  // Set the audio data source to the file's URL
+                mediaPlayer.prepare();  // Prepare the audio file for playback
+                mediaPlayer.start();  // Start playback
                 Toast.makeText(LessonItemDetailActivity.this, "Playing Audio", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(LessonItemDetailActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(e -> Toast.makeText(LessonItemDetailActivity.this, "Failed to get audio URL: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-    }
+
+}
 
     @Override
     protected void onDestroy() {

@@ -1,31 +1,30 @@
 package com.example.JapLearn;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 public class KanaShootActivity extends AppCompatActivity {
     private WebView webView;
-
     private UserModel userModel;
+    private static final String PREFS_NAME = "KanaShootPrefs";
+    private static final String PREF_DONT_SHOW_AGAIN = "dont_show_again";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +48,34 @@ public class KanaShootActivity extends AppCompatActivity {
 
         // Initialize UserModel
         userModel = new UserModel();
+
+        // Show directions popup
+        showDirectionsPopupIfNeeded();
     }
 
+    private void showDirectionsPopupIfNeeded() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        boolean dontShowAgain = prefs.getBoolean(PREF_DONT_SHOW_AGAIN, false);
+
+        if (!dontShowAgain) {
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View dialogView = inflater.inflate(R.layout.dialogue_directions, null);
+            CheckBox checkBox = dialogView.findViewById(R.id.checkbox_dont_show_again);
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Game Directions")
+                    .setView(dialogView)
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        if (checkBox.isChecked()) {
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putBoolean(PREF_DONT_SHOW_AGAIN, true);
+                            editor.apply();
+                        }
+                        dialog.dismiss();
+                    })
+                    .show();
+        }
+    }
 
     @Override
     public void onBackPressed() {

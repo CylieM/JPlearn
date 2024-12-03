@@ -44,7 +44,9 @@ public class LessonItemAdapter extends RecyclerView.Adapter<MyViewHolder> {
                 intent.putExtra("Description", dataList.get(holder.getAdapterPosition()).getDataDesc());
                 intent.putExtra("Romaji", dataList.get(holder.getAdapterPosition()).getDataRomaji());
                 intent.putExtra("Key", dataList.get(holder.getAdapterPosition()).getKey());
-                intent.putExtra("Example", dataList.get(holder.getAdapterPosition()).getDataExample());
+                intent.putExtra("ExampleEn", dataList.get(holder.getAdapterPosition()).getDataExampleEn());
+                intent.putExtra("ExampleJp", dataList.get(holder.getAdapterPosition()).getDataExampleJp());
+                intent.putExtra("Pronun", dataList.get(holder.getAdapterPosition()).getDataPronun());
                 context.startActivity(intent);
             }
         });

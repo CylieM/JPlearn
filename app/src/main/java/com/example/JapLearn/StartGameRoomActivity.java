@@ -1,5 +1,8 @@
 package com.example.JapLearn;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -9,9 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -54,6 +59,7 @@ public class StartGameRoomActivity extends AppCompatActivity {
         } else {
             checkOrCreateLobby();
         }
+        showDirectionsDialog();
     }
 
     private void initializeUI() {
@@ -271,5 +277,32 @@ public class StartGameRoomActivity extends AppCompatActivity {
         intent.putExtra("LOBBY_ID", lobbyRef.getKey());
         startActivity(intent);
         finish();
+    }
+    private void showDirectionsDialog() {
+        SharedPreferences prefs = getSharedPreferences("JapLearnPrefs", MODE_PRIVATE);
+        boolean dontShowAgain = prefs.getBoolean("dont_show_directions", false);
+
+        if (!dontShowAgain) {
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View dialogView = inflater.inflate(R.layout.dialogue_direction, null);
+            CheckBox dontShowAgainCheckbox = dialogView.findViewById(R.id.checkbox_dont_show_again);
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Directions")
+                    .setView(dialogView)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dontShowAgainCheckbox.isChecked()) {
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putBoolean("dont_show_directions", true);
+                                editor.apply();
+                            }
+                            dialog.dismiss();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
     }
 }

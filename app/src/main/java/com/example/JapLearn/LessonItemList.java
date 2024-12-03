@@ -10,10 +10,12 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -58,9 +60,17 @@ public class LessonItemList extends AppCompatActivity {
                 dataList.clear();
                 for (DataSnapshot lessonSnapshot : snapshot.getChildren()) {
                     for (DataSnapshot itemSnapshot : lessonSnapshot.getChildren()) {
-                        LessonItemDataClass lessonItemDataClass = itemSnapshot.getValue(LessonItemDataClass.class);
-                        lessonItemDataClass.setKey(itemSnapshot.getKey());
-                        dataList.add(lessonItemDataClass);
+                        try {
+                            LessonItemDataClass lessonItemDataClass = itemSnapshot.getValue(LessonItemDataClass.class);
+                            if (lessonItemDataClass != null && lessonItemDataClass.getDataRomaji() != null && !lessonItemDataClass.getDataRomaji().isEmpty()) {
+                                lessonItemDataClass.setKey(itemSnapshot.getKey());
+                                dataList.add(lessonItemDataClass);
+                            } else {
+                                Log.e("DataError", "Null or empty item in lesson " + lessonSnapshot.getKey());
+                            }
+                        } catch (DatabaseException e) {
+                            Log.e("FirebaseError", "Data conversion error: " + e.getMessage());
+                        }
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -72,6 +82,8 @@ public class LessonItemList extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -114,4 +126,5 @@ public class LessonItemList extends AppCompatActivity {
         startActivity(intent);
         finish(); // Optional: Call finish if you want to close the current activity
     }
+
 }

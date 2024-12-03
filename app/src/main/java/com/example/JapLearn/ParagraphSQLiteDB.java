@@ -10,7 +10,7 @@ import android.util.Log;
 public class ParagraphSQLiteDB extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "paragraphs.db";
-    private static final int DATABASE_VERSION = 27; // Incremented database version
+    private static final int DATABASE_VERSION = 30; // Incremented database version
 
     public static final String TABLE_PARAGRAPHS = "paragraphs";
     public static final String COLUMN_ID = "_id";
@@ -45,10 +45,10 @@ public class ParagraphSQLiteDB extends SQLiteOpenHelper {
 
     private void initializeDatabase(SQLiteDatabase db) {
         Object[][] initialParagraphs = {
-                {"こ ん し ゅ う  の  セ  ー  ル  は  と う ふ  と  チ ョ こ　レ ー ト  で す", "ko n sh u u no se e ru wa to u fu to cho ko re e to de su", "Mixed", 2}, // 2 sentence, mixed
+                {"こ ん し ゅ う の セ ー ル は と う ふ と チ ョ こ レ ー ト で す", "ko n sh uu no se e ru wa to u fu to ch o ko re e to de su", "Mixed", 2}, // 2 sentence, mixed
                 {"き ょ う  は  す  ー ぱ  ー  に か い も の  に い き ま し た  ま め の  か ん づ め と  ぱ ん  を  か い ま し た", "k yo u wa su u pa a ni ka i mo no ni i ki ma shi ta ma me no ka n zu me to pa n o ka i ma shi ta", "Hiragana", 2}, //2 sentence, pure hiragana
                 {"き ょ う  と  あ し た  は が っ こ う  が  や す み  で す  き ょ う  は  と も だ ち  と  こ う え ん  に  い き ま す", "k yo u to a shi ta wa ga k ko u ga ya su mi de su k yo u wa to mo da chi to ko u e n ni i ki ma su", "Hiragana", 2}, //2 sentence, pure hiragana
-                {"こ こ  は  ア メ リ カ で す", "ko ko wa a me ri ka de su", "Mixed", 1}, //1 sentence, mixed
+                {"こ れ は ペ ン で す", "ko re wa pe n de su", "Mixed", 1}, //1 sentence, mixed
                 {"に ほ ん ご が は な せ ま せ ん", "ni ho n go ga ha na se ma se n", "Hiragana", 1}, //1 sentence, pure hiragana
                 {"に ほ ん で は た く さ ん の ひ と が お べ ん と う を た べ ま す お べ ん と う や さ ん や コ ン ビ ニ に は い ろ い ろ な お べ ん と う が う っ て い ま す と て も べ ん り で す", "ni ho n de wa ta ku sa n no hi to ga o be n to u wo ta be ma su o be n to u ya sa n ya ko n bi ni ni wa i ro i ro na o be n to u ga u t te i ma su to te mo be n ri de su", "Mixed", 3}, //3 sentence, mixed
                 {"に ほ ん じ ん は お ち ゃ が だ い す き で す し ょ く じ の と き お ち ゃ を の む ひ と が お お い で す う ー ろ ん ち ゃ や む ぎ ち ゃ も の み ま す さ と う や み る く わ い れ ま せ ん", "ni ho n ji n wa o ch a ga da i su ki de su sh o ku ji no to ki o ch a wo no mu hi to ga o o i de su u u ro n ch a ya mu gi ch a mo no mi ma su sa to u ya mi ru ku wa i re ma se n", "Hiragana", 3} //3 sentence, pure hiragana

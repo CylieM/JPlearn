@@ -4,7 +4,9 @@ package com.example.JapLearn;
 public class LessonItemDataClass {
     private String dataRomaji;
     private String dataDesc;
-    private String dataExample;
+    private String dataExampleEn;
+    private String dataExampleJp;
+    private String dataPronun;
     private String japaneseChar;
     private String key;
 
@@ -24,18 +26,26 @@ public class LessonItemDataClass {
         return dataDesc;
     }
 
-    public String getDataExample() {
-        return dataExample;
+    public String getDataExampleEn() {
+        return dataExampleEn;
+    }
+    public String getDataExampleJp() {
+        return dataExampleJp;
+    }
+    public String getDataPronun() {
+        return dataPronun;
     }
 
     public String getJapaneseChar() {
         return japaneseChar;
     }
 
-    public LessonItemDataClass(String dataRomaji, String dataDesc, String dataExample, String japaneseChar) {
+    public LessonItemDataClass(String dataRomaji, String dataDesc, String dataExampleEn, String dataExampleJp, String dataPronun, String japaneseChar) {
         this.dataRomaji = dataRomaji;
         this.dataDesc = dataDesc;
-        this.dataExample = dataExample;
+        this.dataExampleEn = dataExampleEn;
+        this.dataExampleJp = dataExampleJp;
+        this.dataPronun = dataPronun;
         this.japaneseChar = japaneseChar;
     }
 

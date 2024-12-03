@@ -21,9 +21,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class LessonItemUpdateActivity extends AppCompatActivity {
-    EditText updateDesc, updateRomaji, updateExample, updateJapaneseChar;
+    EditText updateDesc, updateRomaji, updateExampleEn, updateExampleJp, updatePronun, updateJapaneseChar;
     Button updateButton, updateAudioButton;
-    String romaji, desc, example, japaneseChar;
+    String romaji, desc, exampleEn, exampleJp, pronun, japaneseChar;
     String key, lesson;
     DatabaseReference databaseReference;
     private Uri audioUri;
@@ -38,7 +38,9 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
         updateButton = findViewById(R.id.updateButton);
         updateDesc = findViewById(R.id.updateDesc);
         updateRomaji = findViewById(R.id.updateRomaji);
-        updateExample = findViewById(R.id.updateExample);
+        updateExampleEn = findViewById(R.id.updateExampleEn);
+        updateExampleJp = findViewById(R.id.updateExampleJp);
+        updatePronun = findViewById(R.id.updatePronun);
         updateJapaneseChar = findViewById(R.id.updateJapaneseChar);
         updateAudioButton = findViewById(R.id.updateAudioButton);
 
@@ -46,7 +48,9 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
         if (bundle != null) {
             updateRomaji.setText(bundle.getString("Romaji"));
             updateDesc.setText(bundle.getString("Description"));
-            updateExample.setText(bundle.getString("Example"));
+            updateExampleEn.setText(bundle.getString("ExampleEn"));
+            updateExampleJp.setText(bundle.getString("ExampleJp"));
+            updatePronun.setText(bundle.getString("Pronun"));
             updateJapaneseChar.setText(bundle.getString("JapaneseChar"));
             key = bundle.getString("Key"); // e.g., "1_1" or "4_9"
             lesson = key.split("_")[0]; // Extract lesson number from the key
@@ -87,10 +91,12 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
     public void updateData() {
         romaji = updateRomaji.getText().toString().trim();
         desc = updateDesc.getText().toString().trim();
-        example = updateExample.getText().toString().trim();
+        exampleEn = updateExampleEn.getText().toString().trim();
+        exampleJp = updateExampleJp.getText().toString().trim();
+        pronun = updatePronun.getText().toString().trim();
         japaneseChar = updateJapaneseChar.getText().toString().trim();
 
-        LessonItemDataClass lessonItemDataClass = new LessonItemDataClass(romaji, desc, example, japaneseChar);
+        LessonItemDataClass lessonItemDataClass = new LessonItemDataClass(romaji, desc, exampleEn, exampleJp, pronun, japaneseChar);
 
         // Update the existing lesson item using the reference
         databaseReference.setValue(lessonItemDataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -155,3 +161,4 @@ public class LessonItemUpdateActivity extends AppCompatActivity {
         });
     }
 }
+

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type the corresponding romaji for each Japanese character. Example: か is 'ka' so you type 'ka' on your keyboard. This destroys the asteroid. If an asteroid touches the bottom of the screen ONCE it's game over. Survive for as long as you can and enjoy! If the keyboard disappears, simply restart the game."
+        android:textSize="16sp"
+        android:paddingBottom="16dp" />
+
+    <CheckBox
+        android:id="@+id/checkbox_dont_show_again"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Do not show again" />
+
+</LinearLayout>

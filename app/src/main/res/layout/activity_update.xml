@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".LessonItemUpdateActivity"
     android:background="@drawable/bg29">
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,6 +17,7 @@
         android:layout_marginStart="20dp"
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,6 +25,7 @@
             android:layout_gravity="center_horizontal"
             android:padding="20dp"
             android:background="@drawable/maroon_border">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,6 +33,7 @@
                 android:textSize="30sp"
                 android:textAlignment="center"
                 android:textColor="@color/myblue"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -37,9 +41,10 @@
                 android:background="@drawable/maroon_border"
                 android:layout_marginTop="20dp"
                 android:padding="16dp"
-                android:hint="Enter romaji"
+                android:hint="Enter Japanese Character"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/myblue"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -47,9 +52,10 @@
                 android:background="@drawable/maroon_border"
                 android:layout_marginTop="20dp"
                 android:padding="16dp"
-                android:hint="Enter romaji"
+                android:hint="Enter Romaji"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/myblue"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
@@ -57,19 +63,46 @@
                 android:background="@drawable/maroon_border"
                 android:layout_marginTop="20dp"
                 android:padding="16dp"
-                android:hint="Enter description"
+                android:hint="Enter Description"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/myblue"/>
+
+            <!-- English Example Field -->
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:id="@+id/updateExample"
+                android:id="@+id/updateExampleEn"
                 android:background="@drawable/maroon_border"
                 android:layout_marginTop="20dp"
                 android:padding="16dp"
-                android:hint="Enter Example"
+                android:hint="Enter English Example"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/myblue"/>
+
+            <!-- Japanese Example Field -->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/updateExampleJp"
+                android:background="@drawable/maroon_border"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:hint="Enter Japanese Example"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/myblue"/>
+
+            <!-- Pronunciation Field -->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/updatePronun"
+                android:background="@drawable/maroon_border"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:hint="Enter Pronunciation"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/myblue"/>
+
             <Button
                 android:id="@+id/updateAudioButton"
                 android:layout_width="match_parent"
@@ -78,6 +111,7 @@
                 android:textSize="18sp"
                 android:layout_marginTop="20dp"
                 app:cornerRadius="20dp"/>
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -85,7 +119,8 @@
                 android:id="@+id/updateButton"
                 android:textSize="18sp"
                 android:layout_marginTop="20dp"
-                app:cornerRadius = "20dp"/>
+                app:cornerRadius="20dp"/>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </ScrollView>

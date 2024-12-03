@@ -29,7 +29,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class LessonItemUploadActivity extends AppCompatActivity {
-    EditText uploadRomaji, uploadDesc, uploadExample, uploadJapaneseChar;
+    EditText  uploadDesc,  uploadRomaji,  uploadExampleEn,  uploadExampleJp,  uploadPronun,  uploadJapaneseChar;
     Spinner lessonSpinner;
     Button saveButton;
     Button uploadAudioButton;
@@ -43,10 +43,12 @@ public class LessonItemUploadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
 
-        uploadDesc = findViewById(R.id.uploadDesc);
-        uploadRomaji = findViewById(R.id.uploadRomaji);
-        uploadExample = findViewById(R.id.uploadExample);
-        uploadJapaneseChar = findViewById(R.id.JapaneseChar);
+        uploadDesc = findViewById(R.id. uploadDesc);
+        uploadRomaji = findViewById(R.id. uploadRomaji);
+        uploadExampleEn = findViewById(R.id.uploadExampleEn);
+        uploadExampleJp = findViewById(R.id.uploadExampleJp);
+        uploadPronun = findViewById(R.id.uploadPronun);
+        uploadJapaneseChar = findViewById(R.id.uploadJapaneseChar);
         uploadAudioButton = findViewById(R.id.uploadAudioButton);
         lessonSpinner = findViewById(R.id.lessonSpinner);
         saveButton = findViewById(R.id.saveButton);
@@ -82,11 +84,13 @@ public class LessonItemUploadActivity extends AppCompatActivity {
     public void uploadData() {
         String romaji = uploadRomaji.getText().toString().trim();
         String desc = uploadDesc.getText().toString().trim();
-        String example = uploadExample.getText().toString().trim();
+        String exampleEn = uploadExampleEn.getText().toString().trim();
+        String exampleJp = uploadExampleJp.getText().toString().trim();
+        String pronun = uploadPronun.getText().toString().trim();
         String japaneseChar = uploadJapaneseChar.getText().toString().trim();
         String selectedLesson = lessonSpinner.getSelectedItem().toString();
 
-        if (romaji.isEmpty() || desc.isEmpty() || example.isEmpty() || japaneseChar.isEmpty()) {
+        if (romaji.isEmpty() || desc.isEmpty() || exampleEn.isEmpty() || exampleJp.isEmpty() || pronun.isEmpty() ||japaneseChar.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -108,7 +112,7 @@ public class LessonItemUploadActivity extends AppCompatActivity {
                 String lessonNumber = selectedLesson.substring(selectedLesson.lastIndexOf(" ") + 1);
                 String key = lessonNumber + "_" + (itemCount + 1);
 
-                LessonItemDataClass lessonItemDataClass = new LessonItemDataClass(romaji, desc, example, japaneseChar);
+                LessonItemDataClass lessonItemDataClass = new LessonItemDataClass(romaji, desc, exampleEn, exampleJp, pronun, japaneseChar);
 
                 lessonRef.child(key).setValue(lessonItemDataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
