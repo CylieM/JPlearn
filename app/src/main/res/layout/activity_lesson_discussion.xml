@@ -87,13 +87,16 @@
 
                         <TextView
                             android:id="@+id/tvBtnName"
-                            android:layout_width="1dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:clickable="true"
                             android:focusable="true"
                             android:gravity="center"
                             android:text="Name"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:maxLines="1"
                             android:textColor="@color/white"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -111,11 +114,14 @@
 
                         <TextView
                             android:id="@+id/tvBtnExample"
-                            android:layout_width="11dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:clickable="true"
                             android:focusable="true"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:maxLines="1"
                             android:gravity="center"
                             android:text="Example"
                             android:textColor="@color/white"
@@ -213,7 +219,9 @@
                                 android:layout_weight="1"
                                 android:text="Pronunciation : "
                                 android:textColor="@color/red"
-
+                                android:singleLine="true"
+                                android:ellipsize="end"
+                                android:maxLines="1"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -243,7 +251,9 @@
                                 android:layout_weight="1"
                                 android:text="Description : "
                                 android:textColor="@color/red"
-
+                                android:singleLine="true"
+                                android:ellipsize="end"
+                                android:maxLines="1"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
