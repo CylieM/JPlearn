@@ -383,6 +383,8 @@ public class LessonsActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "You have completed all questions.", Toast.LENGTH_SHORT).show();
         }
+        answerVerified = false;
+
     }
     private void incrementCurrentLesson() {
         // Path to the user's current lesson in the database

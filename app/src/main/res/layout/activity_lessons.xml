@@ -41,7 +41,8 @@
                         android:text="こんにちは"
                         android:textColor="@color/gray"
                         android:textSize="48sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        />
 
                 </FrameLayout>
 

@@ -1,15 +1,19 @@
 package com.example.JapLearn;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -33,11 +37,19 @@ public class LessonList extends AppCompatActivity {
     // Lesson buttons
     private LinearLayout lessonHiragana, lessonKatakana, lessonVocabulary, lessonGrammar;
     private ImageView lockKata, lockVocab, lockGrammar;
+    private ImageButton btnInstruction;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_lesson_list);
+
+
+        // Find the instruction button by its ID
+        btnInstruction = findViewById(R.id.btn_instruction);
+
+        // Set an OnClickListener for the instruction button
+        btnInstruction.setOnClickListener(v -> showInstructionDialog());
 
         // Initialize lesson layouts
         lessonHiragana = findViewById(R.id.lessonHiragana);
@@ -300,5 +312,35 @@ public class LessonList extends AppCompatActivity {
     private void startGrammarIntro() {
         Intent intent = new Intent(LessonList.this, LessonGrammarIntroActivity.class);
         startActivity(intent);
+    }
+
+
+    private void showInstructionDialog() {
+        // Create the dialog builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(LessonList.this);
+
+        // Set the message for the dialog
+        builder.setMessage("You need to have a perfect score in the Test yourself to unlock the next lesson.\n\nTest yourself automatically tests you on your latest unlocked lesson.")
+                .setCancelable(false)  // Make it non-cancellable (user can only dismiss by pressing the "Got it!" button)
+                .setPositiveButton("Got it!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Close the dialog when the user clicks "Got it!"
+                        dialog.dismiss();
+                    }
+                });
+
+        // Create the dialog and show it
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Customize the dialog's appearance
+        dialog.getWindow().setLayout(900, 800);  // Set the dialog's size (can adjust as necessary)
+
+        // Set rounded corners for the dialog
+        dialog.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.lesson_instruction));
+
+        // Optionally change the message text color to gray
+        ((android.widget.TextView) dialog.findViewById(android.R.id.message)).setTextColor(getResources().getColor(android.R.color.darker_gray));
     }
 }

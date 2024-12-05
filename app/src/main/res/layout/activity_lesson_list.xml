@@ -36,16 +36,26 @@
                     android:gravity="center"
                     android:padding="16dp"
                     android:text="Lesson"
+                    android:textColor="@color/gray"
                     android:textSize="40sp" />
 
                 <!-- Button for Lessons -->
                 <!-- Button for Self-Testing -->
                 <!-- Hiragana Container -->
 
+                <ImageButton
+                    android:id="@+id/btn_instruction"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/qsmark"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="20dp"
+                    />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="142dp"
-                    android:layout_marginTop="70dp"
                     android:orientation="horizontal"
                     android:layout_gravity="center"
                     android:gravity="center">
