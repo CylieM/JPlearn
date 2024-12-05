@@ -335,7 +335,7 @@ public class LessonList extends AppCompatActivity {
         dialog.show();
 
         // Customize the dialog's appearance
-        dialog.getWindow().setLayout(700, 400);  // Set the dialog's size (can adjust as necessary)
+        dialog.getWindow().setLayout(800, 500);  // Set the dialog's size (can adjust as necessary)
 
         // Set rounded corners for the dialog
         dialog.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.lesson_instruction));
