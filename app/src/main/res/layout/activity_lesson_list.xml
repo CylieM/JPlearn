@@ -211,7 +211,7 @@
                                 android:layout_margin="4dp"
                                 android:background="@drawable/custom_round_background"
                                 android:padding="8dp"
-                                android:text="あ"
+                                android:text="ア"
                                 android:textColor="@android:color/black"
                                 android:textSize="18sp" />
 
@@ -221,7 +221,7 @@
                                 android:layout_margin="4dp"
                                 android:background="@drawable/custom_round_background"
                                 android:padding="8dp"
-                                android:text="い"
+                                android:text="イ"
                                 android:textColor="@android:color/black"
                                 android:textSize="18sp" />
 
@@ -231,7 +231,7 @@
                                 android:layout_margin="4dp"
                                 android:background="@drawable/custom_round_background"
                                 android:padding="8dp"
-                                android:text="う"
+                                android:text="ウ"
                                 android:textColor="@android:color/black"
                                 android:textSize="18sp" />
 
@@ -241,7 +241,7 @@
                                 android:layout_margin="4dp"
                                 android:background="@drawable/custom_round_background"
                                 android:padding="8dp"
-                                android:text="え"
+                                android:text="エ"
                                 android:textColor="@android:color/black"
                                 android:textSize="18sp" />
 
@@ -251,7 +251,7 @@
                                 android:layout_margin="4dp"
                                 android:background="@drawable/custom_round_background"
                                 android:padding="8dp"
-                                android:text="お"
+                                android:text="オ"
                                 android:textColor="@android:color/black"
                                 android:textSize="18sp" />
 
@@ -261,7 +261,7 @@
                                 android:layout_margin="4dp"
                                 android:background="@drawable/custom_round_background"
                                 android:padding="8dp"
-                                android:text="か"
+                                android:text="カ"
                                 android:textColor="@android:color/black"
                                 android:textSize="18sp" />
 
@@ -271,7 +271,7 @@
                                 android:layout_margin="4dp"
                                 android:background="@drawable/custom_round_background"
                                 android:padding="8dp"
-                                android:text="き"
+                                android:text="キ"
                                 android:textColor="@android:color/black"
                                 android:textSize="18sp" />
 
