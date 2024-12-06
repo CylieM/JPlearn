@@ -1,4 +1,3 @@
-
 package com.example.JapLearn;
 
 import androidx.annotation.NonNull;
@@ -29,7 +28,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class LessonItemUploadActivity extends AppCompatActivity {
-    EditText  uploadDesc,  uploadRomaji,  uploadExampleEn,  uploadExampleJp,  uploadPronun,  uploadJapaneseChar;
+    EditText uploadDesc, uploadRomaji, uploadExampleEn, uploadExampleJp, uploadPronun, uploadJapaneseChar;
     Spinner lessonSpinner;
     Button saveButton;
     Button uploadAudioButton;
@@ -43,8 +42,8 @@ public class LessonItemUploadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
 
-        uploadDesc = findViewById(R.id. uploadDesc);
-        uploadRomaji = findViewById(R.id. uploadRomaji);
+        uploadDesc = findViewById(R.id.uploadDesc);
+        uploadRomaji = findViewById(R.id.uploadRomaji);
         uploadExampleEn = findViewById(R.id.uploadExampleEn);
         uploadExampleJp = findViewById(R.id.uploadExampleJp);
         uploadPronun = findViewById(R.id.uploadPronun);
@@ -90,15 +89,9 @@ public class LessonItemUploadActivity extends AppCompatActivity {
         String japaneseChar = uploadJapaneseChar.getText().toString().trim();
         String selectedLesson = lessonSpinner.getSelectedItem().toString();
 
-        if (romaji.isEmpty() || desc.isEmpty() || exampleEn.isEmpty() || exampleJp.isEmpty() || pronun.isEmpty() ||japaneseChar.isEmpty()) {
+        if (romaji.isEmpty() || desc.isEmpty() || exampleEn.isEmpty() || exampleJp.isEmpty() || pronun.isEmpty() || japaneseChar.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
-        }
-
-        if (audioUri != null) {
-            uploadAudio(japaneseChar);
-        } else {
-            Toast.makeText(this, "Please select an audio file", Toast.LENGTH_SHORT).show();
         }
 
         DatabaseReference lessonRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
@@ -119,15 +112,14 @@ public class LessonItemUploadActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(LessonItemUploadActivity.this, "Saved", Toast.LENGTH_SHORT).show();
-                            finish();
+                            if (audioUri != null) {
+                                uploadAudio(japaneseChar, selectedLesson, key);
+                            } else {
+                                finish();
+                            }
                         }
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(LessonItemUploadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                }).addOnFailureListener(e -> Toast.makeText(LessonItemUploadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
             }
 
             @Override
@@ -137,30 +129,56 @@ public class LessonItemUploadActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadAudio(String japaneseChar) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("audios/");
+    private void uploadAudio(String japaneseChar, String selectedLesson, String key) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
-        // Sanitize japaneseChar to ensure it can be used as a file name
-        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "" + japaneseChar);
+        String storagePath = "audios/"; // Default path
+        if ("2".equals(selectedLesson)) {
+            storagePath = "audioKana/";
+        } else if ("3".equals(selectedLesson)) {
+            storagePath = "audioVocab/";
+        } else if ("4".equals(selectedLesson)) {
+            storagePath = "grammar/";
+        }
 
-        StorageReference audioRef = storageRef.child(sanitizedJapaneseChar);
+        String sanitizedJapaneseChar = japaneseChar.replaceAll("[^a-zA-Z0-9_\\-]", "") + ".mp3";
+
+        StorageReference audioRef = storageRef.child(storagePath).child(sanitizedJapaneseChar);
 
         UploadTask uploadTask = audioRef.putFile(audioUri);
 
-        uploadTask.continueWithTask(task -> {
-            if (!task.isSuccessful()) {
-                throw task.getException();
-            }
-            return audioRef.getDownloadUrl();
-        }).addOnCompleteListener(task -> {
+        uploadTask.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Uri downloadUri = task.getResult();
-                Toast.makeText(LessonItemUploadActivity.this, "Audio uploaded successfully: " + downloadUri.toString(), Toast.LENGTH_SHORT).show();
+                audioRef.getDownloadUrl().addOnCompleteListener(urlTask -> {
+                    if (urlTask.isSuccessful()) {
+                        Uri downloadUri = urlTask.getResult();
+                        String audioUrl = downloadUri.toString();
+                        // Now you can save the audio URL in the database
+                        DatabaseReference lessonRef = FirebaseDatabase.getInstance("https://jlearn-25b34-default-rtdb.asia-southeast1.firebasedatabase.app")
+                                .getReference("Lessons")
+                                .child(selectedLesson)
+                                .child(key);
+
+                        lessonRef.child("audioUrl").setValue(audioUrl)
+                                .addOnCompleteListener(audioUrlTask -> {
+                                    if (audioUrlTask.isSuccessful()) {
+                                        Toast.makeText(LessonItemUploadActivity.this, "Audio uploaded and URL saved", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+                                })
+                                .addOnFailureListener(e -> Toast.makeText(LessonItemUploadActivity.this, "Failed to save audio URL", Toast.LENGTH_SHORT).show());
+                    } else {
+                        Toast.makeText(LessonItemUploadActivity.this, "Failed to retrieve audio URL", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 Toast.makeText(LessonItemUploadActivity.this, "Failed to upload audio", Toast.LENGTH_SHORT).show();
             }
-        }).addOnFailureListener(e -> Toast.makeText(LessonItemUploadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+        }).addOnFailureListener(e -> {
+            Toast.makeText(LessonItemUploadActivity.this, "Error uploading audio: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
     }
+
 
     private String getRealPathFromURI(Uri uri) {
         String result;
