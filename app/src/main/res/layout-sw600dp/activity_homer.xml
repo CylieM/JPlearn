@@ -5,16 +5,13 @@
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="50dp"
-    android:layout_marginEnd="50dp"
-    android:layout_marginTop="50dp"
-    android:layout_marginBottom="50dp"
-    tools:context=".HomeFragment">
+    tools:context=".HomeActivity"
+    android:background="@drawable/bg12">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="50dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,7 +42,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="50dp"
                     android:layout_marginTop="15dp"
-                    android:gravity="center"
                     android:text="Current Lesson"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
@@ -56,7 +52,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="49dp"
                     android:text="TextView"
-                    android:gravity="center"
                     android:textColor="@color/white"
                     android:textSize="34sp"
                     android:textStyle="bold" />
@@ -80,8 +75,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/rounded_border"
                 android:backgroundTint="#d34746"
@@ -89,9 +82,9 @@
 
                 <TextView
                     android:id="@+id/textView3"
-                    android:layout_width="300dp"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="189dp"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="Test Yourself!"
                     android:textColor="@color/white"
@@ -103,11 +96,10 @@
                     android:layout_width="144dp"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="18dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/button_round_radius"
                     android:backgroundTint="#FFFFFF"
-                    android:layout_marginEnd="300dp"
-
                     android:text="Start Quiz!"
                     android:textColor="#d34746"
                     android:textStyle="bold" />
@@ -213,18 +205,19 @@
                     android:layout_width="71dp"
                     android:layout_height="69dp"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/usericon"
+                    android:src="@drawable/ic_person_24"
                     android:background="@color/myblue"
-                    android:contentDescription="Icon description" />
+                    android:contentDescription="User Profile Icon" />
 
                 <TextView
                     android:id="@+id/iconDescriptionTextView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="To view your profile and your learning progress"
+                    android:text="To view and edit your profile"
                     android:textSize="16sp" />
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
