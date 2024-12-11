@@ -9,8 +9,8 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="889dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="1dp"
@@ -18,11 +18,11 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="738dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:padding="50dp">
 
@@ -229,6 +229,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:textColor="@color/red"
+                                android:textSize="17sp"
 
                                 android:text="Pronunciation : "
                                 android:textStyle="bold" />
@@ -239,6 +240,7 @@
                                 android:layout_height="70dp"
                                 android:layout_weight="1"
                                 android:textColor="@color/gray"
+                                android:textSize="17sp"
 
                                 android:text="TextView" />
                         </LinearLayout>
@@ -254,6 +256,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:textColor="@color/red"
+                                android:textSize="17sp"
 
                                 android:text="Description : "
                                 android:textStyle="bold" />
@@ -264,6 +267,7 @@
                                 android:layout_height="100dp"
                                 android:layout_weight="1"
                                 android:textColor="@color/gray"
+                                android:textSize="17sp"
 
                                 android:text="TextView" />
                         </LinearLayout>
@@ -275,15 +279,6 @@
             </LinearLayout>
         </ScrollView>
 
-        <ImageView
-            android:id="@+id/imageView11"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:layout_marginLeft="30dp"
-            android:background="#e8d320"
-            android:backgroundTint="#e8d320"
-            app:srcCompat="@drawable/objex_unlimited_black_line1"
-            tools:srcCompat="@drawable/objex_unlimited_black_line1___copy" />
 
         <FrameLayout
             android:layout_width="match_parent"

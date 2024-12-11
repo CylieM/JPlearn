@@ -282,15 +282,15 @@
             </LinearLayout>
         </ScrollView>
 
-        <ImageView
-            android:id="@+id/imageView1190"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:layout_marginLeft="30dp"
-            android:background="#e8d320"
-            android:backgroundTint="#e8d320"
-            app:srcCompat="@drawable/objex_unlimited_black_line1"
-            tools:srcCompat="@drawable/objex_unlimited_black_line1___copy" />
+<!--        <ImageView-->
+<!--            android:id="@+id/imageView1190"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="10dp"-->
+<!--            android:layout_marginLeft="30dp"-->
+<!--            android:background="#e8d320"-->
+<!--            android:backgroundTint="#e8d320"-->
+<!--            app:srcCompat="@drawable/objex_unlimited_black_line1"-->
+<!--            tools:srcCompat="@drawable/objex_unlimited_black_line1___copy" />-->
 
         <FrameLayout
             android:layout_width="match_parent"
